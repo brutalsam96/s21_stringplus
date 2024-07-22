@@ -5,6 +5,8 @@ Implementation of the string.h library with additions.
 The russian version of the task can be found in the repository.
 
 
+💡 [Tap here](https://new.oprosso.net/p/4cb31ec3f47a4596bc758ea1861fb624) **to leave your feedback on the project**. It's anonymous and will help our team make your educational experience better. We recommend completing the survey immediately after the project.
+
 ## Contents
 0. [Preamble](#preamble)
 1. [Chapter I](#chapter-i) \
@@ -233,5 +235,3 @@ Bonus assignment for extra points. You need to implement some string processing 
 - All of the requirements outlined in [the first part](#part-1-implementation-of-the-stringh-library-functions) are applied to functions implementation;
   excluding the requirement to compare your implementation with the standard.
 
-
-💡 [Tap here](https://forms.yandex.ru/cloud/6418126b02848f263d78c4a1/) **to leave your feedback on the project**. Product Team really tries to make your educational experience better.
