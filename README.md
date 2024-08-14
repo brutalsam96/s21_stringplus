@@ -27,7 +27,7 @@ The russian version of the task can be found in the repository.
 
 1942, late evening, Bletchley Park, Alan Turing's desk. 
 
-For almost a year, a group of the brightest mathematicians, linguists and crossword puzzle enthusiasts have been trying to solve the most difficult problem of deciphering the German Enigma cipher, whose codes change every day and the number of possible combinations is about two to the power of 64. The group often had to come up with different algorithms, and they even developed a special set of keywords and their syntax for ease of communication and logging, which is exactly like the well-known C language in our universe. What a remarkable coincidence! But there was a catch - the people at Bletchley Park had to remember the whole sequence of actions described in this language. 
+For almost a year, a group of the brightest mathematicians, linguists, and crossword puzzle enthusiasts had been trying to solve the most difficult problem of all: breaking the German Enigma cipher, whose codes changed daily and whose number of possible combinations was about two to the power of 64. The group often had to come up with different algorithms, and they even developed a special set of keywords and their syntax for easy communication and logging, which is exactly like the well-known C language in our universe. What a remarkable coincidence! But there was a catch — the people at Bletchley Park had to remember the whole sequence of actions described in this language. 
 
 As you walk past Turing's desk, you notice a sheet of paper that says "For processing letters, punctuation marks, words and sentences". 
 
@@ -66,8 +66,9 @@ In this project you will develop your own implementation of the string.h library
 
 ## Information
 
-The C programming language has a set of functions implementing operations on strings (character strings and byte strings) in its standard library. Various operations, such as copying, concatenation, tokenization and searching are supported. For character strings, the standard library uses the convention that strings are null-terminated: a string of n characters is represented as an array of n + 1 elements, the last of which is a "NULL" character. \
-The only support for strings in the programming language proper is that the compiler translates quoted string constants into null-terminated strings.
+The C language has a set of functions that implement operations on strings (character strings and byte strings) in its standard library. Various operations such as copy, concatenate, tokenize, and search are supported. For strings, the standard library uses the convention that strings are null-terminated: a string of n characters is represented as an array of n + 1 elements, the last of which is a "NULL" character. 
+
+The only support for strings in the actual programming language is that the compiler translates quoted string constants to null-terminated strings.
 
 ### string.h Types
 
@@ -103,12 +104,12 @@ The only support for strings in the programming language proper is that the comp
 
 ### sprintf and sscanf
 
-- int sscanf(const char *str, const char *format, ...) - reads formatted input from a string;
-- int sprintf(char *str, const char *format, ...) - sends formatted output to a string pointed to, by str.
+- int sscanf(const char *str, const char *format, ...) — reads formatted input from a string;
+- int sprintf(char *str, const char *format, ...) — sends formatted output to a string pointed to, by str.
 
 where:
-- str − This is the C string that the function processes as its source to retrieve the data;
-- format − This is the C string that contains one or more of the following items: Whitespace character, Non-whitespace character and Format specifiers. A format specifier for print functions follows this prototype: %[flags][width][.precision][length]specifier. A format specifier for scan functions follows this prototype: %[*][width][length]specifier.
+- str — This is the C string that the function processes as its source to retrieve the data;
+- format — This is the C string that contains one or more of the following items: Whitespace character, Non-whitespace character and Format specifiers. A format specifier for print functions follows this prototype: %[flags][width][.precision][length]specifier. A format specifier for scan functions follows this prototype: %[*][width][length]specifier.
 
 ### sprintf And sscanf Specifiers
 
@@ -152,7 +153,7 @@ where:
 
 | No. |	.precision | Description |
 | --- | --- | --- |
-| 1	| .number | For integer specifiers (d, i, o, u, x, X) − precision specifies the minimum number of digits to be written. If the value to be written is shorter than this number, the result is padded with leading zeros. The value is not truncated even if the result is longer. A precision of 0 means that no character is written for the value 0. For e, E and f specifiers − this is the number of digits to be printed after the decimal point. For g and G specifiers − This is the maximum number of significant digits to be printed. For s − this is the maximum number of characters to be printed. By default all characters are printed until the ending null character is encountered. For c type − it has no effect. When no precision is specified for specifiers e, E, f, g and G, the default one is 6. When no precision is specified for all other kind of specifiers, the default is 1. If the period is specified without an explicit value for precision, 0 is assumed. |
+| 1	| .number | For integer specifiers (d, i, o, u, x, X) — precision specifies the minimum number of digits to be written. If the value to be written is shorter than this number, the result is padded with leading zeros. The value is not truncated even if the result is longer. A precision of 0 means that no character is written for the value 0. For e, E and f specifiers — this is the number of digits to be printed after the decimal point. For g and G specifiers — This is the maximum number of significant digits to be printed. For s — this is the maximum number of characters to be printed. By default all characters are printed until the ending null character is encountered. For c type — it has no effect. When no precision is specified for specifiers e, E, f, g and G, the default one is 6. When no precision is specified for all other kind of specifiers, the default is 1. If the period is specified without an explicit value for precision, 0 is assumed. |
 | 2	| .* | The precision is not specified in the format string, but as an additional integer value argument preceding the argument that has to be formatted. |
 
 ### sprintf And sscanf Length Description
@@ -161,7 +162,7 @@ where:
 | --- | --- | --- |
 | 1 | h | The argument is interpreted as a short int or unsigned short int (only applies to integer specifiers: i, d, o, u, x and X). |
 | 2 | l | The argument is interpreted as a long int or unsigned long int for integer specifiers (i, d, o, u, x and X), and as a wide character or wide character string for specifiers c and s. |
-| 3 | L | The argument is interpreted as a long double (only applies to floating point specifiers − e, E, f, g and G). |
+| 3 | L | The argument is interpreted as a long double (only applies to floating point specifiers — e, E, f, g and G). |
 
 ### Special string processing functions (from the String class in C#)
 
@@ -178,29 +179,29 @@ where:
 ## Part 1. Implementation of the string.h library functions
 
 It is necessary to implement the described [above](#stringh-functions) functions of the string.h library: 
- - The library must be developed in C language of C11 standard using gcc compiler;
- - The library's code, including headers, makefile and library itself must be located in the src folder on the develop branch;    
- - Do not use outdated and legacy language constructions and library functions. Pay attention to the legacy and obsolete marks in the official documentation on the language and the libraries used. Use the POSIX.1-2017 standard; 
- - When writing code it is necessary to follow the Google style;
- - Make it as a static library named *s21_string.a* (with the header file s21_string.h);
- - The library must be developed in accordance with the principles of structured programming, duplication in the code must be avoided;
- - Prepare a full coverage of the library's functions by unit-tests using the Check library;
- - Test's code and the executable file must be located in the src folder or its any subfolder;
- - Unit-tests must check the results of your implementation by comparing them with the implementation of the standard string.h library;
- - Unit tests must cover at least 80% of each function (checked using gcov);
- - Provide a Makefile for building the library and tests (with the targets all, clean, test, s21_string.a, gcov_report);
- - The gcov_report target should generate a gcov report in the form of an html page. Unit tests must be run with gcov flags to do this;
- - Use prefix s21_ before each function;
- - It is forbidden to copy the implementation of the standard string.h library and other string processing libraries and to use them anywhere, except unit-tests;
- - It is forbidden to use system errors arrays, including those not specified in POSIX (sys_nerr, sys_errlist). Instead, you need to implement your own platform-specific errors arrays, as it was mentioned in the description of the [strerror function](#stringh-functions);  
- - You must follow the logic of the standard string.h library (in terms of checks, working with memory and behavior in emergency situations - tests will help you with that);
+ - The library must be developed in C language of C11 standard using gcc compiler.
+ - The library's code, including headers, makefile and library itself must be located in the src folder on the develop branch.
+ - Do not use outdated and legacy language constructions and library functions. Pay attention to the legacy and obsolete marks in the official documentation on the language and the libraries used. Use the POSIX.1-2017 standard.
+ - When writing code it is necessary to follow the Google style.
+ - Make it as a static library named *s21_string.a* (with the header file s21_string.h).
+ - The library must be developed in accordance with the principles of structured programming, duplication in the code must be avoided.
+ - Prepare a full coverage of the library's functions by unit-tests using the Check library.
+ - Test's code and the executable file must be located in the src folder or its any subfolder.
+ - Unit-tests must check the results of your implementation by comparing them with the implementation of the standard string.h library.
+ - Unit tests must cover at least 80% of each function (checked using gcov).
+ - Provide a Makefile for building the library and tests (with the targets all, clean, test, s21_string.a, gcov_report).
+ - The gcov_report target should generate a gcov report in the form of an html page. Unit tests must be run with gcov flags to do this.
+ - Use prefix s21_ before each function.
+ - It is forbidden to copy the implementation of the standard string.h library and other string processing libraries and to use them anywhere, except unit-tests.
+ - It is forbidden to use system errors arrays, including those not specified in POSIX (sys_nerr, sys_errlist). Instead, you need to implement your own platform-specific errors arrays, as it was mentioned in the description of the [strerror function](#stringh-functions).
+ - You must follow the logic of the standard string.h library (in terms of checks, working with memory and behavior in emergency situations — tests will help you with that).
  - Functions must work with z-string made of single-byte characters in ASCII encoding.
 
 ## Part 2. Partial implementation of the sprintf function
 
 It is necessary to implement the sprintf function from the stdio.h library:
-- The function must be placed in the s21_string.h library;
-- All of the requirements outlined in [the first part](#part-1-implementation-of-the-stringh-library-functions) are applied to function implementation;
+- The function must be placed in the s21_string.h library.
+- All of the requirements outlined in [the first part](#part-1-implementation-of-the-stringh-library-functions) are applied to function implementation.
 - The next partial formatting must be supported:
   - Specifiers: c, d, f, s, u, %
   - Flags: -, +, (space)
@@ -211,8 +212,8 @@ It is necessary to implement the sprintf function from the stdio.h library:
 ## Part 3. Bonus. Implementation of some format modifiers of the sprintf function
 
 Bonus assignment for extra points. You need to implement some format modifiers of the sprintf function from the stdio.h library:
-- The function must be placed in the s21_string.h library;
-- All of the requirements outlined in [the first part](#part-1-implementation-of-the-stringh-library-functions) are applied to function implementation;
+- The function must be placed in the s21_string.h library.
+- All of the requirements outlined in [the first part](#part-1-implementation-of-the-stringh-library-functions) are applied to function implementation.
 - The next additional format modifiers must be supported:
   - Specifiers: g, G, e, E, x, X, o, p
   - Flags: #, 0
@@ -223,15 +224,14 @@ Bonus assignment for extra points. You need to implement some format modifiers o
 ## Part 4. Bonus. Implementation of the sscanf function
 
 Bonus assignment for extra points. You need to implement the sscanf function from the stdio.h library:
-- The function must be placed in the s21_string.h library;
-- All of the requirements outlined in [the first part](#part-1-implementation-of-the-stringh-library-functions) are applied to function implementation;
+- The function must be placed in the s21_string.h library.
+- All of the requirements outlined in [the first part](#part-1-implementation-of-the-stringh-library-functions) are applied to function implementation.
 - Full formatting (including flags, widths, precision, modifiers and conversion types) must be supported.
 
 
 ## Part 5. Bonus. Implementation of special string processing functions
 
 Bonus assignment for extra points. You need to implement some string processing functions from the String class (described [here](#special-string-processing-functions-from-the-string-class-in-c)):
-- The functions must be placed in the s21_string.h library;
-- All of the requirements outlined in [the first part](#part-1-implementation-of-the-stringh-library-functions) are applied to functions implementation;
-  excluding the requirement to compare your implementation with the standard.
+- The functions must be placed in the s21_string.h library.
+- All of the requirements outlined in [the first part](#part-1-implementation-of-the-stringh-library-functions) are applied to functions implementation excluding the requirement to compare your implementation with the standard.
 
