@@ -172,7 +172,7 @@ bunda:
 
 ## Part 1.  string.h kutubxonasi funksiyalarini amalga oshirish
 
-Yuqorida tavsiflangan string.h kutubxonasi funksiyalarini amalga oshirishingiz lozim:
+Yuqorida tavsiflangan string.h kutubxonasi funksiyalarini amalga oshirishingiz lozim, shuningdek, s21_size_t turini va S21_NULL makrosini amalga oshirish kerak:
 
 - Kutubxona gcc kompilyatoridan foydalangan holda C11 standartidagi C tilida ishlab chiqilishi kerak.
 - Kutubxona kodi, jumladan sarlavha fayllari, meyk fayllar va kutubxonaning o'zi develop tarmog’idagi src papkasida joylashgan bo'lishi kerak.

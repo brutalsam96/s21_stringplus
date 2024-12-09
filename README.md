@@ -178,7 +178,7 @@ where:
 
 ## Part 1. Implementation of the string.h library functions
 
-It is necessary to implement the described [above](#stringh-functions) functions of the string.h library: 
+It is necessary to implement the described [above](#stringh-functions) functions of the string.h library, as well as the s21_size_t type and the S21_NULL macro: 
  - The library must be developed in C language of C11 standard using gcc compiler.
  - The library's code, including headers, makefile and library itself must be located in the src folder on the develop branch.
  - Do not use outdated and legacy language constructions and library functions. Pay attention to the legacy and obsolete marks in the official documentation on the language and the libraries used. Use the POSIX.1-2017 standard.
