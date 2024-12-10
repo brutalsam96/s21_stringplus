@@ -220,7 +220,7 @@ Qo'shimcha ballar uchun majburiy bo’lmagan topshiriq: stdio.h kutubxonasidan s
 Qo'shimcha ballar uchun majburiy bo’lmagan topshiriq: stdio.h kutubxonasidan sscanf funksiyasini amalga oshiring:
 - Funksiya s21_string.h kutubxonasiga joylashtirilishi kerak.
 - Funksiyani amalga oshirish birinchi qismda belgilangan barcha talablarga bo'ysunadi.
-- To'liq formatlash (jumladan, bayroqlar, kenglik, aniqlik, modifikatorlar va aylanish turlari) qo'llab-quvvatlanishi kerak.
+- To'liq formatlash (jumladan, bayroqlar, kenglik, modifikatorlar va aylanish turlari) qo'llab-quvvatlanishi kerak.
 
 ## Part 5. Дополнительно. Реализация специальных функций обработки строк
 

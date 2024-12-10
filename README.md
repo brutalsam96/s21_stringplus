@@ -226,7 +226,7 @@ Bonus assignment for extra points. You need to implement some format modifiers o
 Bonus assignment for extra points. You need to implement the sscanf function from the stdio.h library:
 - The function must be placed in the s21_string.h library.
 - All of the requirements outlined in [the first part](#part-1-implementation-of-the-stringh-library-functions) are applied to function implementation.
-- Full formatting (including flags, widths, precision, modifiers and conversion types) must be supported.
+- Full formatting (including flags, widths, modifiers and conversion types) must be supported.
 
 
 ## Part 5. Bonus. Implementation of special string processing functions
