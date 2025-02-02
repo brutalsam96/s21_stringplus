@@ -1,0 +1,12 @@
+In C there are multiple methods using which we can create a library
+    1. Static library
+    2. Dynamic library
+
+Static library is when we use it like this
+#inlcude "mylib.h"
+
+Dynamic library is when we add it at compiling time
+    gcc -c -fPIC mylib.c -o mylib.o
+
+
+
