@@ -136,10 +136,10 @@ char *s21_utoa(unsigned int value, char *buffer, int base, int IsUpper){
         value /= base;
     }
 
-    // base 10 negative sign
-    if (is_negative) {
-        buffer[i++] = '-';
-    }
+    // // base 10 negative sign
+    // if (is_negative) {
+    //     buffer[i++] = '-';
+    // }
 
     buffer[i] = '\0'; // null at the end
 
@@ -322,23 +322,49 @@ char *s21_etoa(double value, char *buffer, int precision) {
     buffer[i] = '\0';
     return buffer;
 }
-
-int round_to_sig_digits(long double *value, int *precision) {
-    
-    if (*value == 0.0L) return 0; // ==0
+int round_to_sig_digits(long double *value, int *precision, int IsComp) {
+    if (*value == 0.0L) return 0;
 
     int exponent = (int)floor(log10(fabsl(*value)));
-    // printf("%d\n", exponent);
-    if (exponent < 0 && ((int)fabs(exponent)) > *precision){
+    
+
+    if (IsComp) {
+        // %g: Round to 'precision' significant digits
+        long double scale = powl(10, *precision - 1 - exponent);
+        *value = roundl(*value * scale) / scale;
+        
+        // Recalculate exponent post-rounding
+        if (*value != 0.0L) {
+            exponent = (int)floor(log10(fabsl(*value)));
+            long double norm_scale = powl(10, exponent);
+            *value /= norm_scale;
+            
+            // Handle cases where rounding pushed value to 10.0 or 0.0999
+            if (*value >= 10.0L) {
+                *value /= 10.0L;
+                exponent++;
+            } else if (*value < 1.0L) {
+                *value *= 10.0L;
+                exponent--;
+            }
+        }
+    } else {
+        // %e: Normalize to [1.0, 10.0)
+        long double scale = powl(10, -exponent);
+        *value *= scale;
+        if (*value >= 10.0L) {
+            *value /= 10.0L;
+            exponent++;
+        }
+    }
+    // Adjust precision for numbers with leading zeros (e.g., 0.000123)
+    if (exponent < 0 && (int)fabs(exponent) > *precision) {
         *precision = (int)fabs(exponent);
-    } 
-    // if (exponent == 0) *precision = (int)fabs(exponent);
-    long double scale = powl(10, *precision - 1 - exponent);
-    // printf("%LF\n", scale);
-    *value = roundl(*value * scale) / scale; // removed roundl()
-    printf("%Lf\n", *value);
+    }
+
     return exponent;
 }
+
 
 
 void remove_trailing_zeroes(char *itc) {

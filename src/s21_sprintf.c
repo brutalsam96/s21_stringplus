@@ -8,15 +8,16 @@
 
 /*%
     ### [flags][width][.precision][length]specifier
+    %
 */
-int s21_sprintf(char *str, const char *format, ...) {
+int s21_sprintf(char *str, const char *format, ...) { // variadic
     int done;
     va_list args;
     va_start(args, format);
     done = proccess_string(str, format, &args);
     // printf("%d", done); // debug
     va_end(args); // for cleanup
-    return done;
+    return done; // TODO need to test if it is returning correct amount of proccesed values
 }
 
 int proccess_string(char *str, const char *format, va_list *args) {
@@ -56,7 +57,7 @@ int parse_flags(const char **current, int *flags){
     // printf("%c", *current);
     while (**current == '-' || **current == '+' || **current == ' ' || **current == '#' || **current == '0'){    
         switch (**current) {
-            case '-': *flags |= FLAG_LEFT; break;
+            case '-': *flags |= FLAG_LEFT; break; //bitwise OR
             case '+': *flags |= FLAG_SIGN; break;
             case ' ': *flags |= FLAG_SPACE; break; 
             case '#': *flags |= FLAG_ALT; break; // TODO need implementation
@@ -64,6 +65,8 @@ int parse_flags(const char **current, int *flags){
         }
         (*current)++;
     }
+
+
     if (*flags) {
         return 1; // flag found
     } else {
@@ -96,15 +99,6 @@ int parse_width(const char **current, int *width, va_list *args, int *flags){
 }
 
 
-/* //TODO\\ I guess i need to change default precision to 1 from -1, OR set defaults manually.
-For integer specifiers (d, i, o, u, x, X) — precision specifies the minimum number of digits to be written. 
-If the value to be written is shorter than this number, the result is padded with leading zeros. 
-The value is not truncated even if the result is longer. A precision of 0 means that no character is written for the value 0. 
-For e, E and f specifiers — this is the number of digits to be printed after the decimal point. 
-For g and G specifiers — This is the maximum number of significant digits to be printed. 
-For s — this is the maximum number of characters to be printed. By default all characters are printed until the ending null character is encountered. 
-For c type — it has no effect. When no precision is specified for specifiers e, E, f, g and G, the default one is 6. 
-When no precision is specified for all other kind of specifiers, the default is 1. If the period is specified without an explicit value for precision, 0 is assumed.*/
 int parse_precision(const char **current, int *precision, va_list *args){
     if (**current == '.') {
         (*current)++;
@@ -233,7 +227,7 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index, 
                     default:
                     value.db = va_arg(*args, double);
                 }
-            proccess_float(str, *current, args, &value, index, &flags, &width, &precision, length_modifiers, **current == 'F', 0);
+            proccess_float(str, *current, args, &value, index, &flags, &width, &precision, length_modifiers, **current == 'F');
             break;
         case 'E': case 'e':
             // logic to proccess scientific uppercase
@@ -244,7 +238,7 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index, 
                     default:
                     value.db = va_arg(*args, double);
                 }
-                proccess_scientific(str, *current, args, &value, index, &flags, &width, &precision, length_modifiers, **current == 'E', 0); // tricky operator comparision
+                proccess_scientific(str, *current, args, &value, index, &flags, &width, &precision, length_modifiers, **current == 'E'); // tricky operator comparision
             break;
         case 'g': case 'G':
             // logic to proccess scientific
@@ -255,7 +249,7 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index, 
                     default:
                     value.db = va_arg(*args, double);
                 }
-            proccess_compact(str, *current, args, &value, index, &flags, &width, &precision, length_modifiers, **current == 'G', 1);
+            proccess_compact(str, *current, args, &value, index, &flags, &width, &precision, length_modifiers, **current == 'G');
             break;
         case 's':
             // logic to proccess strings
@@ -410,7 +404,7 @@ int proccess_unsigned_int(char *str, const char *current, va_list *args, void *v
     return 0;
 }
 
-int proccess_float(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper, int IsComp){
+int proccess_float(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper){
     char itc[BUFSIZ];
     int len;
     long double val;
@@ -419,18 +413,10 @@ int proccess_float(char *str, const char *current, va_list *args, void *value, i
     
     if (length_modifier == 'L') {
         val = *(long double*)value;
-        if (*precision == 0) val = roundl(val);
-        if (IsComp) round_to_sig_digits(&val, precision);
         s21_lftoa(val, itc, *precision);
-        if(IsComp) remove_trailing_zeroes(itc);
     } else {
         val = *(double*)value;
-        if (*precision == 0) val = roundl(val);
-        if (IsComp) round_to_sig_digits(&val, precision);
-        // printf("%Lf\n", val);
         s21_ftoa(val, itc, *precision);
-        // printf("%s\n", itc);
-        if(IsComp) remove_trailing_zeroes(itc);
     }
     
     
@@ -465,7 +451,7 @@ int proccess_float(char *str, const char *current, va_list *args, void *value, i
         handle_width_padding(str, index, *width - (*flags & FLAG_SIGN ? len + 1: len), *flags);
     }
 
-    if (*precision > len && !IsComp) {
+    if (*precision > len) {
         handle_precision_padding(str, index, *precision, val);
     }
     
@@ -481,7 +467,7 @@ int proccess_float(char *str, const char *current, va_list *args, void *value, i
 
 
 
-int proccess_scientific(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper, int IsComp){
+int proccess_scientific(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper){
     
     char itc[BUFSIZ];
     int exponent = 0;
@@ -492,10 +478,11 @@ int proccess_scientific(char *str, const char *current, va_list *args, void *val
 
     if (length_modifier == 'L') {
         val = *(long double*)value;
+        // if (*precision == 0) val = roundl(val);
         
     } else {
         val = *(double*)value;
-        if (*precision == 0) val = roundl(val);
+        // if (*precision == 0) val = roundl(val);
     }
 
 
@@ -511,32 +498,11 @@ int proccess_scientific(char *str, const char *current, va_list *args, void *val
     }
 
     // TODO handle case 0.0L here
+    exponent = round_to_sig_digits (&val, precision, 0);
+    // TODO need else block to handle value == 0
 
-    if (IsComp) exponent = round_to_sig_digits(&val, precision);
-    // printf("%LF\n", val);
-    // printf("%Lf\n", val);
-    // printf("%d", *precision);
-    // printf("%d\n", exponent);
-    if (val != 0) {
-        while (fabsl(val) >= 10.0L) {
-            val /= 10;
-            IsComp?:exponent++;
-        }
-        while (fabsl(val) < 1.0L) {
-            val *= 10;
-            IsComp?:exponent++;
-        }
-    } // TODO need else block to handle value == 0
-    
-    // printf("%Lf\n", val);
-    
-    if (IsComp && !(exponent < -4 || exponent >= *precision)) 
-        return 1;
-    
-    // printf("%LF\n", val);
     s21_ftoa(fabsl(val), itc, *precision);
-    if(IsComp) remove_trailing_zeroes(itc);
-    // printf("%s\n", itc);
+
     len = strlen(itc);
     itc[len++] = IsUpper?'E':'e';
     itc[len++] = (exponent < 0) ? '-' : '+';
@@ -572,18 +538,87 @@ int proccess_scientific(char *str, const char *current, va_list *args, void *val
 
 }
 
-int proccess_compact(char *str, const char *current, va_list *args, void *value, 
-                    int *index, int *flags, int *width, int *precision, 
-                    char length_modifier, int IsUpper, int IsComp) {
-    int result = proccess_scientific(str, current, args, value, index, 
-                                   flags, width, precision, 
-                                   length_modifier, IsUpper, IsComp);
-    if (result) {
-        return proccess_float(str, current, args, value, index, 
-                            flags, width, precision, 
-                            length_modifier, IsUpper, IsComp);
+int proccess_compact(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper) {
+    char itc[BUFSIZ];
+    int exponent = 0;
+    int len;
+    long double val;
+
+
+    if (*precision == -1) *precision = 6;    // Default precision
+    else if (*precision == 0) *precision = 1; // %g with precision 0 → 1 sig digit
+
+    if (length_modifier == 'L') {
+        val = *(long double*)value;
+    } else {
+        val = *(double*)value;
     }
-    return result;  // Return the result of scientific processing
+
+    if (isinf(val)) {
+        strcpy(&str[*index], (val < 0) ? IsUpper?"-INF":"-inf" : IsUpper?"INF":"inf");
+        *index += (val < 0)? 4 : 3 ;
+        return 0;
+        }
+    if (isnan(val)) {
+        strcpy(&str[*index], IsUpper?"NAN":"nan");
+        *index += 3;
+        return 0;
+    }
+    long double e_val = val;
+    exponent = round_to_sig_digits(&e_val, precision, 1);
+    int sign = (e_val < 0) ? -1 : 1;
+    if (e_val == 0.0L) sign = 1; // Prevent negative zero
+
+    // Determine if scientific notation is needed
+    if ((exponent < -4 || exponent >= *precision)) {
+        // Format for scientific notation
+        s21_ftoa(fabsl(e_val), itc, *precision - 1); // Sig digs after decimal: precision-1
+        if (!(*flags & FLAG_ALT)) {
+            remove_trailing_zeroes(itc); // Remove insignificant zeros
+        }
+        len = strlen(itc);
+        itc[len++] = IsUpper ? 'E' : 'e';
+        itc[len++] = (exponent < 0) ? '-' : '+';
+        if (fabs(exponent) < 10) itc[len++] = '0'; // Leading zero for single-digit exponents
+        s21_itoa(fabs(exponent), &itc[len], 10);
+    } else {
+        // Fixed notation
+        int decimal_places = *precision - 1 - exponent;
+        if (decimal_places < 0) decimal_places = 0;
+        long double original_val = e_val * powl(10, exponent);
+        s21_ftoa(original_val, itc, decimal_places);
+        if (!(*flags & FLAG_ALT)) remove_trailing_zeroes(itc); // Remove trailing zeros unless # flag is set
+        
+    }
+
+
+
+    len = strlen(itc);
+
+    if (!(*flags & FLAG_LEFT) && !(*flags & FLAG_ZERO) && *width > len) {
+        handle_width_padding(str, index, *width - len, *flags);
+    }
+
+    if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0) {
+        handle_sign_space(str, index, (val >= 0 ? 1 : - 1), *flags);
+    }
+
+    if (!(*flags & FLAG_LEFT) && (*flags & FLAG_ZERO) && *width > len) {
+        handle_width_padding(str, index, *width - (*flags & FLAG_SIGN ? len + 1: len), *flags);
+    }
+
+    if (*precision > len) {
+        handle_precision_padding(str, index, *precision, val);
+    }
+
+    strcpy(&str[*index], itc);
+    *index += len;
+
+    if ((*flags & FLAG_LEFT) && *width > len) {
+        handle_width_padding(str, index, *width - len, *flags);
+    }
+
+    return 0;
 }
 
 int proccess_string_arg(char *str, const char *current, va_list *args, int *index, int *flags, int *width, int *precision, char length_modifier){
@@ -611,18 +646,21 @@ int proccess_char_counter(char *str, const char *current, va_list *args, int *in
 }
 
 int main () {
-    // const char *text = "this is %a %d %a % - %-";
     char buff[256];
     char buff2[256];
     int n = 55;
-    // s21_sprintf(buff, "ab %.1g cd", 1245.34898);
-    // sprintf(buff2, "ab %.1g cd", 1245.34898);
+    // s21_sprintf(buff, "ab %g cd", 12454645.0348);
+    // sprintf(buff2, "ab %g cd", 12454645.0348);
     // s21_sprintf(buff, "ab %.3g cd", 12345.67);
     // sprintf(buff2, "ab %.3g cd", 12345.67);
-    s21_sprintf(buff, "ab %.3g cd", 0.0042069);
-    sprintf(buff2, "ab %.3g cd", 0.0042069);
+    s21_sprintf(buff, "ab %.0g cd", 0.0042069);
+    sprintf(buff2, "ab %.0g cd", 0.0042069);
+    // s21_sprintf(buff, "ab %g cd", 1.435800);
+    // sprintf(buff2, "ab %g cd", 1.435800);
+    // s21_sprintf(buff, "ab %.e cd", -123.45);
+    // sprintf(buff2, "ab %.e cd", -123.45);
+
     printf("%s\n", buff);
     printf("%s\n", buff2);
     return 0;
 }
-// s21_sprintf(buff, "ab %g cd", 1.435800);

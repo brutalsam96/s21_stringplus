@@ -30,13 +30,13 @@ int proccess_signed_int(char *str, const char *current, va_list *args,void *valu
 int proccess_unsigned_int(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int base, int IsUpper);
 int proccess_float(char *str, const char *current, va_list *args, void *value,
                    int *index, int *flags, int *width, int *precision,
-                   char length_modifier, int IsUpper, int IsComp);
+                   char length_modifier, int IsUpper);
 
 int proccess_string_arg(char *str, const char *current, va_list *args, int *index, int *flags, int *width, int *precision, char length_modifier);
 int proccess_char(char *str, const char *current, va_list *args, int *index, int *flags, int *width, int *precision, char length_modifier);
 int proccess_char_counter(char *str, const char *current, va_list *args, int *index, int *flags, int *width, int *precision, char length_modifier);
-int proccess_scientific(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper, int IsComp);
-int proccess_compact(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper, int IsComp);
+int proccess_scientific(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper);
+int proccess_compact(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper);
 // HELPER
 void handle_width_padding(char *str, int *index, int width, int flags);
 
