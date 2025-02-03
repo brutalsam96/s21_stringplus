@@ -37,6 +37,7 @@ int proccess_char(char *str, const char *current, va_list *args, int *index, int
 int proccess_char_counter(char *str, const char *current, va_list *args, int *index, int *flags, int *width, int *precision, char length_modifier);
 int proccess_scientific(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper);
 int proccess_compact(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper);
+int proccess_pointer(char *str, const char *current, va_list *args, int *index, int *flags, int *width, int *precision, char length_modifier);
 // HELPER
 void handle_width_padding(char *str, int *index, int width, int flags);
 
@@ -44,6 +45,7 @@ void handle_precision_padding(char *str, int *index, int precision, int value);
 
 
 void handle_sign_space(char *str, int *index, int value, int flags);
+
 
 
 union signed_value {

@@ -16,4 +16,8 @@ char *s21_llutoa(unsigned long value, char *buffer, int base, int IsUpper);
 char *s21_etoa(double value, char *buffer, int precision);
 int round_to_sig_digits(long double *value, int *precision, int IsComp);
 void remove_trailing_zeroes(char *itc);
+
+
+typedef long long unsigned int s21_uintptr_t;
+
 #endif

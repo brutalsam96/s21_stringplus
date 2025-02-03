@@ -4,7 +4,9 @@
 #include <ctype.h>
 #include <math.h>
 
-//TODO NEED TO IMPLEMENT TYPE CHECKER FOR VARIADICS
+
+//TODO NEED TO IMPLEMENT TYPE CHECKER FOR VARIADICS, IT CRASHES BECAUSE OF THAT
+
 
 /*%
     ### [flags][width][.precision][length]specifier
@@ -261,6 +263,7 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index, 
             break;
         case 'p':
             // logic to process pointers
+            proccess_pointer(str, *current, args, index, &flags, &width, &precision, length_modifiers);
             break;
         case 'n':
             // write number of characters written so far
@@ -591,7 +594,7 @@ int proccess_compact(char *str, const char *current, va_list *args, void *value,
         
     }
 
-
+   
 
     len = strlen(itc);
 
@@ -645,16 +648,32 @@ int proccess_char_counter(char *str, const char *current, va_list *args, int *in
     return 0;
 }
 
+int proccess_pointer(char *str, const char *current, va_list *args, int *index, int *flags, int *width, int *precision, char length_modifier) {
+    char itc [BUFSIZ];
+    void *value = va_arg(*args, void*);
+    s21_uintptr_t addr = (s21_uintptr_t)value;
+    s21_llutoa(addr, itc, 16, 0);
+    strcpy(&str[*index], "0x");
+    *index += 2;
+    strcpy(&str[*index], itc);
+    *index += strlen(itc);
+    return 0;
+}
+
 int main () {
     char buff[256];
     char buff2[256];
     int n = 55;
+    void *p = &n;
     // s21_sprintf(buff, "ab %g cd", 12454645.0348);
     // sprintf(buff2, "ab %g cd", 12454645.0348);
     // s21_sprintf(buff, "ab %.3g cd", 12345.67);
     // sprintf(buff2, "ab %.3g cd", 12345.67);
-    s21_sprintf(buff, "ab %.0g cd", 0.0042069);
-    sprintf(buff2, "ab %.0g cd", 0.0042069);
+
+    s21_sprintf(buff, "ab %p cd", p);
+    sprintf(buff2, "ab %p cd", p);
+
+    // sprintf(buff2, "ab %.0g cd", 0.0042069);
     // s21_sprintf(buff, "ab %g cd", 1.435800);
     // sprintf(buff2, "ab %g cd", 1.435800);
     // s21_sprintf(buff, "ab %.e cd", -123.45);

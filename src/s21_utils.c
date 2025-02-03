@@ -67,7 +67,7 @@ char *s21_lltoa(long value, char *buffer, int base){
         return buffer;
     }
 
-    int i = 0;
+    int i = strlen(buffer);
     int is_negative = 0;
 
     // Handle LONG_MIN specially
@@ -96,9 +96,9 @@ char *s21_lltoa(long value, char *buffer, int base){
     }
 
     // base 10 negative sign
-    if (is_negative) {
-        buffer[i++] = '-';
-    }
+    // if (is_negative) {
+    //     buffer[i++] = '-';
+    // }
 
     buffer[i] = '\0'; // null at the end
 
@@ -177,10 +177,10 @@ char *s21_llutoa(unsigned long value, char *buffer, int base, int IsUpper){
         value /= base;
     }
 
-    // base 10 negative sign
-    if (is_negative) {
-        buffer[i++] = '-';
-    }
+    // // base 10 negative sign
+    // if (is_negative) {
+    //     buffer[i++] = '-';
+    // }
 
     buffer[i] = '\0'; // null at the end
 
@@ -365,8 +365,6 @@ int round_to_sig_digits(long double *value, int *precision, int IsComp) {
     return exponent;
 }
 
-
-
 void remove_trailing_zeroes(char *itc) {
     int i_len = strlen(itc) - 1;
     while (i_len >= 0 && itc[i_len] == '0') {
@@ -375,4 +373,3 @@ void remove_trailing_zeroes(char *itc) {
     }
     if (i_len >= 0 && itc[i_len] == '.') itc[i_len] = '\0';
 }
-
