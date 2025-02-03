@@ -66,8 +66,8 @@ char *s21_lltoa(long value, char *buffer, int base){
         *buffer = '\0';
         return buffer;
     }
-
-    int i = strlen(buffer);
+    
+    int i = 0;
     int is_negative = 0;
 
     // Handle LONG_MIN specially
@@ -191,9 +191,10 @@ char *s21_llutoa(unsigned long value, char *buffer, int base, int IsUpper){
 }
 
 char *s21_ftoa(double value, char *buffer, int precision) {
-    char temp[30];
+    char temp[50];
     double integral;
     double fractional = modf(value, &integral);
+    // printf("%.12f\n", fractional);
 
     if (value < 0) {
         integral = -integral;
@@ -246,7 +247,7 @@ char *s21_lftoa(long double value, char *buffer, int precision) {
     s21_itoa((int)integral, temp, 10);
     strcat(buffer, temp);
     
-    int i = strlen(buffer);
+    int i = strlen(buffer); // TODO NEED TO CHECK THIS MIGHT BUG OUT
     
 
     if (precision > 0) {
@@ -322,48 +323,92 @@ char *s21_etoa(double value, char *buffer, int precision) {
     buffer[i] = '\0';
     return buffer;
 }
-int round_to_sig_digits(long double *value, int *precision, int IsComp) {
-    if (*value == 0.0L) return 0;
+// int round_to_sig_digits(long double *value, int *precision, int IsComp) {
+//     if (*value == 0.0L) return 0;
 
-    int exponent = (int)floor(log10(fabsl(*value)));
+//     int exponent = (int)floor(log10(fabsl(*value)));
     
+
+//     if (IsComp) {
+//         // %g: Round to 'precision' significant digits
+//         long double scale = powl(10, *precision - 1 - exponent);
+//         *value = roundl(*value * scale) / scale;
+        
+//         // Recalculate exponent post-rounding
+//         if (*value != 0.0L) {
+//             exponent = (int)floor(log10(fabsl(*value)));
+//             long double norm_scale = powl(10, exponent);
+//             *value /= norm_scale;
+            
+//             // Handle cases where rounding pushed value to 10.0 or 0.0999
+//             if (*value >= 10.0L) {
+//                 *value /= 10.0L;
+//                 exponent++;
+//             } else if (*value < 1.0L) {
+//                 *value *= 10.0L;
+//                 exponent--;
+//             }
+//         }
+//     } else {
+//         // %e: Normalize to [1.0, 10.0)
+//         long double scale = powl(10, -exponent);
+//         *value *= scale;
+//         if (*value >= 10.0L) {
+//             *value /= 10.0L;
+//             exponent++;
+//         }
+//         roundl(*value);
+//     }
+//     // Adjust precision for numbers with leading zeros (e.g., 0.000123)
+//     if (exponent < 0 && (int)fabs(exponent) > *precision) {
+//         *precision = (int)fabs(exponent);
+//     }
+
+//     return exponent;
+// }
+
+int round_to_sig_digits(double *value, int *precision, int IsComp) {
+    if (*value == 0.0) return 0;
+
+    int exponent = (int)floor(log10(fabs(*value)));
 
     if (IsComp) {
         // %g: Round to 'precision' significant digits
-        long double scale = powl(10, *precision - 1 - exponent);
-        *value = roundl(*value * scale) / scale;
+        double scale = pow(10, *precision - 1 - exponent);
+        *value = round(*value * scale) / scale;
         
         // Recalculate exponent post-rounding
-        if (*value != 0.0L) {
-            exponent = (int)floor(log10(fabsl(*value)));
-            long double norm_scale = powl(10, exponent);
+        if (*value != 0.0) {
+            exponent = (int)floor(log10(fabs(*value)));
+            double norm_scale = pow(10, exponent);
             *value /= norm_scale;
             
             // Handle cases where rounding pushed value to 10.0 or 0.0999
-            if (*value >= 10.0L) {
-                *value /= 10.0L;
+            if (*value >= 10.0) {
+                *value /= 10.0;
                 exponent++;
-            } else if (*value < 1.0L) {
-                *value *= 10.0L;
+            } else if (*value < 1.0) {
+                *value *= 10.0;
                 exponent--;
             }
         }
     } else {
         // %e: Normalize to [1.0, 10.0)
-        long double scale = powl(10, -exponent);
+        double scale = pow(10, -exponent);
         *value *= scale;
-        if (*value >= 10.0L) {
-            *value /= 10.0L;
+        if (*value >= 10.0) {
+            *value /= 10.0;
             exponent++;
         }
     }
-    // Adjust precision for numbers with leading zeros (e.g., 0.000123)
+    
+    // Adjust precision for numbers with leading zeros
     if (exponent < 0 && (int)fabs(exponent) > *precision) {
         *precision = (int)fabs(exponent);
     }
-
     return exponent;
 }
+
 
 void remove_trailing_zeroes(char *itc) {
     int i_len = strlen(itc) - 1;
