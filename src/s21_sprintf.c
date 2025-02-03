@@ -218,7 +218,7 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index, 
                     default:
                     u_value.i = va_arg(*args, unsigned int);
                 }
-                proccess_unsigned_int(str, *current, args, &value, index, &flags, &width, &precision, length_modifiers, base, **current == 'X');
+                proccess_unsigned_int(str, *current, args, &u_value, index, &flags, &width, &precision, length_modifiers, base, **current == 'X');
             break;
         case 'F': case 'f':
             // logic to proccess scientific
@@ -364,23 +364,23 @@ int proccess_signed_int(char *str, const char *current, va_list *args, void *val
 }
 
 
-int proccess_unsigned_int(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int base, int IsUpper){
+int proccess_unsigned_int(char *str, const char *current, va_list *args, void *u_value, int *index, int *flags, int *width, int *precision, char length_modifier, int base, int IsUpper){
     unsigned int val = 0;
     unsigned long long long_val = 0;
     char itc[BUFSIZ];
     int len;
 
-    if (length_modifier == 'h') {
+    if (length_modifier == 'h') { // TODO GOTTA CHECK ALL LENGTH MODIFIERS
         // shorts and ints can use regular s21_itoa
-        val = *(unsigned short*)value;
-        s21_utoa(val, itc, 10, IsUpper);
+        val = *(unsigned short*)u_value;
+        s21_utoa(val, itc, base, IsUpper);
     } else if (length_modifier == 'l') {
         // long and long long use s21_ltoa
-        long_val = *(unsigned long*)value;
-        s21_llutoa(long_val, itc, 10, IsUpper);
+        long_val = *(unsigned long*)u_value;
+        s21_llutoa(long_val, itc, base, IsUpper);
     } else {
-        val = *(unsigned int*)value;
-        s21_utoa(val, itc, 10, IsUpper);
+        val = *(unsigned int*)u_value;
+        s21_utoa(val, itc, base, IsUpper);
     }
 
     len = strlen(itc);
@@ -420,11 +420,7 @@ int proccess_float(char *str, const char *current, va_list *args, void *value, i
     } else {
         val = *(double*)value;
         s21_ftoa(val, itc, *precision);
-    }
-    
-    
-    
-
+    } 
 
     if (isinf(val)) {
         strcpy(&str[*index], (val < 0) ? IsUpper?"-INF":"-inf" : IsUpper?"INF":"inf");
@@ -670,8 +666,11 @@ int main () {
     // s21_sprintf(buff, "ab %.3g cd", 12345.67);
     // sprintf(buff2, "ab %.3g cd", 12345.67);
 
-    s21_sprintf(buff, "ab %p cd", p);
-    sprintf(buff2, "ab %p cd", p);
+    // s21_sprintf(buff, "ab %p cd", p);
+    // sprintf(buff2, "ab %p cd", p);
+
+    s21_sprintf(buff, "ab %x cd", 351351351);
+    sprintf(buff2, "ab %x cd", 351351351);
 
     // sprintf(buff2, "ab %.0g cd", 0.0042069);
     // s21_sprintf(buff, "ab %g cd", 1.435800);

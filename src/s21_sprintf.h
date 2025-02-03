@@ -27,7 +27,7 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index,
 
 // Proccess TODO GOTTA FIX VALUE types
 int proccess_signed_int(char *str, const char *current, va_list *args,void *value, int *index, int *flags, int *width, int *precision, char length_modifier);
-int proccess_unsigned_int(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int base, int IsUpper);
+int proccess_unsigned_int(char *str, const char *current, va_list *args, void *u_value, int *index, int *flags, int *width, int *precision, char length_modifier, int base, int IsUpper);
 int proccess_float(char *str, const char *current, va_list *args, void *value,
                    int *index, int *flags, int *width, int *precision,
                    char length_modifier, int IsUpper);

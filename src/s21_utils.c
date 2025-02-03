@@ -96,9 +96,9 @@ char *s21_lltoa(long value, char *buffer, int base){
     }
 
     // base 10 negative sign
-    // if (is_negative) {
-    //     buffer[i++] = '-';
-    // }
+    if (is_negative) {
+        buffer[i++] = '-';
+    }
 
     buffer[i] = '\0'; // null at the end
 
