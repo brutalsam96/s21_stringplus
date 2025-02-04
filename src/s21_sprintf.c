@@ -327,6 +327,7 @@ void handle_width_padding(char *str, int *index, int width, int flags) {
       str[(*index)++] = ' ';
     }
   } else {
+    if (flags * FLAG_SIGN) width--;
     for (int i = 0; i < width; i++) {
       str[(*index)++] = ' ';
     }
@@ -574,6 +575,9 @@ int proccess_scientific(char *str, void *value, int *index, int *flags,
   s21_ftoa(fabs(val), itc, *precision);
 
   len = strlen(itc);
+  if (*flags & FLAG_ALT && *precision == 0) {
+    itc[len++] = '.';
+  }
   itc[len++] = IsUpper ? 'E' : 'e';
   itc[len++] = (exponent < 0) ? '-' : '+';
   if (fabs((double)exponent) < 10.0L)
@@ -749,7 +753,7 @@ int main() {
   char buff4[256];
   char buff5[256];
   char buff6[256];
-  // s21_sprintf(buff, "ab %g cd", 12454645.0348);
+  s21_sprintf(buff, "ab %g cd", 123.0);
   // sprintf(buff2, "ab %g cd", 12454645.0348);
   // s21_sprintf(buff, "ab %.3g cd", 12345.67);
   // sprintf(buff2, "ab %.3g cd", 12345.67);
@@ -766,7 +770,7 @@ int main() {
   // s21_sprintf(buff, "ab %.e cd", -123.45);
   // sprintf(buff2, "ab %.e cd", -123.45);
 
-
+/* %O ALT TESTS CHECK */
 //   s21_sprintf(buff, "%#o", 8);
 //   s21_sprintf(buff2, "%#o", 0);
 //   s21_sprintf(buff3, "%- #6o", 8);
@@ -795,35 +799,127 @@ int main() {
 //   printf("%s\n", buff5);
 //   printf("%s\n", buff6);
 
+/* %X ALT TESTS CHECK */
+//   s21_sprintf(buff,  "%#x", 	    255);
+//   s21_sprintf(buff2, "%#X", 	    255);
+//   s21_sprintf(buff3, "%#6x",    	15);
+//   s21_sprintf(buff4, "%- #8X",  	15);
+//   s21_sprintf(buff5, "%#08x",   	15);
+//   s21_sprintf(buff6, "%#.4x",   	15);
 
-  s21_sprintf(buff,  "%#x", 	    255);
-  s21_sprintf(buff2, "%#X", 	    255);
-  s21_sprintf(buff3, "%#6x",    	15);
-  s21_sprintf(buff4, "%- #8X",  	15);
-  s21_sprintf(buff5, "%#08x",   	15);
-  s21_sprintf(buff6, "%#.4x",   	15);
+//   printf("%s\n", buff);
+//   printf("%s\n", buff2);
+//   printf("%s\n", buff3);
+//   printf("%s\n", buff4);
+//   printf("%s\n", buff5);
+//   printf("%s\n", buff6);
+//   printf("----------------\n");
+
+//   sprintf(buff,  "%#x", 	    255);
+//   sprintf(buff2, "%#X", 	    255);
+//   sprintf(buff3, "%#6x",    	15);
+//   sprintf(buff4, "%- #8X",  	15);
+//   sprintf(buff5, "%#08x",   	15);
+//   sprintf(buff6, "%#.4x",   	15);
+
+//   printf("%s\n", buff);
+//   printf("%s\n", buff2);
+//   printf("%s\n", buff3);
+//   printf("%s\n", buff4);
+//   printf("%s\n", buff5);
+//   printf("%s\n", buff6);
+
+/* %F ALT TESTS CHECK */
+//   s21_sprintf(buff,  "%#.0f"	, 3.0	);
+//   s21_sprintf(buff2, "%#.2f"	, 3	    );
+//   s21_sprintf(buff3, "%+#.0f"	, 3.0	);
+//   s21_sprintf(buff4, "% -#10.2f", 3.5	);
+//   s21_sprintf(buff5, "%0#10.2f"	, 3.5	);
+//   s21_sprintf(buff6, "%#.0f"	, 0.0	);
+
+//   printf("%s\n", buff);
+//   printf("%s\n", buff2);
+//   printf("%s\n", buff3);
+//   printf("%s\n", buff4);
+//   printf("%s\n", buff5);
+//   printf("%s\n", buff6);
+//   printf("----------------\n");
+
+//   sprintf(buff,  "%#.0f"	, 3.0	);
+//   sprintf(buff2, "%#.2f"	, 3	    );
+//   sprintf(buff3, "%+#.0f"	, 3.0	);
+//   sprintf(buff4, "% -#10.2f", 3.5	);
+//   sprintf(buff5, "%0#10.2f"	, 3.5	);
+//   sprintf(buff6, "%#.0f"	, 0.0	);
+
+//   printf("%s\n", buff);
+//   printf("%s\n", buff2);
+//   printf("%s\n", buff3);
+//   printf("%s\n", buff4);
+//   printf("%s\n", buff5);
+//   printf("%s\n", buff6);
+
+/* %E ALT TEST CHECK */
+
+//   s21_sprintf(buff,  "%#.0e"	, 3000.0	);
+//   s21_sprintf(buff2, "%#.3e"	, 100.0    );
+//   s21_sprintf(buff3, "%+#10.2e"	, 123.456	);
+//   s21_sprintf(buff4, "%- #.4e"	, 123.456	);
+//   s21_sprintf(buff5, "%0#12.3e"	, 7.89	);
+
+
+//   printf("%s\n", buff);
+//   printf("%s\n", buff2);
+//   printf("%s\n", buff3);
+//   printf("%s\n", buff4);
+//   printf("%s\n", buff5);
+
+//   printf("----------------\n");
+
+//   sprintf(buff,  "%#.0e"	, 3000.0	);
+//   sprintf(buff2, "%#.3e"	, 100.0    );
+//   sprintf(buff3, "%+#10.2e"	, 123.456	);
+//   sprintf(buff4, "%- #.4e"	, 123.456	);
+//   sprintf(buff5, "%0#12.3e"	, 7.89	);
+
+
+//   printf("%s\n", buff);
+//   printf("%s\n", buff2);
+//   printf("%s\n", buff3);
+//   printf("%s\n", buff4);
+//   printf("%s\n", buff5);
+
+  /* %G ALT TEST CHECK */
+
+//   s21_sprintf(buff,  "%#g"	    ,3.0	);
+//   s21_sprintf(buff2, "%#g"	    ,123.0);
+//   s21_sprintf(buff3, "%#.3g"	,12345);
+//   s21_sprintf(buff4, "%#.5g"	,123.456);
+//   s21_sprintf(buff5, "%+#.0g"	,5.0);
+//   s21_sprintf(buff6, "%#.4g"	,0.00123);
+
+//   printf("%s\n", buff);
+//   printf("%s\n", buff2);
+//   printf("%s\n", buff3);
+//   printf("%s\n", buff4);
+//   printf("%s\n", buff5);
+//   printf("%s\n", buff6);
+//   printf("----------------\n");
+
+//   sprintf(buff,  "%#g"	    ,3.0	);
+//   sprintf(buff2, "%#g"	    ,123.0);
+//   sprintf(buff3, "%#.3g"	,12345);
+//   sprintf(buff4, "%#.5g"	,123.456);
+//   sprintf(buff5, "%+#.0g"	,5.0);
+//   sprintf(buff6, "%#.4g"	,0.00123);
 
   printf("%s\n", buff);
-  printf("%s\n", buff2);
-  printf("%s\n", buff3);
-  printf("%s\n", buff4);
-  printf("%s\n", buff5);
-  printf("%s\n", buff6);
-  printf("----------------\n");
+//   printf("%s\n", buff2);
+//   printf("%s\n", buff3);
+//   printf("%s\n", buff4);
+//   printf("%s\n", buff5);
+//   printf("%s\n", buff6);
 
-  sprintf(buff,  "%#x", 	    255);
-  sprintf(buff2, "%#X", 	    255);
-  sprintf(buff3, "%#6x",    	15);
-  sprintf(buff4, "%- #8X",  	15);
-  sprintf(buff5, "%#08x",   	15);
-  sprintf(buff6, "%#.4x",   	15);
-
-  printf("%s\n", buff);
-  printf("%s\n", buff2);
-  printf("%s\n", buff3);
-  printf("%s\n", buff4);
-  printf("%s\n", buff5);
-  printf("%s\n", buff6);
   return 0;
 }
 
