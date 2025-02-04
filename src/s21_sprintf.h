@@ -29,7 +29,7 @@ int proccess_signed_int(char *str, void *value, int *index, int *flags,
 
 int proccess_unsigned_int(char *str, void *u_value, int *index, int *flags,
                           int *width, int *precision, char length_modifier,
-                          int base, int IsUpper);
+                          int base, int IsUpper, int isX);
 
 int proccess_float(char *str, void *value, int *index, int *flags, int *width,
                    int *precision, char length_modifier, int IsUpper);
@@ -51,6 +51,8 @@ int proccess_pointer(char *str, va_list *args, int *index);
 void handle_width_padding(char *str, int *index, int width, int flags);
 
 void handle_precision_padding(char *str, int *index, int precision, int value);
+
+void handle_precision_pad_str(char *str, int *index, int precision, int len);
 
 void handle_sign_space(char *str, int *index, int value, int flags);
 
