@@ -79,6 +79,7 @@ char *s21_strncat(char *dest, const char *src, s21_size_t n) {
     }
 
     dest[dest_len + i] = '\0';
+    return dest;
 }
 
 char *s21_strchr(const char *str, int c) {

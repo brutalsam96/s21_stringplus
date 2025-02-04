@@ -1,2 +1,2 @@
 all:
-    gcc s21_sprint.c string_functions.c
+    gcc -Wall -Werror -Wextra -std=c11 s21_sprint.c string_functions.c -lm

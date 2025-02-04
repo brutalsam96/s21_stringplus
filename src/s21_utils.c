@@ -20,7 +20,7 @@ char *s21_itoa(int value, char *buffer, int base){
     }
 
     int i = 0;
-    int is_negative = 0;
+    // int is_negative = 0; unused
 
     // Handle 0 value
     if (value == 0) {
@@ -35,9 +35,8 @@ char *s21_itoa(int value, char *buffer, int base){
         return buffer;
     }
 
-    // negative numbers
-    if (value < 0 && base == 10) {
-        is_negative = 1;
+    // // negative numbers
+    if (value < 0 && base == 10) { // turn negative numbers to positive since they are handled
         value = -value;
     }
 
@@ -68,7 +67,7 @@ char *s21_lltoa(long value, char *buffer, int base){
     }
     
     int i = 0;
-    int is_negative = 0;
+    // int is_negative = 0;
 
     // Handle LONG_MIN specially
     // TODO should i also check for LONG MAX ???
@@ -83,8 +82,7 @@ char *s21_lltoa(long value, char *buffer, int base){
         return buffer;
     }
     // negative numbers
-    if (value < 0 && base == 10) {
-        is_negative = 1;
+    if (value < 0 && base == 10) { // turn negative numbers to positive since they are handled
         value = -value;
     }
 
@@ -95,10 +93,10 @@ char *s21_lltoa(long value, char *buffer, int base){
         value /= base;
     }
 
-    // base 10 negative sign
-    if (is_negative) {
-        buffer[i++] = '-';
-    }
+    // // base 10 negative sign
+    // if (is_negative) {
+    //     buffer[i++] = '-';
+    // }
 
     buffer[i] = '\0'; // null at the end
 
@@ -115,18 +113,12 @@ char *s21_utoa(unsigned int value, char *buffer, int base, int IsUpper){
     }
 
     int i = 0;
-    int is_negative = 0;
 
     // Handle 0 value
     if (value == 0) {
         buffer[i++] = '0';
         buffer[i] = '\0';
         return buffer;
-    }
-    // negative numbers
-    if (value < 0 && base == 10) {
-        is_negative = 1;
-        value = -value;
     }
 
     // Convert number to the given base
@@ -135,11 +127,6 @@ char *s21_utoa(unsigned int value, char *buffer, int base, int IsUpper){
         buffer[i++] = (remainder > 9) ? (remainder - 10) + (IsUpper? 'A' : 'a') : remainder + '0';
         value /= base;
     }
-
-    // // base 10 negative sign
-    // if (is_negative) {
-    //     buffer[i++] = '-';
-    // }
 
     buffer[i] = '\0'; // null at the end
 
@@ -156,18 +143,12 @@ char *s21_llutoa(unsigned long value, char *buffer, int base, int IsUpper){
     }
 
     int i = 0;
-    int is_negative = 0;
 
     // Handle 0 value
     if (value == 0) {
         buffer[i++] = '0';
         buffer[i] = '\0';
         return buffer;
-    }
-    // negative numbers
-    if (value < 0 && base == 10) {
-        is_negative = 1;
-        value = -value;
     }
 
     // Convert number to the given base
@@ -176,11 +157,6 @@ char *s21_llutoa(unsigned long value, char *buffer, int base, int IsUpper){
         buffer[i++] = (remainder > 9) ? (remainder - 10) + (IsUpper? 'A' : 'a') : remainder + '0';
         value /= base;
     }
-
-    // // base 10 negative sign
-    // if (is_negative) {
-    //     buffer[i++] = '-';
-    // }
 
     buffer[i] = '\0'; // null at the end
 
@@ -235,8 +211,6 @@ char *s21_lftoa(long double value, char *buffer, int precision) {
     long double integral;
     long double fractional = modfl(value, &integral);
     
-
-
     if (value < 0) {
         integral = -integral;
         fractional = -fractional;
@@ -280,6 +254,12 @@ test cases:
 char *s21_etoa(double value, char *buffer, int precision) {
     char temp[100]; // temporary buffer to hold the integer part
     int e_width = 0;
+    if (value < 0) {
+        value = -value;
+    } else {
+        buffer[0] = '\0';
+    }
+
     if (value < 1.0) {
         while (value < 1.0){
             value *= 10;
@@ -323,49 +303,6 @@ char *s21_etoa(double value, char *buffer, int precision) {
     buffer[i] = '\0';
     return buffer;
 }
-// int round_to_sig_digits(long double *value, int *precision, int IsComp) {
-//     if (*value == 0.0L) return 0;
-
-//     int exponent = (int)floor(log10(fabsl(*value)));
-    
-
-//     if (IsComp) {
-//         // %g: Round to 'precision' significant digits
-//         long double scale = powl(10, *precision - 1 - exponent);
-//         *value = roundl(*value * scale) / scale;
-        
-//         // Recalculate exponent post-rounding
-//         if (*value != 0.0L) {
-//             exponent = (int)floor(log10(fabsl(*value)));
-//             long double norm_scale = powl(10, exponent);
-//             *value /= norm_scale;
-            
-//             // Handle cases where rounding pushed value to 10.0 or 0.0999
-//             if (*value >= 10.0L) {
-//                 *value /= 10.0L;
-//                 exponent++;
-//             } else if (*value < 1.0L) {
-//                 *value *= 10.0L;
-//                 exponent--;
-//             }
-//         }
-//     } else {
-//         // %e: Normalize to [1.0, 10.0)
-//         long double scale = powl(10, -exponent);
-//         *value *= scale;
-//         if (*value >= 10.0L) {
-//             *value /= 10.0L;
-//             exponent++;
-//         }
-//         roundl(*value);
-//     }
-//     // Adjust precision for numbers with leading zeros (e.g., 0.000123)
-//     if (exponent < 0 && (int)fabs(exponent) > *precision) {
-//         *precision = (int)fabs(exponent);
-//     }
-
-//     return exponent;
-// }
 
 int round_to_sig_digits(double *value, int *precision, int IsComp) {
     if (*value == 0.0) return 0;
@@ -403,8 +340,8 @@ int round_to_sig_digits(double *value, int *precision, int IsComp) {
     }
     
     // Adjust precision for numbers with leading zeros
-    if (exponent < 0 && (int)fabs(exponent) > *precision) {
-        *precision = (int)fabs(exponent);
+    if (exponent < 0 && (int)fabs((double)exponent) > *precision) { // again might be trouble with casting int to double for fabs
+        *precision = (int)fabs((double)exponent);
     }
     return exponent;
 }

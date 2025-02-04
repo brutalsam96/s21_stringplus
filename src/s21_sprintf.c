@@ -152,11 +152,10 @@ int parse_length_modifiers(const char **current, char *length_modifier){
 }
 
 // can use ternary on uppercases to reduce function size if needed
-int parse_type_spec(const char **current, char *str, va_list *args, int *index, int flags, int precision, int width, char length_modifiers) {
+void parse_type_spec(const char **current, char *str, va_list *args, int *index, int flags, int precision, int width, char length_modifiers) {
     union signed_value value = {0};
     union unsigned_value u_value = {0};
     int base = 10;
-    double f_value;
     switch (**current)
     {
         case 'd': case 'i':
@@ -172,7 +171,7 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index, 
                 value.i = va_arg(*args, int);
             }
             
-            proccess_signed_int(str, *current, args, &value, index, &flags, &width, &precision, length_modifiers);
+            proccess_signed_int(str, &value, index, &flags, &width, &precision, length_modifiers);
             break;
 
         case 'u':
@@ -188,7 +187,7 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index, 
                     default:
                     u_value.i = va_arg(*args, unsigned int);
                 }
-                proccess_unsigned_int(str, *current, args, &u_value, index, &flags, &width, &precision, length_modifiers, base, 0);
+                proccess_unsigned_int(str, &u_value, index, &flags, &width, &precision, length_modifiers, base, 0);
             break;
         case 'o':
             // logic to proccess unsigned integers in base 8
@@ -207,7 +206,7 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index, 
                     str[*index]= '0';
                     *index += 1;
                 } 
-                proccess_unsigned_int(str, *current, args, &u_value, index, &flags, &width, &precision, length_modifiers, base, 0);
+                proccess_unsigned_int(str, &u_value, index, &flags, &width, &precision, length_modifiers, base, 0);
             break;
         case 'X': case 'x':
             // logic to proccess unsigned integers in base 16, lowercase
@@ -227,7 +226,7 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index, 
                     str[*index + 1]= (**current == 'X' ? 'X' : 'x');
                     *index += 2;
                 } 
-                proccess_unsigned_int(str, *current, args, &u_value, index, &flags, &width, &precision, length_modifiers, base, **current == 'X');
+                proccess_unsigned_int(str, &u_value, index, &flags, &width, &precision, length_modifiers, base, **current == 'X');
             break;
         case 'F': case 'f':
             // logic to proccess scientific
@@ -238,7 +237,7 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index, 
                     default:
                     value.db = va_arg(*args, double);
                 }
-            proccess_float(str, *current, args, &value, index, &flags, &width, &precision, length_modifiers, **current == 'F');
+            proccess_float(str, &value, index, &flags, &width, &precision, length_modifiers, **current == 'F');
             break;
         case 'E': case 'e':
             // logic to proccess scientific uppercase
@@ -249,7 +248,7 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index, 
                     default:
                     value.db = va_arg(*args, double);
                 }
-                proccess_scientific(str, *current, args, &value, index, &flags, &width, &precision, length_modifiers, **current == 'E'); // tricky operator comparision
+                proccess_scientific(str, &value, index, &flags, &width, &precision, length_modifiers, **current == 'E'); // tricky operator comparision
             break;
         case 'g': case 'G':
             // logic to proccess scientific
@@ -260,23 +259,23 @@ int parse_type_spec(const char **current, char *str, va_list *args, int *index, 
                     default:
                     value.db = va_arg(*args, double);
                 }
-            proccess_compact(str, *current, args, &value, index, &flags, &width, &precision, length_modifiers, **current == 'G');
+            proccess_compact(str, &value, index, &flags, &width, &precision, length_modifiers, **current == 'G');
             break;
         case 's':
             // logic to proccess strings
-            proccess_string_arg(str, *current, args, index, &flags, &width, &precision, length_modifiers);
+            proccess_string_arg(str, args, index);
             break;
         case 'c':
             // logic to proccess chars
-            proccess_char(str, *current, args, index, &flags, &width, &precision, length_modifiers);
+            proccess_char(str, args, index);
             break;
         case 'p':
             // logic to process pointers
-            proccess_pointer(str, *current, args, index, &flags, &width, &precision, length_modifiers);
+            proccess_pointer(str, args, index);
             break;
         case 'n':
             // write number of characters written so far
-            proccess_char_counter(str,*current, args, index, &flags, &width, &precision, length_modifiers);
+            proccess_char_counter(str,args, index);
             break;
         case '%':
             // put '%'
@@ -331,7 +330,7 @@ void handle_sign_space(char *str, int *index, int value, int flags) {
     }
 }
 
-int proccess_signed_int(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier) {
+int proccess_signed_int(char *str, void *value, int *index, int *flags, int *width, int *precision, char length_modifier) {
     
     int val = 0;
     long long long_val = 0;
@@ -379,7 +378,7 @@ int proccess_signed_int(char *str, const char *current, va_list *args, void *val
 }
 
 
-int proccess_unsigned_int(char *str, const char *current, va_list *args, void *u_value, int *index, int *flags, int *width, int *precision, char length_modifier, int base, int IsUpper){
+int proccess_unsigned_int(char *str, void *u_value, int *index, int *flags, int *width, int *precision, char length_modifier, int base, int IsUpper){
     unsigned int val = 0;
     unsigned long long long_val = 0;
     char itc[BUFSIZ];
@@ -422,7 +421,7 @@ int proccess_unsigned_int(char *str, const char *current, va_list *args, void *u
     return 0;
 }
 
-int proccess_float(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper){
+int proccess_float(char *str, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper){
     char itc[BUFSIZ];
     int len;
     long double val;
@@ -481,7 +480,7 @@ int proccess_float(char *str, const char *current, va_list *args, void *value, i
 
 
 
-int proccess_scientific(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper){
+int proccess_scientific(char *str, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper){
     
     char itc[BUFSIZ];
     int exponent = 0;
@@ -520,8 +519,8 @@ int proccess_scientific(char *str, const char *current, va_list *args, void *val
     len = strlen(itc);
     itc[len++] = IsUpper?'E':'e';
     itc[len++] = (exponent < 0) ? '-' : '+';
-    if (fabs(exponent) < 10.0L) itc[len++] = '0';
-    s21_itoa(fabs(exponent), &itc[len], 10);
+    if (fabs((double)exponent) < 10.0L) itc[len++] = '0'; // added cast to double might break the programm need to test
+    s21_itoa(fabs((double)exponent), &itc[len], 10);
 
     len = strlen(itc);
 
@@ -552,7 +551,7 @@ int proccess_scientific(char *str, const char *current, va_list *args, void *val
 
 }
 
-int proccess_compact(char *str, const char *current, va_list *args, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper) {
+int proccess_compact(char *str, void *value, int *index, int *flags, int *width, int *precision, char length_modifier, int IsUpper) {
     char itc[BUFSIZ];
     int exponent = 0;
     int len;
@@ -580,9 +579,10 @@ int proccess_compact(char *str, const char *current, va_list *args, void *value,
     }
     long double e_val = val;
     // exponent = round_to_sig_digits(&e_val, precision, 1);
-    int sign = (e_val < 0) ? -1 : 1;
-    if (e_val == 0.0L) sign = 1; // Prevent negative zero
-
+    // if (e_val == 0.0L) {
+    //     int sign = (e_val < 0) ? -1 : 1;
+    //     sign = 1; // Prevent negative zero
+    // }
     // Determine if scientific notation is needed
     if ((exponent < -4 || exponent >= *precision)) {
         // Format for scientific notation
@@ -593,8 +593,8 @@ int proccess_compact(char *str, const char *current, va_list *args, void *value,
         len = strlen(itc);
         itc[len++] = IsUpper ? 'E' : 'e';
         itc[len++] = (exponent < 0) ? '-' : '+';
-        if (fabs(exponent) < 10) itc[len++] = '0'; // Leading zero for single-digit exponents
-        s21_itoa(fabs(exponent), &itc[len], 10);
+        if (fabs((double)exponent) < 10) itc[len++] = '0'; // Leading zero for single-digit exponents cast to double b4 fabl might break it so check it
+        s21_itoa(fabs((double)exponent), &itc[len], 10);
     } else {
         // Fixed notation
         int decimal_places = *precision - 1 - exponent;
@@ -635,21 +635,24 @@ int proccess_compact(char *str, const char *current, va_list *args, void *value,
     return 0;
 }
 
-int proccess_string_arg(char *str, const char *current, va_list *args, int *index, int *flags, int *width, int *precision, char length_modifier){
+/* Removed flags, width, precision and length for string, char, char counter and pointer 
+i don't think they are required by task*/
+
+int proccess_string_arg(char *str, va_list *args, int *index){
     char *value = va_arg(*args, char *);
     strcpy(&str[*index], value);
     *index += strlen(value);
     return 0;
 }
 
-int proccess_char(char *str, const char *current, va_list *args, int *index, int *flags, int *width, int *precision, char length_modifier){
+int proccess_char(char *str, va_list *args, int *index){
     char value = va_arg(*args, int);
     str[*index] = value;
     *index += 1;
     return 0;
 }
 
-int proccess_char_counter(char *str, const char *current, va_list *args, int *index, int *flags, int *width, int *precision, char length_modifier){
+int proccess_char_counter(char *str, va_list *args, int *index){
     int *value = va_arg(*args, int *);
     *value = *index;
     char itc[BUFSIZ];
@@ -659,7 +662,8 @@ int proccess_char_counter(char *str, const char *current, va_list *args, int *in
     return 0;
 }
 
-int proccess_pointer(char *str, const char *current, va_list *args, int *index, int *flags, int *width, int *precision, char length_modifier) {
+int proccess_pointer(char *str, va_list *args, int *index) {
+    // Padding should work with pointer ? should it ??? removed implementation might need to add it though
     char itc [BUFSIZ];
     void *value = va_arg(*args, void*);
     s21_uintptr_t addr = (s21_uintptr_t)value;
@@ -674,8 +678,6 @@ int proccess_pointer(char *str, const char *current, va_list *args, int *index, 
 int main () {
     char buff[256];
     char buff2[256];
-    int n = 55;
-    void *p = &n;
     // s21_sprintf(buff, "ab %g cd", 12454645.0348);
     // sprintf(buff2, "ab %g cd", 12454645.0348);
     // s21_sprintf(buff, "ab %.3g cd", 12345.67);
@@ -687,8 +689,8 @@ int main () {
     // s21_sprintf(buff, "ab %#x cd", 351351351);
     // sprintf(buff2, "ab %#x cd", 351351351);
 
-    s21_sprintf(buff, "ab %.15f cd", 123.0);
-    sprintf(buff2, "ab %.15f cd", 123.0);
+    s21_sprintf(buff, "ab %e cd", 123.0);
+    sprintf(buff2, "ab %e cd", 123.0);
 
     // sprintf(buff2, "ab %.0g cd", 0.0042069);
     // s21_sprintf(buff, "ab %g cd", 1.435800);
@@ -700,3 +702,5 @@ int main () {
     printf("%s\n", buff2);
     return 0;
 }
+
+// need to test negative numbers with hex and octal
