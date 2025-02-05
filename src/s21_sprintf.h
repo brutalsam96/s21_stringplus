@@ -1,8 +1,15 @@
 #ifndef SPRINTF_H
 #define SPRINTF_H
 
-#include <ctype.h>
+
 #include <stdarg.h>
+#include <ctype.h>
+#include <math.h>
+#include <limits.h>
+
+
+#include <stdio.h>
+
 
 /* SPRINTF FLAGS */
 #define FLAG_LEFT 1
@@ -64,7 +71,7 @@ union signed_value {
   long long ll;
   long double dll;
   double db;
-} value;
+};
 
 union unsigned_value {
   unsigned char c;
@@ -72,6 +79,8 @@ union unsigned_value {
   unsigned int i;
   unsigned long l;
   unsigned long long ll;
-} u_value;
+};
+
+typedef long long unsigned int s21_uintptr_t;
 
 #endif

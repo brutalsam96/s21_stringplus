@@ -1,6 +1,6 @@
 #include "s21_utils.h"
-
-
+#include "s21_sprintf.h"
+#include "string_functions.h"
 
 void reverse(char *str, int length){
     int start = 0;
@@ -19,7 +19,7 @@ char *s21_itoa(int value, char *buffer, int base){
         return buffer;
     }
 
-    int i = strlen(buffer);
+    int i = s21_strlen(buffer);
     // int is_negative = 0; unused
 
     // Handle 0 value
@@ -31,7 +31,7 @@ char *s21_itoa(int value, char *buffer, int base){
 
     // Handle INT MIN specially
     if (value == INT_MIN && base == 10) {
-        strcpy(buffer, "-2147483648");
+        s21_strcpy(buffer, "-2147483648");
         return buffer;
     }
 
@@ -66,13 +66,13 @@ char *s21_lltoa(long value, char *buffer, int base){
         return buffer;
     }
     
-    int i = strlen(buffer);
+    int i = s21_strlen(buffer);
     // int is_negative = 0;
 
     // Handle LONG_MIN specially
     // TODO should i also check for LONG MAX ???
     if (value == LONG_MIN && base == 10) {
-        strcpy(buffer, "-9223372036854775808");
+        s21_strcpy(buffer, "-9223372036854775808");
         return buffer;
     }
     // Handle 0 value
@@ -180,8 +180,8 @@ char *s21_ftoa(double value, char *buffer, int precision) {
     }
 
     s21_itoa((int)integral, temp, 10);
-    strcat(buffer, temp);
-    int i = strlen(buffer);
+    s21_strcat(buffer, temp);
+    int i = s21_strlen(buffer);
     if (precision > 0) {
         // TODO precision = 2; it should set precision to 2 temproraly if there are zeroes after .
         buffer[i++] = '.';
@@ -193,7 +193,7 @@ char *s21_ftoa(double value, char *buffer, int precision) {
         temp[0] = '\0';
         s21_lltoa(frac_part, temp, 10);
 
-        int frac_len = strlen(temp);
+        int frac_len = s21_strlen(temp);
         
         // Add leading zeros
         for (int j = 0; j < precision - frac_len; j++) {
@@ -201,7 +201,7 @@ char *s21_ftoa(double value, char *buffer, int precision) {
         }
         
         // Copy the fraction digits
-        strcpy(&buffer[i], temp);
+        s21_strcpy(&buffer[i], temp);
     }
 
     return buffer;
@@ -220,9 +220,9 @@ char *s21_lftoa(long double value, char *buffer, int precision) {
     }
 
     s21_itoa((int)integral, temp, 10);
-    strcat(buffer, temp);
+    s21_strcat(buffer, temp);
     
-    int i = strlen(buffer); // TODO NEED TO CHECK THIS MIGHT BUG OUT
+    int i = s21_strlen(buffer); // TODO NEED TO CHECK THIS MIGHT BUG OUT
     
 
     if (precision > 0) {
@@ -233,7 +233,7 @@ char *s21_lftoa(long double value, char *buffer, int precision) {
         
         // Convert fraction to string
         s21_lltoa(frac_part, temp, 10);
-        int frac_len = strlen(temp);
+        int frac_len = s21_strlen(temp);
         
         // Add leading zeros
         for (int j = 0; j < precision - frac_len; j++) {
@@ -241,7 +241,7 @@ char *s21_lftoa(long double value, char *buffer, int precision) {
         }
         
         // Copy the fraction digits
-        strcpy(&buffer[i], temp);
+        s21_strcpy(&buffer[i], temp);
     }
 
     return buffer;
@@ -273,8 +273,8 @@ char *s21_etoa(double value, char *buffer, int precision) {
         }
     }
     s21_ftoa(value, buffer, precision);
-    buffer[strlen(buffer)] = 'e';
-    buffer[strlen(buffer)] = '\0';
+    buffer[s21_strlen(buffer)] = 'e';
+    buffer[s21_strlen(buffer)] = '\0';
 
     
     int int_part = (int)value; // separate part of float before fraction
@@ -390,7 +390,7 @@ int round_to_sig_digits_l(long double *value, int *precision, int IsComp) {
 }
 
 void remove_trailing_zeroes(char *itc) {
-    int i_len = strlen(itc) - 1;
+    int i_len = s21_strlen(itc) - 1;
     while (i_len >= 0 && itc[i_len] == '0') {
       itc[i_len] = '\0';
       i_len--;

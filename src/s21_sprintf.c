@@ -1,12 +1,7 @@
 #include "s21_sprintf.h"
-
-#include <ctype.h>
-#include <math.h>
-#include <string.h>
-
 #include "s21_utils.h"
+#include "string_functions.h"
 
-// TODO NEED TO IMPLEMENT TYPE CHECKER FOR VARIADICS, IT CRASHES BECAUSE OF THAT
 
 /*%
     ### [flags][width][.precision][length]specifier
@@ -31,7 +26,7 @@ int proccess_string(char *str, const char *format, va_list *args) {
   int str_index = 0;
 
   while (*current != '\0') {
-    const char *next_symbol = strchr(current, symbol);
+    const char *next_symbol = s21_strchr(current, symbol);
     if (next_symbol) {
       int flags = 0, width = 0, precision = -1;
       char length_modifier = '\0';
@@ -74,7 +69,7 @@ int parse_flags(const char **current, int *flags) {
         break;
       case '#':
         *flags |= FLAG_ALT;
-        break;  // TODO need implementation
+        break; 
       case '0':
         *flags |= FLAG_ZERO;
         break;
@@ -306,7 +301,6 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
       break;
     case '%':
       // put '%'
-      // TODO -Wformat extra args needs to be thrown
       str[*index] = '%';
       *index += 1;
       break;
@@ -398,7 +392,7 @@ int proccess_signed_int(char *str, void *value, int *index, int *flags,
     s21_itoa(val, itc, 10);
   }
 
-  len = strlen(itc);
+  len = s21_strlen(itc);
 
   if (!(*flags & FLAG_LEFT) && !(*flags & FLAG_ZERO) && *width > len) {
     handle_width_padding(str, index, *width - len, *flags);
@@ -417,7 +411,7 @@ int proccess_signed_int(char *str, void *value, int *index, int *flags,
     handle_precision_padding(str, index, *precision, val);
   }
 
-  strcpy(&str[*index], itc);
+  s21_strcpy(&str[*index], itc);
   *index += len;
 
   if ((*flags & FLAG_LEFT) && *width > len) {
@@ -448,7 +442,7 @@ int proccess_unsigned_int(char *str, void *u_value, int *index, int *flags,
     s21_utoa(val, itc, base, IsUpper);
   }
 
-  len = strlen(itc);
+  len = s21_strlen(itc);
 
   if (!(*flags & FLAG_LEFT) && !(*flags & FLAG_ZERO) && *width > (*flags & FLAG_ALT ? (isX ? len + 2 : len + 1) : len)) {
     handle_width_padding(str, index, *width - (*flags & FLAG_ALT ? (isX ? len + 2 : len + 1) : len), *flags);
@@ -468,7 +462,7 @@ int proccess_unsigned_int(char *str, void *u_value, int *index, int *flags,
     handle_precision_pad_str(str, index, *precision, (*flags & FLAG_ALT ? (isX ? len + 0 : len + 1) : len));
   }
 
-  strcpy(&str[*index], itc);
+  s21_strcpy(&str[*index], itc);
   *index += len;
 
   if ((*flags & FLAG_LEFT) && *width > len) {
@@ -494,19 +488,19 @@ int proccess_float(char *str, void *value, int *index, int *flags, int *width,
   }
 
   if (isinf(val)) {
-    strcpy(&str[*index], (val < 0) ? IsUpper ? "-INF" : "-inf"
+    s21_strcpy(&str[*index], (val < 0) ? IsUpper ? "-INF" : "-inf"
                          : IsUpper ? "INF"
                                    : "inf");
     *index += (val < 0) ? 4 : 3;
     return -1;
   }
   if (isnan(val)) {
-    strcpy(&str[*index], IsUpper ? "NAN" : "nan");
+    s21_strcpy(&str[*index], IsUpper ? "NAN" : "nan");
     *index += 3;
     return -1;
   }
 
-  len = strlen(itc);
+  len = s21_strlen(itc);
 
   if (!(*flags & FLAG_LEFT) && !(*flags & FLAG_ZERO) && *width > len) {
     handle_width_padding(str, index, *width - len, *flags);
@@ -524,7 +518,7 @@ int proccess_float(char *str, void *value, int *index, int *flags, int *width,
   if (*precision > len) {
     handle_precision_padding(str, index, *precision, val);
   }
-  strcpy(&str[*index], itc);
+  s21_strcpy(&str[*index], itc);
   *index += len;
 
     if (*flags & FLAG_ALT && *precision == 0) {
@@ -556,14 +550,14 @@ int proccess_scientific(char *str, void *value, int *index, int *flags,
   }
 
   if (isinf(val)) {
-    strcpy(&str[*index], (val < 0) ? IsUpper ? "-INF" : "-inf"
+    s21_strcpy(&str[*index], (val < 0) ? IsUpper ? "-INF" : "-inf"
                          : IsUpper ? "INF"
                                    : "inf");
     *index += (val < 0) ? 4 : 3;
     return 0;
   }
   if (isnan(val)) {
-    strcpy(&str[*index], IsUpper ? "NAN" : "nan");
+    s21_strcpy(&str[*index], IsUpper ? "NAN" : "nan");
     *index += 3;
     return 0;
   }
@@ -574,7 +568,7 @@ int proccess_scientific(char *str, void *value, int *index, int *flags,
 
   s21_ftoa(fabs(val), itc, *precision);
 
-  len = strlen(itc);
+  len = s21_strlen(itc);
   if (*flags & FLAG_ALT && *precision == 0) {
     itc[len++] = '.';
   }
@@ -585,7 +579,7 @@ int proccess_scientific(char *str, void *value, int *index, int *flags,
         '0';  // added cast to double might break the programm need to test
   s21_itoa(fabs((double)exponent), &itc[len], 10);
 
-  len = strlen(itc);
+  len = s21_strlen(itc);
 
   if (!(*flags & FLAG_LEFT) && !(*flags & FLAG_ZERO) && *width > len) {
     handle_width_padding(str, index, *width - len, *flags);
@@ -604,7 +598,7 @@ int proccess_scientific(char *str, void *value, int *index, int *flags,
     handle_precision_padding(str, index, *precision, val);
   }
 
-  strcpy(&str[*index], itc);
+  s21_strcpy(&str[*index], itc);
   *index += len;
 
   if ((*flags & FLAG_LEFT) && *width > len) {
@@ -633,14 +627,14 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
   }
 
   if (isinf(val)) {
-    strcpy(&str[*index], (val < 0) ? IsUpper ? "-INF" : "-inf"
+    s21_strcpy(&str[*index], (val < 0) ? IsUpper ? "-INF" : "-inf"
                          : IsUpper ? "INF"
                                    : "inf");
     *index += (val < 0) ? 4 : 3;
     return 0;
   }
   if (isnan(val)) {
-    strcpy(&str[*index], IsUpper ? "NAN" : "nan");
+    s21_strcpy(&str[*index], IsUpper ? "NAN" : "nan");
     *index += 3;
     return 0;
   }
@@ -657,7 +651,7 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
     if (!(*flags & FLAG_ALT)) {
       remove_trailing_zeroes(itc);  // Remove insignificant zeros
     }
-    len = strlen(itc);
+    len = s21_strlen(itc);
     itc[len++] = IsUpper ? 'E' : 'e';
     itc[len++] = (exponent < 0) ? '-' : '+';
     if (fabs((double)exponent) < 10)
@@ -675,7 +669,7 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
           itc);  // Remove trailing zeros unless # flag is set
   }
 
-  len = strlen(itc);
+  len = s21_strlen(itc);
 
   if (!(*flags & FLAG_LEFT) && !(*flags & FLAG_ZERO) && *width > len) {
     handle_width_padding(str, index, *width - len, *flags);
@@ -694,7 +688,7 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
     handle_precision_padding(str, index, *precision, val);
   }
 
-  strcpy(&str[*index], itc);
+  s21_strcpy(&str[*index], itc);
   *index += len;
   
   if (*flags & FLAG_ALT && *precision == 0) {
@@ -713,8 +707,8 @@ pointer i don't think they are required by task*/
 
 int proccess_string_arg(char *str, va_list *args, int *index) {
   char *value = va_arg(*args, char *);
-  strcpy(&str[*index], value);
-  *index += strlen(value);
+  s21_strcpy(&str[*index], value);
+  *index += s21_strlen(value);
   return 0;
 }
 
@@ -730,8 +724,8 @@ int proccess_char_counter(char *str, va_list *args, int *index) {
   *value = *index;
   char itc[BUFSIZ] = {0};
   s21_itoa(*value, itc, 10);
-  strcpy(&str[*index], itc);
-  *index += strlen(itc);
+  s21_strcpy(&str[*index], itc);
+  *index += s21_strlen(itc);
   return 0;
 }
 
@@ -742,10 +736,10 @@ int proccess_pointer(char *str, va_list *args, int *index) {
   void *value = va_arg(*args, void *);
   s21_uintptr_t addr = (s21_uintptr_t)value;
   s21_llutoa(addr, itc, 16, 0);
-  strcpy(&str[*index], "0x");
+  s21_strcpy(&str[*index], "0x");
   *index += 2;
-  strcpy(&str[*index], itc);
-  *index += strlen(itc);
+  s21_strcpy(&str[*index], itc);
+  *index += s21_strlen(itc);
   return 0;
 }
 
