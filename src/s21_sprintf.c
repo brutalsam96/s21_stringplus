@@ -384,7 +384,7 @@ int proccess_signed_int(char *str, void *value, int *index, int *flags,
                         int *width, int *precision, char length_modifier) {
   int val = 0;
   long long long_val = 0;
-  char itc[BUFSIZ];
+  char itc[BUFSIZ] = {0};
   int len;
 
   if (length_modifier == 'h') {
@@ -432,7 +432,7 @@ int proccess_unsigned_int(char *str, void *u_value, int *index, int *flags,
                           int base, int IsUpper, int isX) {
   unsigned int val = 0;
   unsigned long long long_val = 0;
-  char itc[BUFSIZ];
+  char itc[BUFSIZ] = {0};
   int len;
 
   if (length_modifier == 'h') {  // TODO GOTTA CHECK ALL LENGTH MODIFIERS
@@ -479,7 +479,7 @@ int proccess_unsigned_int(char *str, void *u_value, int *index, int *flags,
 
 int proccess_float(char *str, void *value, int *index, int *flags, int *width,
                    int *precision, char length_modifier, int IsUpper) {
-  char itc[BUFSIZ];
+  char itc[BUFSIZ] = {0};
   int len;
   long double val;
 
@@ -539,7 +539,7 @@ int proccess_float(char *str, void *value, int *index, int *flags, int *width,
 int proccess_scientific(char *str, void *value, int *index, int *flags,
                         int *width, int *precision, char length_modifier,
                         int IsUpper) {
-  char itc[BUFSIZ];
+  char itc[BUFSIZ] = {0};
   int exponent = 0;
   int len;
   double val;
@@ -616,7 +616,7 @@ int proccess_scientific(char *str, void *value, int *index, int *flags,
 
 int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
                      int *precision, char length_modifier, int IsUpper) {
-  char itc[BUFSIZ];
+  char itc[BUFSIZ] = {0};
   int exponent = 0;
   int len;
   long double val;
@@ -644,16 +644,15 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
     *index += 3;
     return 0;
   }
-  long double e_val = val;
-  // exponent = round_to_sig_digits(&e_val, precision, 1);
-  // if (e_val == 0.0L) {
-  //     int sign = (e_val < 0) ? -1 : 1;
-  //     sign = 1; // Prevent negative zero
-  // }
+  exponent = round_to_sig_digits_l(&val, precision, 1);
+  if (val == 0.0L) {
+      int sign = (val < 0) ? -1 : 1;
+      sign = 1; // Prevent negative zero
+  }
   // Determine if scientific notation is needed
   if ((exponent < -4 || exponent >= *precision)) {
     // Format for scientific notation
-    s21_ftoa(fabsl(e_val), itc,
+    s21_ftoa(fabsl(val), itc,
              *precision - 1);  // Sig digs after decimal: precision-1
     if (!(*flags & FLAG_ALT)) {
       remove_trailing_zeroes(itc);  // Remove insignificant zeros
@@ -667,10 +666,10 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
     s21_itoa(fabs((double)exponent), &itc[len], 10);
   } else {
     // Fixed notation
-    int decimal_places = *precision - 1 - exponent;
-    if (decimal_places < 0) decimal_places = 0;
-    long double original_val = e_val * powl(10, exponent);
-    s21_ftoa(original_val, itc, decimal_places);
+    *precision = *precision - 1 - exponent;
+    if (*precision < 0) *precision = 0;
+    long double original_val = val * powl(10, exponent);
+    s21_ftoa(original_val, itc, *precision);
     if (!(*flags & FLAG_ALT))
       remove_trailing_zeroes(
           itc);  // Remove trailing zeros unless # flag is set
@@ -697,6 +696,10 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
 
   strcpy(&str[*index], itc);
   *index += len;
+  
+  if (*flags & FLAG_ALT && *precision == 0) {
+        str[(*index)++] = '.';
+  }
 
   if ((*flags & FLAG_LEFT) && *width > len) {
     handle_width_padding(str, index, *width - len, *flags);
@@ -725,7 +728,7 @@ int proccess_char(char *str, va_list *args, int *index) {
 int proccess_char_counter(char *str, va_list *args, int *index) {
   int *value = va_arg(*args, int *);
   *value = *index;
-  char itc[BUFSIZ];
+  char itc[BUFSIZ] = {0};
   s21_itoa(*value, itc, 10);
   strcpy(&str[*index], itc);
   *index += strlen(itc);
@@ -735,7 +738,7 @@ int proccess_char_counter(char *str, va_list *args, int *index) {
 int proccess_pointer(char *str, va_list *args, int *index) {
   // Padding should work with pointer ? should it ??? removed implementation
   // might need to add it though
-  char itc[BUFSIZ];
+  char itc[BUFSIZ] = {0};
   void *value = va_arg(*args, void *);
   s21_uintptr_t addr = (s21_uintptr_t)value;
   s21_llutoa(addr, itc, 16, 0);
@@ -753,7 +756,7 @@ int main() {
   char buff4[256];
   char buff5[256];
   char buff6[256];
-  s21_sprintf(buff, "ab %g cd", 123.0);
+  // s21_sprintf(buff, "ab %g cd", 123.0);
   // sprintf(buff2, "ab %g cd", 12454645.0348);
   // s21_sprintf(buff, "ab %.3g cd", 12345.67);
   // sprintf(buff2, "ab %.3g cd", 12345.67);
@@ -891,34 +894,35 @@ int main() {
 
   /* %G ALT TEST CHECK */
 
-//   s21_sprintf(buff,  "%#g"	    ,3.0	);
-//   s21_sprintf(buff2, "%#g"	    ,123.0);
-//   s21_sprintf(buff3, "%#.3g"	,12345);
-//   s21_sprintf(buff4, "%#.5g"	,123.456);
-//   s21_sprintf(buff5, "%+#.0g"	,5.0);
-//   s21_sprintf(buff6, "%#.4g"	,0.00123);
+  // s21_sprintf(buff,  "%#g"	    ,3.0	);
+  // s21_sprintf(buff2, "%#g"	    ,123.0);
+  // s21_sprintf(buff3, "%#.3g"	,12345);
+  // s21_sprintf(buff4, "%#.5g"	,123.456);
+  // s21_sprintf(buff5, "%+#.0g"	,5.0);
+  // s21_sprintf(buff6, "%#.4g"	,0.00123);
 
-//   printf("%s\n", buff);
-//   printf("%s\n", buff2);
-//   printf("%s\n", buff3);
-//   printf("%s\n", buff4);
-//   printf("%s\n", buff5);
-//   printf("%s\n", buff6);
-//   printf("----------------\n");
+  // printf("%s\n", buff);
+  // printf("%s\n", buff2);
+  // printf("%s\n", buff3);
+  // printf("%s\n", buff4);
+  // printf("%s\n", buff5);
+  // printf("%s\n", buff6);
+  // printf("----------------\n");
 
-//   sprintf(buff,  "%#g"	    ,3.0	);
-//   sprintf(buff2, "%#g"	    ,123.0);
-//   sprintf(buff3, "%#.3g"	,12345);
-//   sprintf(buff4, "%#.5g"	,123.456);
-//   sprintf(buff5, "%+#.0g"	,5.0);
-//   sprintf(buff6, "%#.4g"	,0.00123);
+  // sprintf(buff,  "%#g"	    ,3.0	);
+  // sprintf(buff2, "%#g"	    ,123.0);
+  // sprintf(buff3, "%#.3g"	,12345);
+  // sprintf(buff4, "%#.5g"	,123.456);
+  // sprintf(buff5, "%+#.0g"	,5.0);
+  // sprintf(buff6, "%#.4g"	,0.00123);
 
-  printf("%s\n", buff);
-//   printf("%s\n", buff2);
-//   printf("%s\n", buff3);
-//   printf("%s\n", buff4);
-//   printf("%s\n", buff5);
-//   printf("%s\n", buff6);
+  // printf("%s\n", buff);
+  // printf("%s\n", buff2);
+  // printf("%s\n", buff3);
+  // printf("%s\n", buff4);
+  // printf("%s\n", buff5);
+  // printf("%s\n", buff6);
+
 
   return 0;
 }
