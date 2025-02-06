@@ -95,7 +95,7 @@ void c_specifier(va_list *args, const char **str) {
 
 void d_specifier(va_list *args, const char **str) {
     int *int_ptr = va_arg(*args, int *);
-    int num = 1;
+    int num = 0;
     int sign = 1;
 
     while (isspace(**str)) {

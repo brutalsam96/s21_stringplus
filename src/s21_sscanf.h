@@ -35,7 +35,7 @@ typedef struct {
 
 SpecifierMap specifier_map[] = {
     {'c', c_specifier},
-    // {'d', d_specifier},
+    {'d', d_specifier},
     // {'i', i_specifier},
     // {'e', e_specifier},
     // {'E', E_specifier},
