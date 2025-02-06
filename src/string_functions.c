@@ -1,10 +1,5 @@
 #include "string_functions.h"
 
-#include <errno.h>  // for strerror
-#include <stdio.h>
-
-#define MAX_CHAR 100
-
 s21_size_t s21_strlen(const char *str) {
     s21_size_t length = 0;
     while (str[length] != '\0') {
@@ -277,4 +272,130 @@ char *s21_strtok(char *str, const char *delim) {
     }
 
     return start;
+}
+
+
+
+// Bonus part of C# Functions
+// TODO: In testcase should test for memory leak
+void *s21_to_upper(const char *str) {
+
+    if (!str) {
+        return S21_NULL;
+    }
+
+    s21_size_t len = s21_strlen(str);
+    char *upper_str = (char *)malloc(len + 1); // WARNING CHECK for the memory leak
+    
+    for (s21_size_t i = 0; i < len; i++) {
+        if (str[i] >= 'a' && str[i] <= 'z') {
+            upper_str[i] = str[i] - 32;
+        } else {
+            upper_str[i] = str[i];
+        }
+    }
+
+    upper_str[len] = '\0';
+
+    return upper_str;
+}
+
+
+void *s21_to_lower(const char *str) {
+
+    if (!str) {
+        return S21_NULL;
+    }
+
+    s21_size_t len = s21_strlen(str);
+    char *upper_str = (char *)malloc(len + 1); // WARNING CHECK for the memory leak
+    
+    for (s21_size_t i = 0; i < len; i++) {
+        if (str[i] >= 'A' && str[i] <= 'A') {
+            upper_str[i] = str[i] + 32;
+        } else {
+            upper_str[i] = str[i];
+        }
+    }
+
+    upper_str[len] = '\0';
+
+    return upper_str;
+}
+
+
+void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
+
+    if (!src || !str) {
+        return S21_NULL;
+    }
+
+    s21_size_t len_src = s21_strlen(src);
+    s21_size_t len_str = s21_strlen(str);
+
+    if (start_index > len_src) {
+        return S21_NULL;
+    }
+
+    char *new_str = (char *)malloc(len_src + len_str + 1);
+    if (!new_str) {
+        return S21_NULL;
+    }
+
+    int string_counter = 0;
+    for (s21_size_t i = 0; i < len_src; i++) {
+        new_str[string_counter] = src[i];
+        string_counter++;
+    }
+
+    string_counter = start_index;
+    for (s21_size_t i = 0; i < len_str; i++) {
+        new_str[string_counter] = str[i];
+        string_counter++;
+    }
+
+    return new_str;
+}
+
+
+int is_trim_char(char c, const char *trim_chars) {
+    while (*trim_chars) {
+        if (*trim_chars == c) {
+            return 1;
+        }
+        trim_chars++;
+    }
+    return 0;
+}
+
+
+char *s21_trim(const char *src, const char *trim_chars) {
+    if (!src || !trim_chars) {
+        return S21_NULL;
+    }
+
+    s21_size_t start_index = 0;
+    while (src[start_index] && is_trim_char(src[start_index], trim_chars)) {
+        start_index++;
+    }
+
+    s21_size_t end_index = strlen(src);
+    while (end_index > start_index && is_trim_char(src[end_index - 1], trim_chars)) {
+        end_index--;
+    }
+
+    if (end_index <= start_index) {
+        return S21_NULL;
+    }
+
+    s21_size_t len = end_index - start_index;
+    char *trimmed_str = (char *)malloc(len + 1);
+    if (!trimmed_str) {
+        return S21_NULL;
+    }
+
+    strncpy(trimmed_str, src + start_index, len);
+    trimmed_str[len] = '\0';
+
+    return trimmed_str;
 }

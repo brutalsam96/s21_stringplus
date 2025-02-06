@@ -8,7 +8,7 @@ int s21_sscanf(const char *str, const char *format, ...) {
 
     while (*format && *str) {
         if (*format == '%') {
-            format++; // Move past '%'
+            format++;
 
             if (*format == 'd') {
                 int *int_ptr = va_arg(args, int *);
