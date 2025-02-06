@@ -9,15 +9,15 @@ with the type type
 void va_end(va_list p) This macro allows to end traversal of the variadic function arguments.
 
 c - DONE
-d - DID
-i
-e
+d - DONE
+i - 
+e 
 E
 f
 g
 G
 o
-s
+s - DONE
 u
 x
 X
@@ -30,13 +30,13 @@ n
 
 int main() {
     // char input[] = "h e l l o";
-    char input[] = "14 456 -345 a f";
+    char input[] = "this is new string";
 
-    int a, b, c;
+    char str1[20], str2[20];
 
-    int matched = s21_sscanf(input, "%d %d %d", &a, &b, &c);
+    int matched = s21_sscanf(input, "%s %s", str1, str2);
     printf("Matched: %d\n", matched);
-    printf("a = %d, b = %d, c = %d\n", a, b, c);
+    printf("a = %s, b = %s\n", str1, str2);
 
     return 0;
 }
@@ -115,4 +115,21 @@ void d_specifier(va_list *args, const char **str) {
     }
 
     *int_ptr = sign * num;
+}
+
+
+void s_specifier(va_list *args, const char **str) {
+    char *buffer = va_arg(*args, char *);
+    int i = 0;
+
+    while (isspace(**str)) {
+        (*str)++;
+    }
+
+    while (**str != '\0' && !isspace(**str)) {
+        buffer[i++] = **str;
+        (*str)++;
+    }
+
+    buffer[i] = '\0';
 }

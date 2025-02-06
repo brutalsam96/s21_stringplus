@@ -19,7 +19,7 @@ void d_specifier(va_list *args, const char **str);
 // void g_specifier(va_list *args, const char **str);
 // void G_specifier(va_list *args, const char **str);
 // void o_specifier(va_list *args, const char **str);
-// void s_specifier(va_list *args, const char **str);
+void s_specifier(va_list *args, const char **str);
 // void u_specifier(va_list *args, const char **str);
 // void x_specifier(va_list *args, const char **str);
 // void X_specifier(va_list *args, const char **str);
@@ -43,7 +43,7 @@ SpecifierMap specifier_map[] = {
     // {'g', g_specifier},
     // {'G', G_specifier},
     // {'o', o_specifier},
-    // {'s', s_specifier},
+    {'s', s_specifier},
     // {'u', u_specifier},
     // {'x', x_specifier},
     // {'X', X_specifier},
