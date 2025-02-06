@@ -50,7 +50,7 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
 int proccess_string_arg(char *str, va_list *args, int *index);
 int proccess_char(char *str, va_list *args, int *index);
 
-int proccess_char_counter(char *str, va_list *args, int *index);
+int proccess_char_counter(va_list *args, int *index);
 
 int proccess_pointer(char *str, va_list *args, int *index);
 

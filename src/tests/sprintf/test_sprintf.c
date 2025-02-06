@@ -157,6 +157,13 @@ int main(void){
     fails = srunner_ntests_failed(sr);
     srunner_free(sr);
 
+    // char buff1[256];
+    // char buff2[256];
+    // int value=0, value2=0;
+    // s21_sprintf(buff1,"ab %n cd", &value);
+    // sprintf(buff2,"ab %n cd", &value2);
+    // printf("s21:%s\n std:%s\n s21:%d\n std:%d\n", buff1, buff2, value, value2);
+
     return (fails == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 
 }

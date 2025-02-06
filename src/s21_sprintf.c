@@ -297,7 +297,7 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
       break;
     case 'n':
       // write number of characters written so far
-      proccess_char_counter(str, args, index);
+      proccess_char_counter(args, index);
       break;
     case '%':
       // put '%'
@@ -719,12 +719,10 @@ int proccess_char(char *str, va_list *args, int *index) {
   return 0;
 }
 
-int proccess_char_counter(char *str, va_list *args, int *index) {
+int proccess_char_counter(va_list *args, int *index) {
   int *value = va_arg(*args, int *);
   *value = *index;
   char itc[BUFSIZ] = {0};
-  s21_itoa(*value, itc, 10);
-  s21_strcpy(&str[*index], itc);
   *index += s21_strlen(itc);
   return 0;
 }
