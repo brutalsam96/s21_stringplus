@@ -1,7 +1,7 @@
 #include "s21_sprintf.h"
+
 #include "s21_utils.h"
 #include "string_functions.h"
-
 
 /*%
     ### [flags][width][.precision][length]specifier
@@ -11,14 +11,14 @@ int s21_sprintf(char *str, const char *format, ...) {  // variadic
   int done;
   va_list args;
   va_start(args, format);
-  done = proccess_string(str, format, &args);
+  done = process_string(str, format, &args);
   // printf("%d", done); // debug
   va_end(args);  // for cleanup
   return done;   // TODO need to test if it is returning correct amount of
                  // proccesed values
 }
 
-int proccess_string(char *str, const char *format, va_list *args) {
+int process_string(char *str, const char *format, va_list *args) {
   /* flags, width and precision modifiers*/
 
   char symbol = '%';
@@ -69,7 +69,7 @@ int parse_flags(const char **current, int *flags) {
         break;
       case '#':
         *flags |= FLAG_ALT;
-        break; 
+        break;
       case '0':
         *flags |= FLAG_ZERO;
         break;
@@ -179,12 +179,12 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
           value.i = va_arg(*args, int);
       }
 
-      proccess_signed_int(str, &value, index, &flags, &width, &precision,
+      process_signed_int(str, &value, index, &flags, &width, &precision,
                           length_modifiers);
       break;
 
     case 'u':
-      // logic to proccess unsigned integers
+      // logic to process unsigned integers
       base = 10;
       switch (length_modifiers) {
         case 'h':
@@ -196,11 +196,11 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
         default:
           u_value.i = va_arg(*args, unsigned int);
       }
-      proccess_unsigned_int(str, &u_value, index, &flags, &width, &precision,
+      process_unsigned_int(str, &u_value, index, &flags, &width, &precision,
                             length_modifiers, base, 0, 0);
       break;
     case 'o':
-      // logic to proccess unsigned integers in base 8
+      // logic to process unsigned integers in base 8
       base = 8;
       switch (length_modifiers) {
         case 'h':
@@ -212,17 +212,17 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
         default:
           u_value.i = va_arg(*args, unsigned int);
       }
-    //   if ((flags & FLAG_ALT) && u_value.i != 0 && u_value.s != 0 && 
-    //       u_value.l != 0) {
-    //     str[*index] = '0';
-    //     *index += 1;
-    //   }
-      proccess_unsigned_int(str, &u_value, index, &flags, &width, &precision,
+      //   if ((flags & FLAG_ALT) && u_value.i != 0 && u_value.s != 0 &&
+      //       u_value.l != 0) {
+      //     str[*index] = '0';
+      //     *index += 1;
+      //   }
+      process_unsigned_int(str, &u_value, index, &flags, &width, &precision,
                             length_modifiers, base, 0, 0);
       break;
     case 'X':
     case 'x':
-      // logic to proccess unsigned integers in base 16, lowercase
+      // logic to process unsigned integers in base 16, lowercase
       base = 16;
       switch (length_modifiers) {
         case 'h':
@@ -234,18 +234,18 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
         default:
           u_value.i = va_arg(*args, unsigned int);
       }
-    //   if ((flags & FLAG_ALT) && u_value.i != 0 && u_value.s != 0 &&
-    //       u_value.l != 0) {
-    //     str[*index] = '0';
-    //     str[*index + 1] = (**current == 'X' ? 'X' : 'x');
-    //     *index += 2;
-    //   }
-      proccess_unsigned_int(str, &u_value, index, &flags, &width, &precision,
+      //   if ((flags & FLAG_ALT) && u_value.i != 0 && u_value.s != 0 &&
+      //       u_value.l != 0) {
+      //     str[*index] = '0';
+      //     str[*index + 1] = (**current == 'X' ? 'X' : 'x');
+      //     *index += 2;
+      //   }
+      process_unsigned_int(str, &u_value, index, &flags, &width, &precision,
                             length_modifiers, base, **current == 'X', 1);
       break;
     case 'F':
     case 'f':
-      // logic to proccess scientific
+      // logic to process scientific
       switch (length_modifiers) {
         case 'L':
           value.dll = va_arg(*args, long double);
@@ -253,12 +253,12 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
         default:
           value.db = va_arg(*args, double);
       }
-      proccess_float(str, &value, index, &flags, &width, &precision,
+      process_float(str, &value, index, &flags, &width, &precision,
                      length_modifiers, **current == 'F');
       break;
     case 'E':
     case 'e':
-      // logic to proccess scientific uppercase
+      // logic to process scientific uppercase
       switch (length_modifiers) {
         case 'L':
           value.dll = va_arg(*args, long double);
@@ -266,13 +266,13 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
         default:
           value.db = va_arg(*args, double);
       }
-      proccess_scientific(str, &value, index, &flags, &width, &precision,
+      process_scientific(str, &value, index, &flags, &width, &precision,
                           length_modifiers,
                           **current == 'E');  // tricky operator comparision
       break;
     case 'g':
     case 'G':
-      // logic to proccess scientific
+      // logic to process scientific
       switch (length_modifiers) {
         case 'L':
           value.dll = va_arg(*args, long double);
@@ -280,24 +280,24 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
         default:
           value.db = va_arg(*args, double);
       }
-      proccess_compact(str, &value, index, &flags, &width, &precision,
+      process_compact(str, &value, index, &flags, &width, &precision,
                        length_modifiers, **current == 'G');
       break;
     case 's':
-      // logic to proccess strings
-      proccess_string_arg(str, args, index);
+      // logic to process strings
+      process_string_arg(str, args, index, &flags, &width);
       break;
     case 'c':
-      // logic to proccess chars
-      proccess_char(str, args, index);
+      // logic to process chars
+      process_char(str, args, index, &flags, &width);
       break;
     case 'p':
       // logic to process pointers
-      proccess_pointer(str, args, index);
+      process_pointer(str, args, index);
       break;
     case 'n':
       // write number of characters written so far
-      proccess_char_counter(args, index);
+      process_char_counter(args, index);
       break;
     case '%':
       // put '%'
@@ -349,7 +349,8 @@ void handle_precision_pad_str(char *str, int *index, int precision, int len) {
   }
 }
 
-// void handle_precision_padding(char *str, int *index, int precision, int value) {
+// void handle_precision_padding(char *str, int *index, int precision, int
+// value) {
 //   int val_width = 1, temp_val = value;
 //   for (val_width++; temp_val > 0;) {
 //     temp_val /= 10;
@@ -360,7 +361,6 @@ void handle_precision_pad_str(char *str, int *index, int precision, int len) {
 //   }
 // }
 
-
 void handle_sign_space(char *str, int *index, int value, int flags) {
   if (value >= 0) {
     if (flags & FLAG_SIGN) {
@@ -368,13 +368,12 @@ void handle_sign_space(char *str, int *index, int value, int flags) {
     } else if (flags & FLAG_SPACE) {
       str[(*index)++] = ' ';
     }
-  } else if (value < 0) {
+  } else if (value < 0.0L) {
     str[(*index)++] = '-';
   }
 }
 
-
-int proccess_signed_int(char *str, void *value, int *index, int *flags,
+int process_signed_int(char *str, void *value, int *index, int *flags,
                         int *width, int *precision, char length_modifier) {
   int val = 0;
   long long long_val = 0;
@@ -400,6 +399,7 @@ int proccess_signed_int(char *str, void *value, int *index, int *flags,
 
   if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0) {
     handle_sign_space(str, index, val, *flags);
+    (*width)--;
   }
 
   if (!(*flags & FLAG_LEFT) && (*flags & FLAG_ZERO) && *width > len) {
@@ -415,13 +415,14 @@ int proccess_signed_int(char *str, void *value, int *index, int *flags,
   *index += len;
 
   if ((*flags & FLAG_LEFT) && *width > len) {
+    if (*flags & FLAG_ZERO) *flags &= ~FLAG_ZERO;
     handle_width_padding(str, index, *width - len, *flags);
   }
 
   return 0;
 }
 
-int proccess_unsigned_int(char *str, void *u_value, int *index, int *flags,
+int process_unsigned_int(char *str, void *u_value, int *index, int *flags,
                           int *width, int *precision, char length_modifier,
                           int base, int IsUpper, int isX) {
   unsigned int val = 0;
@@ -444,34 +445,42 @@ int proccess_unsigned_int(char *str, void *u_value, int *index, int *flags,
 
   len = s21_strlen(itc);
 
-  if (!(*flags & FLAG_LEFT) && !(*flags & FLAG_ZERO) && *width > (*flags & FLAG_ALT ? (isX ? len + 2 : len + 1) : len)) {
-    handle_width_padding(str, index, *width - (*flags & FLAG_ALT ? (isX ? len + 2 : len + 1) : len), *flags);
+  if (!(*flags & FLAG_LEFT) && !(*flags & FLAG_ZERO) &&
+      *width > (*flags & FLAG_ALT ? (isX ? len + 2 : len + 1) : len)) {
+    handle_width_padding(
+        str, index,
+        *width - (*flags & FLAG_ALT ? (isX ? len + 2 : len + 1) : len), *flags);
   }
 
   if (*flags & FLAG_ALT && val != 0) {
     str[(*index)++] = '0';
-    if (isX) str[(*index)++] = IsUpper?'X':'x';
+    if (isX) str[(*index)++] = IsUpper ? 'X' : 'x';
   }
 
-  if (!(*flags & FLAG_LEFT) && (*flags & FLAG_ZERO) && *width > (*flags & FLAG_ALT ? (isX ? len + 2 : len + 1) : len)) {
-    handle_width_padding(str, index,
-                         *width - (*flags & FLAG_ALT ? (isX ? len + 2 : len + 1) : len), *flags);
+  if (!(*flags & FLAG_LEFT) && (*flags & FLAG_ZERO) &&
+      *width > (*flags & FLAG_ALT ? (isX ? len + 2 : len + 1) : len)) {
+    handle_width_padding(
+        str, index,
+        *width - (*flags & FLAG_ALT ? (isX ? len + 2 : len + 1) : len), *flags);
   }
 
   if (*precision > (*flags & FLAG_ALT ? (isX ? len + 0 : len + 1) : len)) {
-    handle_precision_pad_str(str, index, *precision, (*flags & FLAG_ALT ? (isX ? len + 0 : len + 1) : len));
+    handle_precision_pad_str(
+        str, index, *precision,
+        (*flags & FLAG_ALT ? (isX ? len + 0 : len + 1) : len));
   }
 
   s21_strcpy(&str[*index], itc);
   *index += len;
 
   if ((*flags & FLAG_LEFT) && *width > len) {
+    if (*flags & FLAG_ZERO) *flags &= ~FLAG_ZERO;
     handle_width_padding(str, index, *width - len, *flags);
   }
   return 0;
 }
 
-int proccess_float(char *str, void *value, int *index, int *flags, int *width,
+int process_float(char *str, void *value, int *index, int *flags, int *width,
                    int *precision, char length_modifier, int IsUpper) {
   char itc[BUFSIZ] = {0};
   int len;
@@ -489,8 +498,8 @@ int proccess_float(char *str, void *value, int *index, int *flags, int *width,
 
   if (isinf(val)) {
     s21_strcpy(&str[*index], (val < 0) ? IsUpper ? "-INF" : "-inf"
-                         : IsUpper ? "INF"
-                                   : "inf");
+                             : IsUpper ? "INF"
+                                       : "inf");
     *index += (val < 0) ? 4 : 3;
     return -1;
   }
@@ -506,8 +515,9 @@ int proccess_float(char *str, void *value, int *index, int *flags, int *width,
     handle_width_padding(str, index, *width - len, *flags);
   }
 
-  if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0) {
-    handle_sign_space(str, index, (val >= 0 ? 1 : -1), *flags);
+  if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0 || (val == 0.0L && signbit(val))) {
+    handle_sign_space(str, index, (signbit(val) ? -1 : 1), *flags);
+    (*width)--;
   }
 
   if (!(*flags & FLAG_LEFT) && (*flags & FLAG_ZERO) && *width > len) {
@@ -521,16 +531,17 @@ int proccess_float(char *str, void *value, int *index, int *flags, int *width,
   s21_strcpy(&str[*index], itc);
   *index += len;
 
-    if (*flags & FLAG_ALT && *precision == 0) {
-        str[(*index)++] = '.';
-    }
+  if (*flags & FLAG_ALT && *precision == 0) {
+    str[(*index)++] = '.';
+  }
   if ((*flags & FLAG_LEFT) && *width > len) {
+    if (*flags & FLAG_ZERO) *flags &= ~FLAG_ZERO;
     handle_width_padding(str, index, *width - len, *flags);
   }
   return 0;
 }
 
-int proccess_scientific(char *str, void *value, int *index, int *flags,
+int process_scientific(char *str, void *value, int *index, int *flags,
                         int *width, int *precision, char length_modifier,
                         int IsUpper) {
   char itc[BUFSIZ] = {0};
@@ -551,8 +562,8 @@ int proccess_scientific(char *str, void *value, int *index, int *flags,
 
   if (isinf(val)) {
     s21_strcpy(&str[*index], (val < 0) ? IsUpper ? "-INF" : "-inf"
-                         : IsUpper ? "INF"
-                                   : "inf");
+                             : IsUpper ? "INF"
+                                       : "inf");
     *index += (val < 0) ? 4 : 3;
     return 0;
   }
@@ -585,8 +596,9 @@ int proccess_scientific(char *str, void *value, int *index, int *flags,
     handle_width_padding(str, index, *width - len, *flags);
   }
 
-  if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0) {
-    handle_sign_space(str, index, (val >= 0 ? 1 : -1), *flags);
+  if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0 || (val == 0.0L && signbit(val))) {
+    handle_sign_space(str, index, (signbit(val) ? -1 : 1), *flags);
+    (*width)--;
   }
 
   if (!(*flags & FLAG_LEFT) && (*flags & FLAG_ZERO) && *width > len) {
@@ -602,13 +614,14 @@ int proccess_scientific(char *str, void *value, int *index, int *flags,
   *index += len;
 
   if ((*flags & FLAG_LEFT) && *width > len) {
+    if (*flags & FLAG_ZERO) *flags &= ~FLAG_ZERO; // TODO COULD BE EXTRA NEED TO CHECK
     handle_width_padding(str, index, *width - len, *flags);
   }
 
   return 0;
 }
 
-int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
+int process_compact(char *str, void *value, int *index, int *flags, int *width,
                      int *precision, char length_modifier, int IsUpper) {
   char itc[BUFSIZ] = {0};
   int exponent = 0;
@@ -628,8 +641,8 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
 
   if (isinf(val)) {
     s21_strcpy(&str[*index], (val < 0) ? IsUpper ? "-INF" : "-inf"
-                         : IsUpper ? "INF"
-                                   : "inf");
+                             : IsUpper ? "INF"
+                                       : "inf");
     *index += (val < 0) ? 4 : 3;
     return 0;
   }
@@ -639,10 +652,8 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
     return 0;
   }
   exponent = round_to_sig_digits_l(&val, precision, 1);
-  if (val == 0.0L) {
-      int sign = (val < 0) ? -1 : 1;
-      sign = 1; // Prevent negative zero
-  }
+
+
   // Determine if scientific notation is needed
   if ((exponent < -4 || exponent >= *precision)) {
     // Format for scientific notation
@@ -662,21 +673,26 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
     // Fixed notation
     *precision = *precision - 1 - exponent;
     if (*precision < 0) *precision = 0;
+    else if (val == 0.0L && !(*flags & FLAG_ALT)) *precision = 1;
     long double original_val = val * powl(10, exponent);
     s21_ftoa(original_val, itc, *precision);
-    if (!(*flags & FLAG_ALT))
-      remove_trailing_zeroes(
-          itc);  // Remove trailing zeros unless # flag is set
+    if (!(*flags & FLAG_ALT)){
+      int removed_zeroes = remove_trailing_zeroes(itc);  // Remove trailing zeros unless # flag is set
+      *precision -= removed_zeroes;
+      if (*precision < 0) *precision = 0;
+    }
   }
 
   len = s21_strlen(itc);
+
 
   if (!(*flags & FLAG_LEFT) && !(*flags & FLAG_ZERO) && *width > len) {
     handle_width_padding(str, index, *width - len, *flags);
   }
 
-  if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0) {
-    handle_sign_space(str, index, (val >= 0 ? 1 : -1), *flags);
+  if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0 || (val == 0.0L && signbit(val))) {
+    handle_sign_space(str, index, (signbit(val) ? -1 : 1), *flags);
+    (*width)--;
   }
 
   if (!(*flags & FLAG_LEFT) && (*flags & FLAG_ZERO) && *width > len) {
@@ -690,12 +706,13 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
 
   s21_strcpy(&str[*index], itc);
   *index += len;
-  
+
   if (*flags & FLAG_ALT && *precision == 0) {
-        str[(*index)++] = '.';
+    str[(*index)++] = '.';
   }
 
   if ((*flags & FLAG_LEFT) && *width > len) {
+    if (*flags & FLAG_ZERO) *flags &= ~FLAG_ZERO;
     handle_width_padding(str, index, *width - len, *flags);
   }
 
@@ -705,21 +722,37 @@ int proccess_compact(char *str, void *value, int *index, int *flags, int *width,
 /* Removed flags, width, precision and length for string, char, char counter and
 pointer i don't think they are required by task*/
 
-int proccess_string_arg(char *str, va_list *args, int *index) {
+int process_string_arg(char *str, va_list *args, int *index, int *flags, int *width) {
   char *value = va_arg(*args, char *);
+  int val_len = s21_strlen(value);
+  if (*flags & FLAG_ZERO) *flags &= ~FLAG_ZERO;
+  
+  if (!(*flags & FLAG_LEFT) && *width > val_len) {
+    handle_width_padding(str, index, *width - val_len, *flags);
+  }
   s21_strcpy(&str[*index], value);
-  *index += s21_strlen(value);
+  *index += val_len;
+  if ((*flags & FLAG_LEFT) && *width > val_len) {
+    handle_width_padding(str, index, *width - val_len, *flags);
+  }
   return 0;
 }
 
-int proccess_char(char *str, va_list *args, int *index) {
+int process_char(char *str, va_list *args, int *index, int *flags, int *width) {
   char value = va_arg(*args, int);
-  str[*index] = value;
+  if (*flags & FLAG_ZERO) *flags &= ~FLAG_ZERO;
+  if (!(*flags & FLAG_LEFT) && *width > 1) {
+    handle_width_padding(str, index, *width - 1, *flags);
+  }
+  str[*index] = (unsigned char)value;
   *index += 1;
+  if ((*flags & FLAG_LEFT) && *width > 1) {
+    handle_width_padding(str, index, *width - 1, *flags);
+  }
   return 0;
 }
 
-int proccess_char_counter(va_list *args, int *index) {
+int process_char_counter(va_list *args, int *index) {
   int *value = va_arg(*args, int *);
   *value = *index;
   char itc[BUFSIZ] = {0};
@@ -727,7 +760,7 @@ int proccess_char_counter(va_list *args, int *index) {
   return 0;
 }
 
-int proccess_pointer(char *str, va_list *args, int *index) {
+int process_pointer(char *str, va_list *args, int *index) {
   // Padding should work with pointer ? should it ??? removed implementation
   // might need to add it though
   char itc[BUFSIZ] = {0};
@@ -742,28 +775,31 @@ int proccess_pointer(char *str, va_list *args, int *index) {
 }
 
 // int main() {
-//   char buff[256];
-//   char buff2[256];
+  // char buff[256];
+  // char buff2[256];
+  // s21_sprintf(buff, "ab %-010g cd", 5.0);
+  // sprintf(buff2, "ab %-010g cd", 5.0);
+  // printf("s21: %s\n std: %s\n", buff, buff2);
 //   char buff3[256];
 //   char buff4[256];
 //   char buff5[256];
 //   char buff6[256];
-  // s21_sprintf(buff, "ab %g cd", 123.0);
-  // sprintf(buff2, "ab %g cd", 12454645.0348);
-  // s21_sprintf(buff, "ab %.3g cd", 12345.67);
-  // sprintf(buff2, "ab %.3g cd", 12345.67);
+// s21_sprintf(buff, "ab %g cd", 123.0);
+// sprintf(buff2, "ab %g cd", 12454645.0348);
+// s21_sprintf(buff, "ab %.3g cd", 12345.67);
+// sprintf(buff2, "ab %.3g cd", 12345.67);
 
-  // s21_sprintf(buff, "ab %p cd", p);
-  // sprintf(buff2, "ab %p cd", p);
+// s21_sprintf(buff, "ab %p cd", p);
+// sprintf(buff2, "ab %p cd", p);
 
 //   s21_sprintf(buff, "ab %#x cd", 351351351);
 //   sprintf(buff2, "ab %#x cd", 351351351);
 
-  // sprintf(buff2, "ab %.0g cd", 0.0042069);
-  // s21_sprintf(buff, "ab %g cd", 1.435800);
-  // sprintf(buff2, "ab %g cd", 1.435800);
-  // s21_sprintf(buff, "ab %.e cd", -123.45);
-  // sprintf(buff2, "ab %.e cd", -123.45);
+// sprintf(buff2, "ab %.0g cd", 0.0042069);
+// s21_sprintf(buff, "ab %g cd", 1.435800);
+// sprintf(buff2, "ab %g cd", 1.435800);
+// s21_sprintf(buff, "ab %.e cd", -123.45);
+// sprintf(buff2, "ab %.e cd", -123.45);
 
 // /* %O ALT TESTS CHECK */
 //   printf("************************\n");
@@ -865,7 +901,6 @@ int proccess_pointer(char *str, va_list *args, int *index) {
 //   s21_sprintf(buff4, "%- #.4e"	, 123.456	);
 //   s21_sprintf(buff5, "%0#12.3e"	, 7.89	);
 
-
 //   printf("%s\n", buff);
 //   printf("%s\n", buff2);
 //   printf("%s\n", buff3);
@@ -879,7 +914,6 @@ int proccess_pointer(char *str, va_list *args, int *index) {
 //   sprintf(buff3, "%+#10.2e"	, 123.456	);
 //   sprintf(buff4, "%- #.4e"	, 123.456	);
 //   sprintf(buff5, "%0#12.3e"	, 7.89	);
-
 
 //   printf("%s\n", buff);
 //   printf("%s\n", buff2);
@@ -911,8 +945,8 @@ int proccess_pointer(char *str, va_list *args, int *index) {
 //   sprintf(buff5, "%+#.0g"	,5.0);
 //   sprintf(buff6, "%#.4g"	,0.00123);
 
-//   printf("%s\n", buff);
-//   printf("%s\n", buff2);
+  // printf("%s\n", buff);
+  // printf("%s\n", buff2);
 //   printf("%s\n", buff3);
 //   printf("%s\n", buff4);
 //   printf("%s\n", buff5);
@@ -925,5 +959,9 @@ int proccess_pointer(char *str, va_list *args, int *index) {
 // need to test negative numbers with hex and octal
 
 
-
-
+// need to test this too
+  // s21_sprintf(buff1, "ab %#g cd", 0.0);
+  // sprintf(buff2, "ab %#g cd", 0.0);
+// test cases for negative zeroes
+  // s21_sprintf(buff1, "ab %f cd", -0.0);
+  // sprintf(buff2, "ab %f cd", -0.0);

@@ -1,399 +1,414 @@
 #include "s21_utils.h"
+
 #include "s21_sprintf.h"
 #include "string_functions.h"
 
-void reverse(char *str, int length){
-    int start = 0;
-    int end = length - 1;
-    while (start < end) {
-        char temp = str[start];
-        str[start] = str[end];
-        str[end] = temp;
-        start++;
-        end--;
-    }
+void reverse(char *str, int length) {
+  int start = 0;
+  int end = length - 1;
+  while (start < end) {
+    char temp = str[start];
+    str[start] = str[end];
+    str[end] = temp;
+    start++;
+    end--;
+  }
 }
-char *s21_itoa(int value, char *buffer, int base){
-    if (base < 2 || base > 36) { // returns empty string if base argument is invalid
-        *buffer = '\0';
-        return buffer;
-    }
-
-    int i = s21_strlen(buffer);
-    // int is_negative = 0; unused
-
-    // Handle 0 value
-    if (value == 0) {
-        buffer[i++] = '0';
-        buffer[i] = '\0';
-        return buffer;
-    }
-
-    // Handle INT MIN specially
-    if (value == INT_MIN && base == 10) {
-        s21_strcpy(buffer, "-2147483648");
-        return buffer;
-    }
-
-    // // negative numbers
-    if (value < 0 && base == 10) { // turn negative numbers to positive since they are handled
-        value = -value;
-    }
-
-    // Convert number to the given base
-    while (value != 0) {
-        int remainder = value % base;
-        buffer[i++] = (remainder > 9) ? (remainder - 10) + 'a' : remainder + '0';
-        value /= base;
-    }
-
-    // // base 10 negative sign
-    // if (is_negative) {
-    //     buffer[i++] = '-';
-    // }
-
-    buffer[i] = '\0'; // null at the end
-
-    // reverse string to restore original order
-    reverse(buffer, i);
-
+char *s21_itoa(int value, char *buffer, int base) {
+  if (base < 2 ||
+      base > 36) {  // returns empty string if base argument is invalid
+    *buffer = '\0';
     return buffer;
-}
+  }
 
-char *s21_lltoa(long value, char *buffer, int base){
-    if (base < 2 || base > 36) { // returns empty string if base argument is invalid
-        *buffer = '\0';
-        return buffer;
-    }
-    
-    int i = s21_strlen(buffer);
-    // int is_negative = 0;
+  int i = s21_strlen(buffer);
+  // int is_negative = 0; unused
 
-    // Handle LONG_MIN specially
-    // TODO should i also check for LONG MAX ???
-    if (value == LONG_MIN && base == 10) {
-        s21_strcpy(buffer, "-9223372036854775808");
-        return buffer;
-    }
-    // Handle 0 value
-    if (value == 0) {
-        buffer[i++] = '0';
-        buffer[i] = '\0';
-        return buffer;
-    }
-    // negative numbers
-    if (value < 0 && base == 10) { // turn negative numbers to positive since they are handled
-        value = -value;
-    }
-
-    // Convert number to the given base
-    while (value != 0) {
-        int remainder = value % base;
-        buffer[i++] = (remainder > 9) ? (remainder - 10) + 'a' : remainder + '0';
-        value /= base;
-    }
-
-    // // base 10 negative sign
-    // if (is_negative) {
-    //     buffer[i++] = '-';
-    // }
-
-    buffer[i] = '\0'; // null at the end
-
-    // reverse string to restore original order
-    reverse(buffer, i);
-
+  // Handle 0 value
+  if (value == 0) {
+    buffer[i++] = '0';
+    buffer[i] = '\0';
     return buffer;
+  }
+
+  // Handle INT MIN specially
+  if (value == INT_MIN && base == 10) {
+    s21_strcpy(buffer, "-2147483648");
+    return buffer;
+  }
+
+  // // negative numbers
+  if (value < 0 &&
+      base == 10) {  // turn negative numbers to positive since they are handled
+    value = -value;
+  }
+
+  // Convert number to the given base
+  while (value != 0) {
+    int remainder = value % base;
+    buffer[i++] = (remainder > 9) ? (remainder - 10) + 'a' : remainder + '0';
+    value /= base;
+  }
+
+  // // base 10 negative sign
+  // if (is_negative) {
+  //     buffer[i++] = '-';
+  // }
+
+  buffer[i] = '\0';  // null at the end
+
+  // reverse string to restore original order
+  reverse(buffer, i);
+
+  return buffer;
 }
 
-char *s21_utoa(unsigned int value, char *buffer, int base, int IsUpper){
-    if (base < 2 || base > 36) { // returns empty string if base argument is invalid
-        *buffer = '\0';
-        return buffer;
-    }
-
-    int i = 0;
-
-    // Handle 0 value
-    if (value == 0) {
-        buffer[i++] = '0';
-        buffer[i] = '\0';
-        return buffer;
-    }
-
-    // Convert number to the given base
-    while (value != 0) {
-        unsigned int remainder = value % base;
-        buffer[i++] = (remainder > 9) ? (remainder - 10) + (IsUpper? 'A' : 'a') : remainder + '0';
-        value /= base;
-    }
-
-    buffer[i] = '\0'; // null at the end
-
-    // reverse string to restore original order
-    reverse(buffer, i);
-
+char *s21_lltoa(long value, char *buffer, int base) {
+  if (base < 2 ||
+      base > 36) {  // returns empty string if base argument is invalid
+    *buffer = '\0';
     return buffer;
+  }
+
+  int i = s21_strlen(buffer);
+  // int is_negative = 0;
+
+  // Handle LONG_MIN specially
+  // TODO should i also check for LONG MAX ???
+  if (value == LONG_MIN && base == 10) {
+    s21_strcpy(buffer, "-9223372036854775808");
+    return buffer;
+  }
+  // Handle 0 value
+  if (value == 0) {
+    buffer[i++] = '0';
+    buffer[i] = '\0';
+    return buffer;
+  }
+  // negative numbers
+  if (value < 0 &&
+      base == 10) {  // turn negative numbers to positive since they are handled
+    value = -value;
+  }
+
+  // Convert number to the given base
+  while (value != 0) {
+    int remainder = value % base;
+    buffer[i++] = (remainder > 9) ? (remainder - 10) + 'a' : remainder + '0';
+    value /= base;
+  }
+
+  // // base 10 negative sign
+  // if (is_negative) {
+  //     buffer[i++] = '-';
+  // }
+
+  buffer[i] = '\0';  // null at the end
+
+  // reverse string to restore original order
+  reverse(buffer, i);
+
+  return buffer;
 }
 
-char *s21_llutoa(unsigned long value, char *buffer, int base, int IsUpper){
-    if (base < 2 || base > 36) { // returns empty string if base argument is invalid
-        *buffer = '\0';
-        return buffer;
-    }
-
-    int i = 0;
-
-    // Handle 0 value
-    if (value == 0) {
-        buffer[i++] = '0';
-        buffer[i] = '\0';
-        return buffer;
-    }
-
-    // Convert number to the given base
-    while (value != 0) {
-        unsigned int remainder = value % base;
-        buffer[i++] = (remainder > 9) ? (remainder - 10) + (IsUpper? 'A' : 'a') : remainder + '0';
-        value /= base;
-    }
-
-    buffer[i] = '\0'; // null at the end
-
-    // reverse string to restore original order
-    reverse(buffer, i);
-
+char *s21_utoa(unsigned int value, char *buffer, int base, int IsUpper) {
+  if (base < 2 ||
+      base > 36) {  // returns empty string if base argument is invalid
+    *buffer = '\0';
     return buffer;
+  }
+
+  int i = 0;
+
+  // Handle 0 value
+  if (value == 0) {
+    buffer[i++] = '0';
+    buffer[i] = '\0';
+    return buffer;
+  }
+
+  // Convert number to the given base
+  while (value != 0) {
+    unsigned int remainder = value % base;
+    buffer[i++] = (remainder > 9) ? (remainder - 10) + (IsUpper ? 'A' : 'a')
+                                  : remainder + '0';
+    value /= base;
+  }
+
+  buffer[i] = '\0';  // null at the end
+
+  // reverse string to restore original order
+  reverse(buffer, i);
+
+  return buffer;
+}
+
+char *s21_llutoa(unsigned long value, char *buffer, int base, int IsUpper) {
+  if (base < 2 ||
+      base > 36) {  // returns empty string if base argument is invalid
+    *buffer = '\0';
+    return buffer;
+  }
+
+  int i = 0;
+
+  // Handle 0 value
+  if (value == 0) {
+    buffer[i++] = '0';
+    buffer[i] = '\0';
+    return buffer;
+  }
+
+  // Convert number to the given base
+  while (value != 0) {
+    unsigned int remainder = value % base;
+    buffer[i++] = (remainder > 9) ? (remainder - 10) + (IsUpper ? 'A' : 'a')
+                                  : remainder + '0';
+    value /= base;
+  }
+
+  buffer[i] = '\0';  // null at the end
+
+  // reverse string to restore original order
+  reverse(buffer, i);
+
+  return buffer;
 }
 
 char *s21_ftoa(double value, char *buffer, int precision) {
-    char temp[50] = {0};
-    double integral;
-    double fractional = modf(value, &integral);
-    // printf("%.12f\n", fractional);
+  char temp[50] = {0};
+  double integral;
+  double fractional = modf(value, &integral);
+  // printf("%.12f\n", fractional);
 
-    if (value < 0) {
-        integral = -integral;
-        fractional = -fractional;
-    } else {
-        buffer[0] = '\0';
+  if (value < 0) {
+    integral = -integral;
+    fractional = -fractional;
+  } else {
+    buffer[0] = '\0';
+  }
+
+  s21_itoa((int)integral, temp, 10);
+  s21_strcat(buffer, temp);
+  int i = s21_strlen(buffer);
+  if (precision > 0) {
+    // TODO precision = 2; it should set precision to 2 temproraly if there are
+    // zeroes after .
+    buffer[i++] = '.';
+    double multiplier = pow(10, precision);
+    long frac_part = roundl(fractional * multiplier);
+    frac_part = frac_part < 0 ? -frac_part : frac_part;
+
+    // Convert fraction to string
+    temp[0] = '\0';
+    s21_lltoa(frac_part, temp, 10);
+
+    int frac_len = s21_strlen(temp);
+
+    // Add leading zeros
+    for (int j = 0; j < precision - frac_len; j++) {
+      buffer[i++] = '0';
     }
 
-    s21_itoa((int)integral, temp, 10);
-    s21_strcat(buffer, temp);
-    int i = s21_strlen(buffer);
-    if (precision > 0) {
-        // TODO precision = 2; it should set precision to 2 temproraly if there are zeroes after .
-        buffer[i++] = '.';
-        double multiplier = pow(10, precision);
-        long frac_part = roundl(fractional * multiplier);
-        frac_part = frac_part < 0 ? -frac_part : frac_part;
-        
-        // Convert fraction to string
-        temp[0] = '\0';
-        s21_lltoa(frac_part, temp, 10);
+    // Copy the fraction digits
+    s21_strcpy(&buffer[i], temp);
+  }
 
-        int frac_len = s21_strlen(temp);
-        
-        // Add leading zeros
-        for (int j = 0; j < precision - frac_len; j++) {
-            buffer[i++] = '0';
-        }
-        
-        // Copy the fraction digits
-        s21_strcpy(&buffer[i], temp);
-    }
-
-    return buffer;
+  return buffer;
 }
 
 char *s21_lftoa(long double value, char *buffer, int precision) {
-    char temp[60];
-    long double integral;
-    long double fractional = modfl(value, &integral);
-    
-    if (value < 0) {
-        integral = -integral;
-        fractional = -fractional;
-    } else {
-        buffer[0] = '\0';
+  char temp[60];
+  long double integral;
+  long double fractional = modfl(value, &integral);
+
+  if (value < 0) {
+    integral = -integral;
+    fractional = -fractional;
+  } else {
+    buffer[0] = '\0';
+  }
+
+  s21_itoa((int)integral, temp, 10);
+  s21_strcat(buffer, temp);
+
+  int i = s21_strlen(buffer);  // TODO NEED TO CHECK THIS MIGHT BUG OUT
+
+  if (precision > 0) {
+    buffer[i++] = '.';
+    long double multiplier = pow(10, precision);
+    long frac_part = round(fractional * multiplier);
+    frac_part = frac_part < 0 ? -frac_part : frac_part;
+
+    // Convert fraction to string
+    s21_lltoa(frac_part, temp, 10);
+    int frac_len = s21_strlen(temp);
+
+    // Add leading zeros
+    for (int j = 0; j < precision - frac_len; j++) {
+      buffer[i++] = '0';
     }
 
-    s21_itoa((int)integral, temp, 10);
-    s21_strcat(buffer, temp);
-    
-    int i = s21_strlen(buffer); // TODO NEED TO CHECK THIS MIGHT BUG OUT
-    
+    // Copy the fraction digits
+    s21_strcpy(&buffer[i], temp);
+  }
 
-    if (precision > 0) {
-        buffer[i++] = '.';
-        long double multiplier = pow(10, precision);
-        long frac_part = round(fractional * multiplier);
-        frac_part = frac_part < 0 ? -frac_part : frac_part;
-        
-        // Convert fraction to string
-        s21_lltoa(frac_part, temp, 10);
-        int frac_len = s21_strlen(temp);
-        
-        // Add leading zeros
-        for (int j = 0; j < precision - frac_len; j++) {
-            buffer[i++] = '0';
-        }
-        
-        // Copy the fraction digits
-        s21_strcpy(&buffer[i], temp);
-    }
-
-    return buffer;
+  return buffer;
 }
-
 
 /*
 test cases:
 0.0000
 */
 char *s21_etoa(double value, char *buffer, int precision) {
-    char temp[100]; // temporary buffer to hold the integer part
-    int e_width = 0;
-    if (value < 0) {
-        value = -value;
-    } else {
-        buffer[0] = '\0';
+  char temp[100];  // temporary buffer to hold the integer part
+  int e_width = 0;
+  if (value < 0) {
+    value = -value;
+  } else {
+    buffer[0] = '\0';
+  }
+
+  if (value < 1.0) {
+    while (value < 1.0) {
+      value *= 10;
+      e_width++;
     }
-
-    if (value < 1.0) {
-        while (value < 1.0){
-            value *= 10;
-            e_width ++;
-        }        
-    } else {
-        while (fmod(value, 10) >= 10) {
-            value /= 10;
-            e_width ++;
-        }
+  } else {
+    while (fmod(value, 10) >= 10) {
+      value /= 10;
+      e_width++;
     }
-    s21_ftoa(value, buffer, precision);
-    buffer[s21_strlen(buffer)] = 'e';
-    buffer[s21_strlen(buffer)] = '\0';
+  }
+  s21_ftoa(value, buffer, precision);
+  buffer[s21_strlen(buffer)] = 'e';
+  buffer[s21_strlen(buffer)] = '\0';
 
-    
-    int int_part = (int)value; // separate part of float before fraction
-    double frac_part = value - (double)int_part; // separate fraction from integer
-    s21_itoa(int_part, temp, 10); // convert integer part to string
+  int int_part = (int)value;  // separate part of float before fraction
+  double frac_part =
+      value - (double)int_part;  // separate fraction from integer
+  s21_itoa(int_part, temp, 10);  // convert integer part to string
 
-    int i = 0;
-    while (temp[i] != '\0') { // copy integer part to buffer
-        buffer[i] = temp[i];
-        i++;
+  int i = 0;
+  while (temp[i] != '\0') {  // copy integer part to buffer
+    buffer[i] = temp[i];
+    i++;
+  }
+
+  if (precision == -1) precision = 6;
+
+  if (precision > 0) {
+    buffer[i++] = '.';  // place dot before fraction
+    while (precision-- > 0) {
+      // printf("%f\n",frac_part);
+      frac_part *= 10;
+      int frac_int = (int)(frac_part + 0.5);
+      // printf("%d\n",frac_int);
+      buffer[i++] = frac_int + '0';
+      frac_part -= frac_int;
     }
+  }
 
-    if (precision == -1) precision = 6;
-
-    if (precision > 0) {
-        buffer[i++] = '.'; // place dot before fraction
-        while (precision-- > 0) {
-            // printf("%f\n",frac_part);
-            frac_part *= 10;
-            int frac_int = (int)(frac_part + 0.5);
-            // printf("%d\n",frac_int);
-            buffer[i++] = frac_int + '0';
-            frac_part -= frac_int;
-        }
-    }
-
-    buffer[i] = '\0';
-    return buffer;
+  buffer[i] = '\0';
+  return buffer;
 }
 
 int round_to_sig_digits(double *value, int *precision, int IsComp) {
-    if (*value == 0.0) return 0;
+  if (*value == 0.0) return 0;
 
-    int exponent = (int)floor(log10(fabs(*value)));
+  int exponent = (int)floor(log10(fabs(*value)));
 
-    if (IsComp) {
-        // %g: Round to 'precision' significant digits
-        double scale = pow(10, *precision - 1 - exponent);
-        *value = round(*value * scale) / scale;
-        
-        // Recalculate exponent post-rounding
-        if (*value != 0.0) {
-            exponent = (int)floor(log10(fabs(*value)));
-            double norm_scale = pow(10, exponent);
-            *value /= norm_scale;
-            
-            // Handle cases where rounding pushed value to 10.0 or 0.0999
-            if (*value >= 10.0) {
-                *value /= 10.0;
-                exponent++;
-            } else if (*value < 1.0) {
-                *value *= 10.0;
-                exponent--;
-            }
-        }
-    } else {
-        // %e: Normalize to [1.0, 10.0)
-        double scale = pow(10, -exponent);
-        *value *= scale;
-        if (*value >= 10.0) {
-            *value /= 10.0;
-            exponent++;
-        }
+  if (IsComp) {
+    // %g: Round to 'precision' significant digits
+    double scale = pow(10, *precision - 1 - exponent);
+    *value = round(*value * scale) / scale;
+
+    // Recalculate exponent post-rounding
+    if (*value != 0.0) {
+      exponent = (int)floor(log10(fabs(*value)));
+      double norm_scale = pow(10, exponent);
+      *value /= norm_scale;
+
+      // Handle cases where rounding pushed value to 10.0 or 0.0999
+      if (*value >= 10.0) {
+        *value /= 10.0;
+        exponent++;
+      } else if (*value < 1.0) {
+        *value *= 10.0;
+        exponent--;
+      }
     }
-    
-    // Adjust precision for numbers with leading zeros
-    if (exponent < 0 && (int)fabs((double)exponent) > *precision) { // again might be trouble with casting int to double for fabs
-        *precision = (int)fabs((double)exponent);
+  } else {
+    // %e: Normalize to [1.0, 10.0)
+    double scale = pow(10, -exponent);
+    *value *= scale;
+    if (*value >= 10.0) {
+      *value /= 10.0;
+      exponent++;
     }
-    return exponent;
+  }
+
+  // Adjust precision for numbers with leading zeros
+  if (exponent < 0 && (int)fabs((double)exponent) >
+                          *precision) {  // again might be trouble with casting
+                                         // int to double for fabs
+    *precision = (int)fabs((double)exponent);
+  }
+  return exponent;
 }
 
 int round_to_sig_digits_l(long double *value, int *precision, int IsComp) {
-    if (*value == 0.0) return 0;
+  if (*value == 0.0) return 0;
+  
+  int exponent = (int)floor(log10(fabs(*value)));
 
-    int exponent = (int)floor(log10(fabs(*value)));
+  if (IsComp) {
+    // %g: Round to 'precision' significant digits
+    long double scale = pow(10, *precision - 1 - exponent);
+    *value = round(*value * scale) / scale;
 
-    if (IsComp) {
-        // %g: Round to 'precision' significant digits
-        long double scale = pow(10, *precision - 1 - exponent);
-        *value = round(*value * scale) / scale;
-        
-        // Recalculate exponent post-rounding
-        if (*value != 0.0) {
-            exponent = (int)floor(log10(fabs(*value)));
-            long double norm_scale = pow(10, exponent);
-            *value /= norm_scale;
-            
-            // Handle cases where rounding pushed value to 10.0 or 0.0999
-            if (*value >= 10.0) {
-                *value /= 10.0;
-                exponent++;
-            } else if (*value < 1.0) {
-                *value *= 10.0;
-                exponent--;
-            }
-        }
-    } else {
-        // %e: Normalize to [1.0, 10.0)
-        long double scale = pow(10, -exponent);
-        *value *= scale;
-        if (*value >= 10.0) {
-            *value /= 10.0;
-            exponent++;
-        }
+    // Recalculate exponent post-rounding
+    if (*value != 0.0) {
+      exponent = (int)floor(log10(fabs(*value)));
+      long double norm_scale = pow(10, exponent);
+      *value /= norm_scale;
+
+      // Handle cases where rounding pushed value to 10.0 or 0.0999
+      if (*value >= 10.0) {
+        *value /= 10.0;
+        exponent++;
+      } else if (*value < 1.0) {
+        *value *= 10.0;
+        exponent--;
+      }
     }
-    
-    // Adjust precision for numbers with leading zeros
-    if (exponent < 0 && (int)fabsl((long double)exponent) > *precision) { // again might be trouble with casting int to double for fabs
-        *precision = (int)fabsl((long double)exponent);
+  } else {
+    // %e: Normalize to [1.0, 10.0)
+    long double scale = pow(10, -exponent);
+    *value *= scale;
+    if (*value >= 10.0) {
+      *value /= 10.0;
+      exponent++;
     }
-    return exponent;
+  }
+
+  // Adjust precision for numbers with leading zeros
+  if (exponent < 0 && (int)fabsl((long double)exponent) >
+                          *precision) {  // again might be trouble with casting
+                                         // int to double for fabs
+    *precision = (int)fabsl((long double)exponent);
+  }
+  return exponent;
 }
 
-void remove_trailing_zeroes(char *itc) {
-    int i_len = s21_strlen(itc) - 1;
-    while (i_len >= 0 && itc[i_len] == '0') {
-      itc[i_len] = '\0';
-      i_len--;
-    }
-    if (i_len >= 0 && itc[i_len] == '.') itc[i_len] = '\0';
+int remove_trailing_zeroes(char *itc) {
+  int removed_count = 0;
+  int i_len = s21_strlen(itc) - 1;
+  while (i_len >= 0 && itc[i_len] == '0') {
+    itc[i_len] = '\0';
+    i_len--;
+    removed_count++;
+  }
+  if (i_len >= 0 && itc[i_len] == '.') itc[i_len] = '\0';
+  return removed_count;
 }

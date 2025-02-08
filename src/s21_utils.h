@@ -1,9 +1,9 @@
 #ifndef S21_UTILS
 #define S21_UTILS
 
-#include <stdio.h>
-#include <math.h>
 #include <limits.h>
+#include <math.h>
+#include <stdio.h>
 
 void reverse(char *str, int length);
 char *s21_itoa(int value, char *buffer, int base);
@@ -16,8 +16,7 @@ char *s21_etoa(double value, char *buffer, int precision);
 // int round_to_sig_digits(double *value, int *precision, int IsComp);
 int round_to_sig_digits(double *value, int *precision, int IsComp);
 int round_to_sig_digits_l(long double *value, int *precision, int IsComp);
-void remove_trailing_zeroes(char *itc);
-
+int remove_trailing_zeroes(char *itc);
 
 typedef long long unsigned int s21_uintptr_t;
 

@@ -23,8 +23,9 @@ char *s21_strcpy(char *dest, const char *src);
 char *s21_strcat(char *dest, const char *src);
 
 typedef struct {
-    int error_code;       // Error code (e.g., ENOENT)
-    const char *message;  // Error message/description (e.g., "No such file or directory")
+  int error_code;  // Error code (e.g., ENOENT)
+  const char *
+      message;  // Error message/description (e.g., "No such file or directory")
 } ErrorCode;
 
 #endif
