@@ -180,7 +180,7 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
       }
 
       process_signed_int(str, &value, index, &flags, &width, &precision,
-                          length_modifiers);
+                         length_modifiers);
       break;
 
     case 'u':
@@ -197,7 +197,7 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
           u_value.i = va_arg(*args, unsigned int);
       }
       process_unsigned_int(str, &u_value, index, &flags, &width, &precision,
-                            length_modifiers, base, 0, 0);
+                           length_modifiers, base, 0, 0);
       break;
     case 'o':
       // logic to process unsigned integers in base 8
@@ -212,13 +212,8 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
         default:
           u_value.i = va_arg(*args, unsigned int);
       }
-      //   if ((flags & FLAG_ALT) && u_value.i != 0 && u_value.s != 0 &&
-      //       u_value.l != 0) {
-      //     str[*index] = '0';
-      //     *index += 1;
-      //   }
       process_unsigned_int(str, &u_value, index, &flags, &width, &precision,
-                            length_modifiers, base, 0, 0);
+                           length_modifiers, base, 0, 0);
       break;
     case 'X':
     case 'x':
@@ -234,14 +229,8 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
         default:
           u_value.i = va_arg(*args, unsigned int);
       }
-      //   if ((flags & FLAG_ALT) && u_value.i != 0 && u_value.s != 0 &&
-      //       u_value.l != 0) {
-      //     str[*index] = '0';
-      //     str[*index + 1] = (**current == 'X' ? 'X' : 'x');
-      //     *index += 2;
-      //   }
       process_unsigned_int(str, &u_value, index, &flags, &width, &precision,
-                            length_modifiers, base, **current == 'X', 1);
+                           length_modifiers, base, **current == 'X', 1);
       break;
     case 'F':
     case 'f':
@@ -254,7 +243,7 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
           value.db = va_arg(*args, double);
       }
       process_float(str, &value, index, &flags, &width, &precision,
-                     length_modifiers, **current == 'F');
+                    length_modifiers, **current == 'F');
       break;
     case 'E':
     case 'e':
@@ -267,8 +256,8 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
           value.db = va_arg(*args, double);
       }
       process_scientific(str, &value, index, &flags, &width, &precision,
-                          length_modifiers,
-                          **current == 'E');  // tricky operator comparision
+                         length_modifiers,
+                         **current == 'E');  // tricky operator comparision
       break;
     case 'g':
     case 'G':
@@ -281,7 +270,7 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
           value.db = va_arg(*args, double);
       }
       process_compact(str, &value, index, &flags, &width, &precision,
-                       length_modifiers, **current == 'G');
+                      length_modifiers, **current == 'G');
       break;
     case 's':
       // logic to process strings
@@ -293,7 +282,7 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
       break;
     case 'p':
       // logic to process pointers
-      process_pointer(str, args, index);
+      process_pointer(str, args, index, &flags);
       break;
     case 'n':
       // write number of characters written so far
@@ -321,7 +310,9 @@ void handle_width_padding(char *str, int *index, int width, int flags) {
       str[(*index)++] = ' ';
     }
   } else {
-    if (flags & FLAG_SIGN) width--;
+    if ((flags & FLAG_SIGN) || (flags & FLAG_SPACE))
+      width--;  // TODO fix this so it modifies width pointer and can remove
+                // extra step to modify on sign if block
     for (int i = 0; i < width; i++) {
       str[(*index)++] = ' ';
     }
@@ -374,7 +365,7 @@ void handle_sign_space(char *str, int *index, int value, int flags) {
 }
 
 int process_signed_int(char *str, void *value, int *index, int *flags,
-                        int *width, int *precision, char length_modifier) {
+                       int *width, int *precision, char length_modifier) {
   int val = 0;
   long long long_val = 0;
   char itc[BUFSIZ] = {0};
@@ -403,8 +394,7 @@ int process_signed_int(char *str, void *value, int *index, int *flags,
   }
 
   if (!(*flags & FLAG_LEFT) && (*flags & FLAG_ZERO) && *width > len) {
-    handle_width_padding(str, index,
-                         *width - (*flags & FLAG_SIGN ? len + 1 : len), *flags);
+    handle_width_padding(str, index, *width - len, *flags);
   }
 
   if (*precision > len) {
@@ -423,8 +413,8 @@ int process_signed_int(char *str, void *value, int *index, int *flags,
 }
 
 int process_unsigned_int(char *str, void *u_value, int *index, int *flags,
-                          int *width, int *precision, char length_modifier,
-                          int base, int IsUpper, int isX) {
+                         int *width, int *precision, char length_modifier,
+                         int base, int IsUpper, int isX) {
   unsigned int val = 0;
   unsigned long long long_val = 0;
   char itc[BUFSIZ] = {0};
@@ -444,6 +434,8 @@ int process_unsigned_int(char *str, void *u_value, int *index, int *flags,
   }
 
   len = s21_strlen(itc);
+
+  if (*flags & FLAG_SIGN) *flags &= ~FLAG_SIGN;
 
   if (!(*flags & FLAG_LEFT) && !(*flags & FLAG_ZERO) &&
       *width > (*flags & FLAG_ALT ? (isX ? len + 2 : len + 1) : len)) {
@@ -481,7 +473,7 @@ int process_unsigned_int(char *str, void *u_value, int *index, int *flags,
 }
 
 int process_float(char *str, void *value, int *index, int *flags, int *width,
-                   int *precision, char length_modifier, int IsUpper) {
+                  int *precision, char length_modifier, int IsUpper) {
   char itc[BUFSIZ] = {0};
   int len;
   long double val;
@@ -515,14 +507,14 @@ int process_float(char *str, void *value, int *index, int *flags, int *width,
     handle_width_padding(str, index, *width - len, *flags);
   }
 
-  if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0 || (val == 0.0L && signbit(val))) {
+  if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0 ||
+      (val == 0.0L && signbit(val))) {
     handle_sign_space(str, index, (signbit(val) ? -1 : 1), *flags);
     (*width)--;
   }
 
   if (!(*flags & FLAG_LEFT) && (*flags & FLAG_ZERO) && *width > len) {
-    handle_width_padding(str, index,
-                         *width - (*flags & FLAG_SIGN ? len + 1 : len), *flags);
+    handle_width_padding(str, index, *width - len, *flags);
   }
 
   if (*precision > len) {
@@ -542,8 +534,8 @@ int process_float(char *str, void *value, int *index, int *flags, int *width,
 }
 
 int process_scientific(char *str, void *value, int *index, int *flags,
-                        int *width, int *precision, char length_modifier,
-                        int IsUpper) {
+                       int *width, int *precision, char length_modifier,
+                       int IsUpper) {
   char itc[BUFSIZ] = {0};
   int exponent = 0;
   int len;
@@ -596,14 +588,14 @@ int process_scientific(char *str, void *value, int *index, int *flags,
     handle_width_padding(str, index, *width - len, *flags);
   }
 
-  if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0 || (val == 0.0L && signbit(val))) {
+  if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0 ||
+      (val == 0.0L && signbit(val))) {
     handle_sign_space(str, index, (signbit(val) ? -1 : 1), *flags);
     (*width)--;
   }
 
   if (!(*flags & FLAG_LEFT) && (*flags & FLAG_ZERO) && *width > len) {
-    handle_width_padding(str, index,
-                         *width - (*flags & FLAG_SIGN ? len + 1 : len), *flags);
+    handle_width_padding(str, index, *width - len, *flags);
   }
 
   if (*precision > len) {
@@ -614,7 +606,8 @@ int process_scientific(char *str, void *value, int *index, int *flags,
   *index += len;
 
   if ((*flags & FLAG_LEFT) && *width > len) {
-    if (*flags & FLAG_ZERO) *flags &= ~FLAG_ZERO; // TODO COULD BE EXTRA NEED TO CHECK
+    if (*flags & FLAG_ZERO)
+      *flags &= ~FLAG_ZERO;  // TODO COULD BE EXTRA NEED TO CHECK
     handle_width_padding(str, index, *width - len, *flags);
   }
 
@@ -622,7 +615,7 @@ int process_scientific(char *str, void *value, int *index, int *flags,
 }
 
 int process_compact(char *str, void *value, int *index, int *flags, int *width,
-                     int *precision, char length_modifier, int IsUpper) {
+                    int *precision, char length_modifier, int IsUpper) {
   char itc[BUFSIZ] = {0};
   int exponent = 0;
   int len;
@@ -653,7 +646,6 @@ int process_compact(char *str, void *value, int *index, int *flags, int *width,
   }
   exponent = round_to_sig_digits_l(&val, precision, 1);
 
-
   // Determine if scientific notation is needed
   if ((exponent < -4 || exponent >= *precision)) {
     // Format for scientific notation
@@ -672,12 +664,15 @@ int process_compact(char *str, void *value, int *index, int *flags, int *width,
   } else {
     // Fixed notation
     *precision = *precision - 1 - exponent;
-    if (*precision < 0) *precision = 0;
-    else if (val == 0.0L && !(*flags & FLAG_ALT)) *precision = 1;
+    if (*precision < 0)
+      *precision = 0;
+    else if (val == 0.0L && !(*flags & FLAG_ALT))
+      *precision = 1;
     long double original_val = val * powl(10, exponent);
     s21_ftoa(original_val, itc, *precision);
-    if (!(*flags & FLAG_ALT)){
-      int removed_zeroes = remove_trailing_zeroes(itc);  // Remove trailing zeros unless # flag is set
+    if (!(*flags & FLAG_ALT)) {
+      int removed_zeroes = remove_trailing_zeroes(
+          itc);  // Remove trailing zeros unless # flag is set
       *precision -= removed_zeroes;
       if (*precision < 0) *precision = 0;
     }
@@ -685,19 +680,18 @@ int process_compact(char *str, void *value, int *index, int *flags, int *width,
 
   len = s21_strlen(itc);
 
-
   if (!(*flags & FLAG_LEFT) && !(*flags & FLAG_ZERO) && *width > len) {
     handle_width_padding(str, index, *width - len, *flags);
   }
 
-  if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0 || (val == 0.0L && signbit(val))) {
+  if (*flags & FLAG_SIGN || *flags & FLAG_SPACE || val < 0 ||
+      (val == 0.0L && signbit(val))) {
     handle_sign_space(str, index, (signbit(val) ? -1 : 1), *flags);
     (*width)--;
   }
 
   if (!(*flags & FLAG_LEFT) && (*flags & FLAG_ZERO) && *width > len) {
-    handle_width_padding(str, index,
-                         *width - (*flags & FLAG_SIGN ? len + 1 : len), *flags);
+    handle_width_padding(str, index, *width - len, *flags);
   }
 
   if (*precision > len) {
@@ -722,11 +716,12 @@ int process_compact(char *str, void *value, int *index, int *flags, int *width,
 /* Removed flags, width, precision and length for string, char, char counter and
 pointer i don't think they are required by task*/
 
-int process_string_arg(char *str, va_list *args, int *index, int *flags, int *width) {
+int process_string_arg(char *str, va_list *args, int *index, int *flags,
+                       int *width) {
   char *value = va_arg(*args, char *);
   int val_len = s21_strlen(value);
   if (*flags & FLAG_ZERO) *flags &= ~FLAG_ZERO;
-  
+
   if (!(*flags & FLAG_LEFT) && *width > val_len) {
     handle_width_padding(str, index, *width - val_len, *flags);
   }
@@ -741,6 +736,7 @@ int process_string_arg(char *str, va_list *args, int *index, int *flags, int *wi
 int process_char(char *str, va_list *args, int *index, int *flags, int *width) {
   char value = va_arg(*args, int);
   if (*flags & FLAG_ZERO) *flags &= ~FLAG_ZERO;
+  if (*flags & FLAG_SIGN) *flags &= ~FLAG_SIGN;
   if (!(*flags & FLAG_LEFT) && *width > 1) {
     handle_width_padding(str, index, *width - 1, *flags);
   }
@@ -760,26 +756,30 @@ int process_char_counter(va_list *args, int *index) {
   return 0;
 }
 
-int process_pointer(char *str, va_list *args, int *index) {
+int process_pointer(char *str, va_list *args, int *index, int *flags) {
   // Padding should work with pointer ? should it ??? removed implementation
   // might need to add it though
   char itc[BUFSIZ] = {0};
   void *value = va_arg(*args, void *);
   s21_uintptr_t addr = (s21_uintptr_t)value;
   s21_llutoa(addr, itc, 16, 0);
-  s21_strcpy(&str[*index], "0x");
-  *index += 2;
+  s21_strcpy(&str[*index], (*flags & FLAG_SIGN) ? "+0x" : "0x");
+  if (*flags & FLAG_SIGN) {
+    *index += 3;
+  } else {
+    *index += 2;
+  }
   s21_strcpy(&str[*index], itc);
   *index += s21_strlen(itc);
   return 0;
 }
 
 // int main() {
-  // char buff[256];
-  // char buff2[256];
-  // s21_sprintf(buff, "ab %-010g cd", 5.0);
-  // sprintf(buff2, "ab %-010g cd", 5.0);
-  // printf("s21: %s\n std: %s\n", buff, buff2);
+// char buff[256];
+// char buff2[256];
+// s21_sprintf(buff, "ab %-010g cd", 5.0);
+// sprintf(buff2, "ab %-010g cd", 5.0);
+// printf("s21: %s\n std: %s\n", buff, buff2);
 //   char buff3[256];
 //   char buff4[256];
 //   char buff5[256];
@@ -945,8 +945,8 @@ int process_pointer(char *str, va_list *args, int *index) {
 //   sprintf(buff5, "%+#.0g"	,5.0);
 //   sprintf(buff6, "%#.4g"	,0.00123);
 
-  // printf("%s\n", buff);
-  // printf("%s\n", buff2);
+// printf("%s\n", buff);
+// printf("%s\n", buff2);
 //   printf("%s\n", buff3);
 //   printf("%s\n", buff4);
 //   printf("%s\n", buff5);
@@ -958,10 +958,9 @@ int process_pointer(char *str, va_list *args, int *index) {
 
 // need to test negative numbers with hex and octal
 
-
 // need to test this too
-  // s21_sprintf(buff1, "ab %#g cd", 0.0);
-  // sprintf(buff2, "ab %#g cd", 0.0);
+// s21_sprintf(buff1, "ab %#g cd", 0.0);
+// sprintf(buff2, "ab %#g cd", 0.0);
 // test cases for negative zeroes
-  // s21_sprintf(buff1, "ab %f cd", -0.0);
-  // sprintf(buff2, "ab %f cd", -0.0);
+// s21_sprintf(buff1, "ab %f cd", -0.0);
+// sprintf(buff2, "ab %f cd", -0.0);

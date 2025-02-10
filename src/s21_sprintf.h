@@ -50,7 +50,7 @@ int process_char(char *str, va_list *args, int *index, int *flags, int *width);
 
 int process_char_counter(va_list *args, int *index);
 
-int process_pointer(char *str, va_list *args, int *index);
+int process_pointer(char *str, va_list *args, int *index, int *flags);
 
 // HELPER
 void handle_width_padding(char *str, int *index, int width, int flags);
