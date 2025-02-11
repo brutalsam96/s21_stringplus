@@ -32,10 +32,10 @@ char *s21_itoa(int value, char *buffer, int base) {
   }
 
   // Handle INT MIN specially
-  if (value == INT_MIN && base == 10) {
-    s21_strcpy(buffer, "-2147483648");
-    return buffer;
-  }
+  // if (value == INT_MIN && base == 10) {
+  //   s21_strcpy(buffer, "-2147483648");
+  //   return buffer;
+  // }
 
   // // negative numbers
   if (value < 0 &&
@@ -74,11 +74,16 @@ char *s21_lltoa(long value, char *buffer, int base) {
   // int is_negative = 0;
 
   // Handle LONG_MIN specially
-  // TODO should i also check for LONG MAX ???
-  if (value == LONG_MIN && base == 10) {
-    s21_strcpy(buffer, "-9223372036854775808");
-    return buffer;
-  }
+  // if (value == LONG_MIN && base == 10) {
+  //   s21_strcpy(buffer, "-9223372036854775808");
+  //   return buffer;
+  // }
+  // if (value >= LONG_MAX && base == 10) {
+  //   s21_strcpy(buffer, "-1");
+  //   buffer[2] = '\0';
+  //   return buffer;
+  // }
+
   // Handle 0 value
   if (value == 0) {
     buffer[i++] = '0';
@@ -218,7 +223,7 @@ char *s21_ftoa(double value, char *buffer, int precision) {
 }
 
 char *s21_lftoa(long double value, char *buffer, int precision) {
-  char temp[60];
+  char temp[60] = {0};
   long double integral;
   long double fractional = modfl(value, &integral);
 
@@ -241,6 +246,7 @@ char *s21_lftoa(long double value, char *buffer, int precision) {
     frac_part = frac_part < 0 ? -frac_part : frac_part;
 
     // Convert fraction to string
+    temp[0] = '\0';
     s21_lltoa(frac_part, temp, 10);
     int frac_len = s21_strlen(temp);
 

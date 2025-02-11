@@ -274,7 +274,7 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
       break;
     case 's':
       // logic to process strings
-      process_string_arg(str, args, index, &flags, &width);
+      process_string_arg(str, args, index, &flags, &width, &precision);
       break;
     case 'c':
       // logic to process chars
@@ -320,7 +320,7 @@ void handle_width_padding(char *str, int *index, int width, int flags) {
 }
 
 void handle_precision_padding(char *str, int *index, int precision, int value) {
-  int val_width = 1, temp_val = fabs((double)value);
+  int val_width = 0, temp_val = fabs((double)value);
   for (; temp_val > 0; val_width++) {
     temp_val /= 10;
   }
@@ -366,6 +366,8 @@ void handle_sign_space(char *str, int *index, int value, int flags) {
 
 int process_signed_int(char *str, void *value, int *index, int *flags,
                        int *width, int *precision, char length_modifier) {
+  
+  if (*precision == 0) return 0;
   int val = 0;
   long long long_val = 0;
   char itc[BUFSIZ] = {0};
@@ -381,7 +383,6 @@ int process_signed_int(char *str, void *value, int *index, int *flags,
     val = *(int *)value;
     s21_itoa(val, itc, 10);
   }
-
   len = s21_strlen(itc);
 
   if (!(*flags & FLAG_LEFT) && !(*flags & FLAG_ZERO) && *width > len) {
@@ -415,6 +416,7 @@ int process_signed_int(char *str, void *value, int *index, int *flags,
 int process_unsigned_int(char *str, void *u_value, int *index, int *flags,
                          int *width, int *precision, char length_modifier,
                          int base, int IsUpper, int isX) {
+  if (*precision == 0) return 0;
   unsigned int val = 0;
   unsigned long long long_val = 0;
   char itc[BUFSIZ] = {0};
@@ -565,10 +567,7 @@ int process_scientific(char *str, void *value, int *index, int *flags,
     return 0;
   }
 
-  // TODO handle case 0.0L here
   exponent = round_to_sig_digits(&val, precision, 0);
-  // TODO need else block to handle value == 0
-
   s21_ftoa(fabs(val), itc, *precision);
 
   len = s21_strlen(itc);
@@ -717,7 +716,7 @@ int process_compact(char *str, void *value, int *index, int *flags, int *width,
 pointer i don't think they are required by task*/
 
 int process_string_arg(char *str, va_list *args, int *index, int *flags,
-                       int *width) {
+                       int *width, int *precision) {
   char *value = va_arg(*args, char *);
   int val_len = s21_strlen(value);
   if (*flags & FLAG_ZERO) *flags &= ~FLAG_ZERO;
@@ -725,7 +724,16 @@ int process_string_arg(char *str, va_list *args, int *index, int *flags,
   if (!(*flags & FLAG_LEFT) && *width > val_len) {
     handle_width_padding(str, index, *width - val_len, *flags);
   }
-  s21_strcpy(&str[*index], value);
+
+  if (*precision != -1) {
+    if (*precision > val_len) {
+      *precision = val_len;
+    } else {
+      val_len = *precision;
+    }
+  }
+  s21_strncpy(&str[*index], value, val_len);
+  
   *index += val_len;
   if ((*flags & FLAG_LEFT) && *width > val_len) {
     handle_width_padding(str, index, *width - val_len, *flags);
@@ -761,6 +769,11 @@ int process_pointer(char *str, va_list *args, int *index, int *flags) {
   // might need to add it though
   char itc[BUFSIZ] = {0};
   void *value = va_arg(*args, void *);
+  if (value == S21_NULL) {
+    s21_strcpy(&str[*index], "(nil)");
+    *index += 5;
+    return 0;
+  }
   s21_uintptr_t addr = (s21_uintptr_t)value;
   s21_llutoa(addr, itc, 16, 0);
   s21_strcpy(&str[*index], (*flags & FLAG_SIGN) ? "+0x" : "0x");

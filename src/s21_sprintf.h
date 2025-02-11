@@ -45,7 +45,7 @@ int process_scientific(char *str, void *value, int *index, int *flags,
 int process_compact(char *str, void *value, int *index, int *flags, int *width,
                      int *precision, char length_modifier, int IsUpper);
 
-int process_string_arg(char *str, va_list *args, int *index, int *flags, int *width);
+int process_string_arg(char *str, va_list *args, int *index, int *flags, int *width, int *precision);
 int process_char(char *str, va_list *args, int *index, int *flags, int *width);
 
 int process_char_counter(va_list *args, int *index);
