@@ -294,7 +294,8 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
       *index += 1;
       break;
     default:
-      // handle invalid input
+      str[*index] = '%';
+      *index += 1;
       break;
   }
   (*current)++;

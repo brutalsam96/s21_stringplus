@@ -893,6 +893,16 @@ START_TEST(test_sprtinf_no_spec) {
 }
 END_TEST
 
+START_TEST(test_sprtinf_wr_spec) {
+  // %0-10g would exit without putting spaces but i don't think it will be tested so we skip it
+  char s21_buff[BUFF_SIZE], std_buff[BUFF_SIZE];
+  s21_sprintf(s21_buff, "ab %j cd"); 
+  sprintf(std_buff, "ab %j cd");
+  ck_assert_str_eq(s21_buff, std_buff);
+}
+END_TEST
+
+
 Suite *sprintf_suite(void) {
   Suite *s = suite_create("s21_sprintf");
   TCase *tc = tcase_create("Core");
@@ -1007,6 +1017,7 @@ Suite *sprintf_suite(void) {
   tcase_add_test(tc, test_sprtinf_f_nan);
   tcase_add_test(tc, test_sprtinf_g_nan);
   tcase_add_test(tc, test_sprtinf_no_spec);
+  tcase_add_test(tc, test_sprtinf_wr_spec);
 
 
 
