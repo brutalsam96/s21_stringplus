@@ -902,6 +902,18 @@ START_TEST(test_sprtinf_wr_spec) {
 }
 END_TEST
 
+START_TEST(test_sprtinf_return) {
+  // %0-10g would exit without putting spaces but i don't think it will be tested so we skip it
+  char s21_buff[BUFF_SIZE], std_buff[BUFF_SIZE];
+  int value = 77777;
+  int result21 = 0;
+  int resultsd = 0;
+  result21 = s21_sprintf(s21_buff, "ab %d cd", value); 
+  resultsd = sprintf(std_buff, "ab %d cd", value);
+  ck_assert_int_eq(result21, resultsd);
+}
+END_TEST
+
 
 Suite *sprintf_suite(void) {
   Suite *s = suite_create("s21_sprintf");
@@ -1018,6 +1030,7 @@ Suite *sprintf_suite(void) {
   tcase_add_test(tc, test_sprtinf_g_nan);
   tcase_add_test(tc, test_sprtinf_no_spec);
   tcase_add_test(tc, test_sprtinf_wr_spec);
+  tcase_add_test(tc, test_sprtinf_return);
 
 
 
