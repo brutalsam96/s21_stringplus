@@ -1048,7 +1048,5 @@ int main(void) {
   srunner_run_all(sr, CK_VERBOSE);
   fails = srunner_ntests_failed(sr);
   srunner_free(sr);
-  char s21_buff[BUFSIZ];
-  s21_sprintf(s21_buff, "ab %10s cd", "Hello");
   return (fails == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
