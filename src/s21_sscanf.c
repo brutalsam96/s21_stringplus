@@ -10,8 +10,8 @@ void va_end(va_list p) This macro allows to end traversal of the variadic functi
 
 c - DONE
 d - DONE
-i - 
-e 
+i - DONE
+e - 
 E
 f
 g
@@ -29,14 +29,32 @@ n
 
 
 int main() {
-    // char input[] = "h e l l o";
-    char input[] = "this is new string";
+    // s specifier usage
+    // char input[] = "this is new string";
+    // char str1[20], str2[20];
 
-    char str1[20], str2[20];
+    // int matched = s21_sscanf(input, "%s %s", str1, str2);
+    // printf("Matched: %d\n", matched);
+    // printf("a = %s, b = %s\n", str1, str2);
 
-    int matched = s21_sscanf(input, "%s %s", str1, str2);
+
+    // i specifier usage
+    // char input[] = "  -123 0123 0x1A";
+
+    // int num1, num2, num3;
+
+    // int matched = s21_sscanf(input, "%i %i %i", &num1, &num2, &num3);
+    // printf("Matched: %d\n", matched);
+    // printf("num1 = %d num2 = %d num3 = %d", num1, num2, num3);
+
+    char input[] = "1.23e4 -5.67E-3 9E2";
+    float num1, num2, num3;
+
+    int matched = s21_sscanf(input, "%e %e %e", &num1, &num2, &num3);
     printf("Matched: %d\n", matched);
-    printf("a = %s, b = %s\n", str1, str2);
+    printf("num1 = %f num2 = %f numf = %f", num1, num2, num3);
+
+
 
     return 0;
 }
@@ -61,6 +79,9 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
             int i = 0;
             while (specifier_map[i].flag != '\0') {
                 if (specifier_map[i].flag == *current) {
+                    while (isspace(*str)) {
+                        (str)++;
+                    }
                     specifier_map[i].function(args, &str);
                     count++; // Increment count after a match
                     break;
@@ -98,10 +119,6 @@ void d_specifier(va_list *args, const char **str) {
     int num = 0;
     int sign = 1;
 
-    while (isspace(**str)) {
-        (*str)++;
-    }
-
     if (**str == '-') {
         sign = -1;
         (*str)++;
@@ -122,14 +139,102 @@ void s_specifier(va_list *args, const char **str) {
     char *buffer = va_arg(*args, char *);
     int i = 0;
 
-    while (isspace(**str)) {
-        (*str)++;
-    }
-
     while (**str != '\0' && !isspace(**str)) {
         buffer[i++] = **str;
         (*str)++;
     }
 
     buffer[i] = '\0';
+}
+
+
+void i_specifier(va_list *args, const char **str) {
+    int *num = va_arg(*args, int *);
+    *num = 0;
+    int sign = 1;
+
+    if (**str == '-') {
+        sign = -1;
+        (*str)++;
+    } else if (**str == '+') {
+        (*str)++;
+    }
+
+    int base = 10;
+    if (**str == '0') {
+        (*str)++;  // Move past '0'
+
+        if (**str == 'x' || **str == 'X') {
+            base = 16;  // Hexadecimal
+            (*str)++;
+        } else {
+            base = 8;   // Octal
+        }
+    }
+
+    while ((base == 10 && isdigit(**str)) ||
+           (base == 8 && **str >= '0' && **str <= '7') ||
+           (base == 16 && (isdigit(**str) || 
+                           (**str >= 'a' && **str <= 'f') || 
+                           (**str >= 'A' && **str <= 'F')))) {
+        *num = (*num * base) +
+               ((isdigit(**str)) ? (**str - '0') : 
+                ((**str >= 'a' && **str <= 'f') ? (**str - 'a' + 10) :
+                 (**str - 'A' + 10)));
+
+        (*str)++;
+    }
+
+    *num *= sign;
+}
+ 
+void e_specifier(va_list *args, const char **str) {
+    double *num = va_arg(*args, double *);
+    *num = 0.0;
+    int sign = 1;
+
+    if (**str == '-') {
+        sign = -1;
+        (*str)++;
+    } else if (**str == '+') {
+        (*str)++;
+    }
+
+    double base = 0.0;
+    while (isdigit(**str) || **str == '.') {
+        if (**str == '.') {
+            (*str)++;
+            double decimal_place = 0.1;
+            while (isdigit(**str)) {
+                
+                base += (int)(**str) * decimal_place;
+                decimal_place /= 10;
+                (*str)++;
+            }
+        } else {
+            base = base * 10 + (**str - '0');
+            (*str)++;
+        }
+    }
+
+    *num = base * sign;
+
+    if (**str == 'e' || **str == 'E') {
+        (*str)++;
+        int exp_sign = 1;
+        if (**str == '-') {
+            exp_sign = -1;
+            (*str)++;
+        } else if (**str == '+') {
+            (*str)++;
+        }
+
+        int exponent = 0;
+        while (isdigit(**str)) {
+            exponent = exponent * 10 + (**str - '0');
+            (*str)++;
+        }
+
+        *num *= pow(10, exp_sign * exponent);
+    }
 }

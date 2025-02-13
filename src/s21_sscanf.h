@@ -6,15 +6,15 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdarg.h>
+#include <math.h>
 
 int s21_sscanf(const char *str, const char *format, ...);
 int proccess_scanf(const char *str, const char *format, va_list *args);
 
 void c_specifier(va_list *args, const char **str);
 void d_specifier(va_list *args, const char **str);
-// void i_specifier(va_list *args, const char **str);
-// void e_specifier(va_list *args, const char **str);
-// void E_specifier(va_list *args, const char **str);
+void i_specifier(va_list *args, const char **str);
+void e_specifier(va_list *args, const char **str);
 // void f_specifier(va_list *args, const char **str);
 // void g_specifier(va_list *args, const char **str);
 // void G_specifier(va_list *args, const char **str);
@@ -36,9 +36,9 @@ typedef struct {
 SpecifierMap specifier_map[] = {
     {'c', c_specifier},
     {'d', d_specifier},
-    // {'i', i_specifier},
-    // {'e', e_specifier},
-    // {'E', E_specifier},
+    {'i', i_specifier},
+    {'e', e_specifier},
+    {'E', e_specifier},
     // {'f', f_specifier},
     // {'g', g_specifier},
     // {'G', G_specifier},
