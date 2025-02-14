@@ -5,6 +5,9 @@
 #include <errno.h>
 #include "../../s21_string.h"
 
+// TODO need to add c# function tests
+
+
 START_TEST(test_memchr) {
     const char str1[] = "Tutorialspoint";
     const char ch1 = '.';
@@ -327,14 +330,213 @@ START_TEST(test_strtok2) {
     ck_assert_ptr_eq(token, s21_token);
 }
 
+// ===================== Additional tests with edge cases =======================
 
+// ==================== Additional Edge Case Tests ===================
 
+START_TEST(test_memchr_not_found) {
+    const char str[] = "abcdef";
+    ck_assert_ptr_eq(s21_memchr(str, 'z', strlen(str)), memchr(str, 'z', strlen(str)));
+}
 
+START_TEST(test_memchr_zero_length) {
+    const char str[] = "abcdef";
+    ck_assert_ptr_eq(s21_memchr(str, 'a', 0), memchr(str, 'a', 0));
+}
+
+START_TEST(test_memcmp_zero_length) {
+    const char a[] = "abcdef";
+    const char b[] = "abcdef";
+    ck_assert_int_eq(s21_memcmp(a, b, 0), memcmp(a, b, 0));
+}
+
+START_TEST(test_memcmp_identical) {
+    const char a[] = "abcdef";
+    const char b[] = "abcdef";
+    ck_assert_int_eq(s21_memcmp(a, b, strlen(a)), memcmp(a, b, strlen(a)));
+}
+
+START_TEST(test_memcpy_zero_length) {
+    const char src[] = "abcdef";
+    char dest1[10] = "123456789";
+    char dest2[10] = "123456789";
+    s21_memcpy(dest1, src, 0);
+    memcpy(dest2, src, 0);
+    ck_assert_str_eq(dest1, dest2);
+}
+
+START_TEST(test_strlen_empty) {
+    const char *s = "";
+    ck_assert_int_eq(s21_strlen(s), strlen(s));
+}
+
+START_TEST(test_strlen_with_internal_null) {
+    char s[] = {'a','b','\0','c','d'};
+    ck_assert_int_eq(s21_strlen(s), strlen(s));
+}
+
+START_TEST(test_memset_zero_length) {
+    char str1[20] = "Hello, world!";
+    char s21_str1[20] = "Hello, world!";
+    s21_memset(s21_str1, 'X', 0);
+    memset(str1, 'X', 0);
+    ck_assert_str_eq(str1, s21_str1);
+}
+
+START_TEST(test_strncat_zero_n) {
+    char dest1[30] = "Hello";
+    char s21_dest1[30] = "Hello";
+    char src1[] = "World";
+    strncat(dest1, src1, 0);
+    s21_strncat(s21_dest1, src1, 0);
+    ck_assert_str_eq(dest1, s21_dest1);
+}
+
+START_TEST(test_strncat_n_exceeds_src) {
+    char dest1[30] = "Hello";
+    char s21_dest1[30] = "Hello";
+    char src1[] = "World";
+    strncat(dest1, src1, 10);
+    s21_strncat(s21_dest1, src1, 10);
+    ck_assert_str_eq(dest1, s21_dest1);
+}
+
+START_TEST(test_strchr_not_found) {
+    const char *str = "abcdef";
+    ck_assert_ptr_eq(s21_strchr(str, 'z'), strchr(str, 'z'));
+}
+
+START_TEST(test_strchr_search_null) {
+    const char *str = "abcdef";
+    ck_assert_ptr_eq(s21_strchr(str, '\0'), strchr(str, '\0'));
+}
+
+START_TEST(test_strncmp_zero) {
+    const char *s1 = "abcdef";
+    const char *s2 = "ABCDEF";
+    ck_assert_int_eq(s21_strncmp(s1, s2, 0), strncmp(s1, s2, 0));
+}
+
+START_TEST(test_strncmp_partial) {
+    const char *s1 = "abcdef";
+    const char *s2 = "abcxyz";
+    ck_assert_int_eq(s21_strncmp(s1, s2, 3), strncmp(s1, s2, 3));
+}
+
+START_TEST(test_strncpy_pad_with_null) {
+    char dest1[20];
+    char s21_dest1[20];
+    const char *src = "Hello";
+    strncpy(dest1, src, 10);
+    s21_strncpy(s21_dest1, src, 10);
+    ck_assert_mem_eq(dest1, s21_dest1, 10);
+}
+
+START_TEST(test_strncpy_zero) {
+    char dest1[20] = "Initial";
+    char s21_dest1[20] = "Initial";
+    const char *src = "Hello";
+    strncpy(dest1, src, 0);
+    s21_strncpy(s21_dest1, src, 0);
+    ck_assert_str_eq(dest1, s21_dest1);
+}
+
+START_TEST(test_strcspn_empty_str1) {
+    const char *s1 = "";
+    const char *s2 = "abc";
+    ck_assert_int_eq(s21_strcspn(s1, s2), strcspn(s1, s2));
+}
+
+START_TEST(test_strcspn_empty_str2) {
+    const char *s1 = "abcdef";
+    const char *s2 = "";
+    ck_assert_int_eq(s21_strcspn(s1, s2), strcspn(s1, s2));
+}
+
+START_TEST(test_strerror_unknown_error) {
+    int err = 123456;
+    ck_assert_str_eq(s21_strerror(err), strerror(err));
+}
+
+START_TEST(test_strerror_zero) {
+    int err = 0;
+    ck_assert_str_eq(s21_strerror(err), strerror(err));
+}
+
+START_TEST(test_strpbrk_no_match) {
+    const char *s1 = "abcdef";
+    const char *s2 = "XYZ";
+    ck_assert_ptr_eq(s21_strpbrk(s1, s2), strpbrk(s1, s2));
+}
+
+START_TEST(test_strpbrk_empty_str1) {
+    const char *s1 = "";
+    const char *s2 = "abc";
+    ck_assert_ptr_eq(s21_strpbrk(s1, s2), strpbrk(s1, s2));
+}
+
+START_TEST(test_strpbrk_empty_str2) {
+    const char *s1 = "abcdef";
+    const char *s2 = "";
+    ck_assert_ptr_eq(s21_strpbrk(s1, s2), strpbrk(s1, s2));
+}
+
+START_TEST(test_strrchr_not_found) {
+    const char *s = "abcdef";
+    ck_assert_ptr_eq(s21_strrchr(s, 'z'), strrchr(s, 'z'));
+}
+
+START_TEST(test_strrchr_search_null) {
+    const char *s = "abcdef";
+    ck_assert_ptr_eq(s21_strrchr(s, '\0'), strrchr(s, '\0'));
+}
+
+START_TEST(test_strstr_empty_substring) {
+    const char *s = "abcdef";
+    ck_assert_ptr_eq(s21_strstr(s, ""), strstr(s, ""));
+}
+
+START_TEST(test_strstr_not_found) {
+    const char *s = "abcdef";
+    ck_assert_ptr_eq(s21_strstr(s, "xyz"), strstr(s, "xyz"));
+}
+
+START_TEST(test_strstr_full_string) {
+    const char *s = "abcdef";
+    ck_assert_ptr_eq(s21_strstr(s, "abcdef"), strstr(s, "abcdef"));
+}
+START_TEST(test_strtok_all_delimiters) {
+    char str1[] = "-----";
+    char str2[] = "-----";
+    ck_assert_ptr_eq(s21_strtok(str1, "-"), strtok(str2, "-"));
+}
+
+START_TEST(test_strtok_consecutive_delimiters) {
+    char str1[] = "Hello,,World";
+    char str2[] = "Hello,,World";
+    char delim[] = ",";
+    char *token1 = strtok(str1, delim);
+    char *token2 = s21_strtok(str2, delim);
+    while (token1 != NULL && token2 != NULL) {
+         ck_assert_str_eq(token1, token2);
+         token1 = strtok(NULL, delim);
+         token2 = s21_strtok(NULL, delim);
+    }
+    ck_assert_ptr_eq(token1, token2);
+}
+
+START_TEST(test_strtok_empty_string) {
+    char str1[] = "";
+    char str2[] = "";
+    char delim[] = ",";
+    ck_assert_ptr_eq(s21_strtok(str1, delim), strtok(str2, delim));
+}
 
 Suite *s21_string_suite(void) {
     Suite *s = suite_create("s21_string");
     TCase *tc = tcase_create("Core");
 
+    // Original tests
     tcase_add_test(tc, test_memchr);
     tcase_add_test(tc, test_memchr2);
     tcase_add_test(tc, test_memchr3);
@@ -353,12 +555,14 @@ Suite *s21_string_suite(void) {
     tcase_add_test(tc, test_strncat2);
     tcase_add_test(tc, test_strchr);
     tcase_add_test(tc, test_strchr2);
+    tcase_add_test(tc, test_strchr3);
     tcase_add_test(tc, test_strncmp);
     tcase_add_test(tc, test_strncmp2);
     tcase_add_test(tc, test_strncpy);
     tcase_add_test(tc, test_strncpy2);
     tcase_add_test(tc, test_strcspn);
     tcase_add_test(tc, test_strcspn2);
+    tcase_add_test(tc, test_strcspn3);
     tcase_add_test(tc, test_strerror);
     tcase_add_test(tc, test_strpbrk);
     tcase_add_test(tc, test_strpbrk2);
@@ -369,10 +573,43 @@ Suite *s21_string_suite(void) {
     tcase_add_test(tc, test_strstr2);
     tcase_add_test(tc, test_strtok);
     tcase_add_test(tc, test_strtok2);
+
+    // Additional edge-case tests
+    tcase_add_test(tc, test_memchr_not_found);
+    tcase_add_test(tc, test_memchr_zero_length);
+    tcase_add_test(tc, test_memcmp_zero_length);
+    tcase_add_test(tc, test_memcmp_identical);
+    tcase_add_test(tc, test_memcpy_zero_length);
+    tcase_add_test(tc, test_strlen_empty);
+    tcase_add_test(tc, test_strlen_with_internal_null);
+    tcase_add_test(tc, test_memset_zero_length);
+    tcase_add_test(tc, test_strncat_zero_n);
+    tcase_add_test(tc, test_strncat_n_exceeds_src);
+    tcase_add_test(tc, test_strchr_not_found);
+    tcase_add_test(tc, test_strchr_search_null);
+    tcase_add_test(tc, test_strncmp_zero);
+    tcase_add_test(tc, test_strncmp_partial);
+    tcase_add_test(tc, test_strncpy_pad_with_null);
+    tcase_add_test(tc, test_strncpy_zero);
+    tcase_add_test(tc, test_strcspn_empty_str1);
+    tcase_add_test(tc, test_strcspn_empty_str2);
+    tcase_add_test(tc, test_strerror_zero);
+    tcase_add_test(tc, test_strerror_unknown_error);
+    tcase_add_test(tc, test_strpbrk_no_match);
+    tcase_add_test(tc, test_strpbrk_empty_str1);
+    tcase_add_test(tc, test_strpbrk_empty_str2);
+    tcase_add_test(tc, test_strrchr_not_found);
+    tcase_add_test(tc, test_strrchr_search_null);
+    tcase_add_test(tc, test_strstr_empty_substring);
+    tcase_add_test(tc, test_strstr_not_found);
+    tcase_add_test(tc, test_strstr_full_string);
+    tcase_add_test(tc, test_strtok_all_delimiters);
+    tcase_add_test(tc, test_strtok_consecutive_delimiters);
+    tcase_add_test(tc, test_strtok_empty_string);
+
     suite_add_tcase(s, tc);
     return s;
 }
-
 int main (void) {
     int fails;
     Suite *s = s21_string_suite();
