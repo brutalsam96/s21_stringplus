@@ -15,14 +15,12 @@ void c_specifier(va_list *args, const char **str);
 void d_specifier(va_list *args, const char **str);
 void i_specifier(va_list *args, const char **str);
 void e_specifier(va_list *args, const char **str);
-// void f_specifier(va_list *args, const char **str);
+void f_specifier(va_list *args, const char **str);
 // void g_specifier(va_list *args, const char **str);
-// void G_specifier(va_list *args, const char **str);
 // void o_specifier(va_list *args, const char **str);
 void s_specifier(va_list *args, const char **str);
 // void u_specifier(va_list *args, const char **str);
 // void x_specifier(va_list *args, const char **str);
-// void X_specifier(va_list *args, const char **str);
 // void p_specifier(va_list *args, const char **str);
 // void n_specifier(va_list *args, const char **str);
 
@@ -39,14 +37,14 @@ SpecifierMap specifier_map[] = {
     {'i', i_specifier},
     {'e', e_specifier},
     {'E', e_specifier},
-    // {'f', f_specifier},
+    {'f', f_specifier},
     // {'g', g_specifier},
-    // {'G', G_specifier},
+    // {'G', g_specifier},
     // {'o', o_specifier},
     {'s', s_specifier},
     // {'u', u_specifier},
     // {'x', x_specifier},
-    // {'X', X_specifier},
+    // {'X', x_specifier},
     // {'p', p_specifier},
     // {'n', n_specifier},
     {'\0', NULL}

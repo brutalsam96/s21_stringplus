@@ -12,10 +12,10 @@ c - DONE
 d - DONE
 i - DONE
 e - 
-E
-f
-g
-G
+E - 
+f 
+g - 
+G - 
 o
 s - DONE
 u
@@ -47,14 +47,19 @@ int main() {
     // printf("Matched: %d\n", matched);
     // printf("num1 = %d num2 = %d num3 = %d", num1, num2, num3);
 
-    char input[] = "1.23e4 -5.67E-3 9E2";
+    // char input[] = "1.23e4 -5.67E-3 9E2";
+    // float num1, num2, num3;
+
+    // int matched = s21_sscanf(input, "%e %e %e", &num1, &num2, &num3);
+    // printf("Matched: %d\n", matched);
+    // printf("num1 = %f num2 = %f num3 = %f\n", num1, num2, num3);
+
+    const char *input = "3.14 -0.001 42.0";
     float num1, num2, num3;
 
-    int matched = s21_sscanf(input, "%e %e %e", &num1, &num2, &num3);
+    int matched = s21_sscanf(input, "%f %f %f", &num1, &num2, &num3);
     printf("Matched: %d\n", matched);
-    printf("num1 = %f num2 = %f numf = %f", num1, num2, num3);
-
-
+    printf("num1 = %f num2 = %f num3 = %f\n", num1, num2, num3);
 
     return 0;
 }
@@ -189,8 +194,8 @@ void i_specifier(va_list *args, const char **str) {
 }
  
 void e_specifier(va_list *args, const char **str) {
-    double *num = va_arg(*args, double *);
-    *num = 0.0;
+    double *double_ptr = va_arg(*args, double *);
+    double num = 0.0;
     int sign = 1;
 
     if (**str == '-') {
@@ -217,7 +222,7 @@ void e_specifier(va_list *args, const char **str) {
         }
     }
 
-    *num = base * sign;
+    num = base * sign;
 
     if (**str == 'e' || **str == 'E') {
         (*str)++;
@@ -235,6 +240,49 @@ void e_specifier(va_list *args, const char **str) {
             (*str)++;
         }
 
-        *num *= pow(10, exp_sign * exponent);
+        num *= pow(10, exp_sign * exponent);
     }
+
+    *double_ptr = num;
+}
+
+
+void f_specifier(va_list *args, const char **str) {
+    double *float_ptr = va_arg(*args, double *);  // Retrieve argument
+    double num = 0.0;  // Initialize result
+    int sign = 1;
+
+    // Handle sign
+    if (**str == '-') {
+        sign = -1;
+        (*str)++;
+    } else if (**str == '+') {
+        (*str)++;
+    }
+
+    // Parse integer part
+    while (isdigit(**str)) {
+        num = num * 10.0 + (**str - '0');
+        (*str)++;
+    }
+
+    // Parse fractional part
+    if (**str == '.') {
+        (*str)++;  // Move past the decimal point
+        double fractional = 0.0;
+        double decimal_place = 1.0;
+
+        while (isdigit(**str)) {
+            fractional = fractional * 10.0 + (**str - '0');
+            decimal_place *= 10.0;
+            (*str)++;
+        }
+
+        num += fractional / decimal_place;
+    }
+
+    // Apply sign
+    num *= sign;
+
+    *float_ptr = num;
 }
