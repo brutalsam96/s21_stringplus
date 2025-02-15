@@ -1,5 +1,5 @@
 #include "s21_sprintf.h"
-#include "string_functions.h"
+#include "s21_string.h"
 
 int process_string(char *str, const char *format, va_list *args) {
   /* flags, width and precision modifiers*/

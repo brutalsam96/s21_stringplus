@@ -532,6 +532,42 @@ START_TEST(test_strtok_empty_string) {
     ck_assert_ptr_eq(s21_strtok(str1, delim), strtok(str2, delim));
 }
 
+START_TEST(test_2upper) {
+    char *res = s21_to_upper("abcdef");
+    char res2[] = "ABCDEF";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_2upper2) {
+    char *res = s21_to_upper("\n3abcdef1\\");
+    char res2[] = "\n3ABCDEF1\\";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+
+START_TEST(test_2lower) {
+    char *res = s21_to_lower("ABCDEF");
+    char res2[] = "abcdef";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_2lower2) {
+    char *res = s21_to_lower("ABCDEF098\n");
+    char res2[] = "abcdef098\n";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_insert) {
+    char *res = s21_insert("GeeksForGeeks", "GFG", 5);
+    char res2[] = "GeeksGFGForGeeks";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
 Suite *s21_string_suite(void) {
     Suite *s = suite_create("s21_string");
     TCase *tc = tcase_create("Core");
@@ -606,7 +642,12 @@ Suite *s21_string_suite(void) {
     tcase_add_test(tc, test_strtok_all_delimiters);
     tcase_add_test(tc, test_strtok_consecutive_delimiters);
     tcase_add_test(tc, test_strtok_empty_string);
-
+    tcase_add_test(tc, test_2upper);
+    tcase_add_test(tc, test_2upper2);
+    tcase_add_test(tc, test_2lower);
+    tcase_add_test(tc, test_2lower2);
+    tcase_add_test(tc, test_insert);
+    
     suite_add_tcase(s, tc);
     return s;
 }

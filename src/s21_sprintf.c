@@ -1,6 +1,4 @@
 #include "s21_sprintf.h"
-
-#include "s21_utils.h"
 #include "s21_string.h"
 
 /*%
