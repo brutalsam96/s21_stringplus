@@ -579,7 +579,6 @@ void *s21_to_lower(const char *str) {
 
 
 void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
-
   if (!src || !str) {
       return S21_NULL;
   }
@@ -591,26 +590,30 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
       return S21_NULL;
   }
 
-  char *new_str = (char *)malloc(len_src + len_str + 1);
+  s21_size_t combined_len = len_src + len_str;
+  char *new_str = (char *)malloc((combined_len + 1) * sizeof(char));
   if (!new_str) {
       return S21_NULL;
   }
 
-  int string_counter = 0;
-  for (s21_size_t i = 0; i < len_src; i++) {
-      new_str[string_counter] = src[i];
-      string_counter++;
+  s21_size_t i = 0;
+
+  for (; i < start_index; i++) {
+      new_str[i] = src[i];
   }
 
-  string_counter = start_index;
-  for (s21_size_t i = 0; i < len_str; i++) {
-      new_str[string_counter] = str[i];
-      string_counter++;
+  for (s21_size_t j = 0; j < len_str; j++) {
+      new_str[i + j] = str[j];
   }
+
+  for (s21_size_t j = start_index; j < len_src; j++) {
+      new_str[len_str + j] = src[j];
+  }
+
+  new_str[combined_len] = '\0';
 
   return new_str;
 }
-
 
 int is_trim_char(char c, const char *trim_chars) {
   while (*trim_chars) {

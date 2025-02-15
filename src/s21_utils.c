@@ -732,7 +732,7 @@ int round_to_sig_digits(double *value, int *precision, int IsComp) {
 int round_to_sig_digits_l(long double *value, int *precision, int IsComp) {
   if (*value == 0.0) return 0;
   
-  int exponent = (int)floor(log10(fabs(*value)));
+  int exponent = (int)floor(log10(fabsl(*value)));
 
   if (IsComp) {
     // %g: Round to 'precision' significant digits
@@ -741,7 +741,7 @@ int round_to_sig_digits_l(long double *value, int *precision, int IsComp) {
 
     // Recalculate exponent post-rounding
     if (*value != 0.0) {
-      exponent = (int)floor(log10(fabs(*value)));
+      exponent = (int)floor(log10(fabsl(*value)));
       long double norm_scale = pow(10, exponent);
       *value /= norm_scale;
 

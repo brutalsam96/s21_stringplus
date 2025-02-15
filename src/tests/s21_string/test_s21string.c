@@ -244,11 +244,8 @@ START_TEST(test_strcspn3) {
 }
 
 START_TEST(test_strerror) {
-    FILE *res;
-    res = fopen("file.txt", "r");
     int err_code = errno;
-    ck_assert_str_eq(strerror(err_code), s21_strerror(err_code));
-    
+    ck_assert_str_eq(strerror(err_code), s21_strerror(err_code));    
 }
 START_TEST(test_strpbrk) {
     char *res, *s21_res;
@@ -378,8 +375,9 @@ START_TEST(test_strlen_with_internal_null) {
 START_TEST(test_memset_zero_length) {
     char str1[20] = "Hello, world!";
     char s21_str1[20] = "Hello, world!";
-    s21_memset(s21_str1, 'X', 0);
-    memset(str1, 'X', 0);
+    s21_size_t len = 0;
+    s21_memset(s21_str1, 'X', len);
+    memset(str1, 'X', len);
     ck_assert_str_eq(str1, s21_str1);
 }
 
@@ -436,8 +434,9 @@ START_TEST(test_strncpy_zero) {
     char dest1[20] = "Initial";
     char s21_dest1[20] = "Initial";
     const char *src = "Hello";
-    strncpy(dest1, src, 0);
-    s21_strncpy(s21_dest1, src, 0);
+    s21_size_t len = 0;
+    strncpy(dest1, src, len);
+    s21_strncpy(s21_dest1, src, len);
     ck_assert_str_eq(dest1, s21_dest1);
 }
 
@@ -561,9 +560,95 @@ START_TEST(test_2lower2) {
     free(res);
 }
 
-START_TEST(test_insert) {
+START_TEST(test_insert_mid) {
     char *res = s21_insert("GeeksForGeeks", "GFG", 5);
     char res2[] = "GeeksGFGForGeeks";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_insert_beg) {
+    char *res = s21_insert("HelloWorld", "Start", 0);
+    char res2[] = "StartHelloWorld";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_insert_end) {
+    size_t len = strlen("HelloWorld");
+    char *res = s21_insert("HelloWorld", "End", len);
+    char res2[] = "HelloWorldEnd";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_insert_empty) {
+    char *res = s21_insert("HelloWorld", "", 5);
+    char res2[] = "HelloWorld";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_insert_non_empty) {
+    char *res = s21_insert("", "Insert", 0);
+    char res2[] = "Insert";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_insert_both_empty) {
+    char *res = s21_insert("", "", 0);
+    char expected[] = "";
+    ck_assert_str_eq(res, expected);
+    free(res);
+}
+END_TEST
+
+START_TEST(test_insert_invalid_index) {
+    char *res = s21_insert("HelloWorld", "X", 100);
+    ck_assert_ptr_eq(res, NULL);
+    free(res);
+}
+END_TEST
+
+START_TEST(test_insert_longstr) {
+    char *res = s21_insert("Short", "ThisIsALongInsertString", 2);
+    char res2[] = "ShThisIsALongInsertStringort";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_trim1) {
+    char *res = s21_trim(" GG", " ");
+    char res2[] = "GG";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_trim2) {
+    char *res = s21_trim(" GaG  ", " ");
+    char res2[] = "GaG";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_trim3) {
+    char *res = s21_trim(" GaG  1", " ");
+    char res2[] = "GaG  1";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_trim4) {
+    char *res = s21_trim(" GaG  1", " 1");
+    char res2[] = "GaG";
+    ck_assert_str_eq(res, res2);
+    free(res);
+}
+
+START_TEST(test_trim5) {
+    char *res = s21_trim("*** Much Ado About Nothing ***", "* \\");
+    char res2[] = "Much Ado About Nothing";
     ck_assert_str_eq(res, res2);
     free(res);
 }
@@ -646,7 +731,23 @@ Suite *s21_string_suite(void) {
     tcase_add_test(tc, test_2upper2);
     tcase_add_test(tc, test_2lower);
     tcase_add_test(tc, test_2lower2);
-    tcase_add_test(tc, test_insert);
+    tcase_add_test(tc, test_insert_mid);
+    tcase_add_test(tc, test_insert_beg);
+    tcase_add_test(tc, test_insert_end);
+    tcase_add_test(tc, test_insert_empty);
+    tcase_add_test(tc, test_insert_non_empty);
+    tcase_add_test(tc, test_insert_both_empty);
+    tcase_add_test(tc, test_insert_invalid_index);
+    tcase_add_test(tc, test_insert_longstr);
+    tcase_add_test(tc, test_trim1);
+    tcase_add_test(tc, test_trim2);
+    tcase_add_test(tc, test_trim3);
+    tcase_add_test(tc, test_trim4);
+    tcase_add_test(tc, test_trim5);
+
+
+
+
     
     suite_add_tcase(s, tc);
     return s;
@@ -659,5 +760,6 @@ int main (void) {
     srunner_run_all(sr, CK_VERBOSE);
     fails = srunner_ntests_failed(sr);
     srunner_free(sr);
+
     return (fails == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
