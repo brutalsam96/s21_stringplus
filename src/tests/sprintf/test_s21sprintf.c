@@ -1,7 +1,8 @@
 #include <check.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../s21_sprintf.h"
+#include <limits.h>
+#include "../../s21_string.h"
 
 #define BUFF_SIZE 1024
  /* Simple specifier tests */
