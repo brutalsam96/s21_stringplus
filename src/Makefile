@@ -3,6 +3,7 @@ GCOVFLAGS = -fprofile-arcs -ftest-coverage
 
 HEADERS = s21_string.h s21_sprintf.h
 SOURCES = $(wildcard *.c)
+GCOVPREFIX = report.out-
 OBJ_LIBRARY := $(patsubst %.c, %.o, $(SOURCES))
 # SOURCES = *.c
 
@@ -29,7 +30,7 @@ test_string: s21_string.a tests/s21_string/test_s21string.c
 gcov_report: s21_string.a tests/sprintf/test_s21sprintf.c
 	gcc $(GCOVFLAGS) tests/sprintf/test_s21sprintf.c $(SOURCES) -o report.out -lcheck -lm -lpthread -lsubunit
 	./report.out
-	gcov -f $(SOURCES)
+	gcov -f $(GCOVPREFIX)s21_sprintf.c $(GCOVPREFIX)s21_string.c $(GCOVPREFIX)s21_utils.c
 	lcov -t "gcov_report" -o Coverage_Report.info -c -d .
 	genhtml -o ./report Coverage_Report.info
 	rm -f *.gcno *.gcda *.info report.out *.gcov
