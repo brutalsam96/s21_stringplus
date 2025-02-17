@@ -1,5 +1,7 @@
 #include "s21_sscanf.h"
 
+// #include <stdio.h>
+// #include <assert.h>
 
 /* TASK LIST
 
@@ -60,12 +62,45 @@ int main() {
     
     
     
-    const char *input = "Discount: 30%";
-    int discount;
+    // const char *input = "Discount: 30%";
+    // int discount;
     
-    // printf("%d\n", s21_sscanf(input, "Discount: %d%%%%%%", &discount)); test case
-    printf("%d\n", s21_sscanf(input, "Discount: %n", &discount));
-    printf("Matched: %d\n", discount);
+    // printf("%d\n", s21_sscanf(input, "Discount: %d%%%%%%", &discount));
+    // printf("%d\n", sscanf(input, "Discount: %p", &discount));
+    // printf("Matched: %d\n", discount);
+
+
+    // const char *input = "0x7f9f5187daf0";
+    // void *ptr;
+    // void *ptr2;
+    // printf("%d\n", s21_sscanf(input, "Discount: %p", &ptr));
+    // printf("%d\n", sscanf(input, "Discount: %p", &ptr2));
+    // printf("Matched: %p\n", ptr);
+    // printf("Matched: %p\n", ptr2);
+    
+    // printf("%lu\n", *(unsigned long*)ptr);
+
+
+    // int dummy;
+    // char test_buffer[50];
+    // void *ptr_original, *ptr_custom;
+
+    // sprintf(test_buffer, "%p", &dummy);
+
+    // int res_original = sscanf(test_buffer, "%p", &ptr_original);
+    // int res_custom = s21_sscanf(test_buffer, "%p", &ptr_custom);
+    // assert(res_original == res_custom && ptr_original == ptr_custom);
+
+    //     sprintf(test_buffer, "%p", (void*)NULL);
+    // res_original = sscanf(test_buffer, "%p", &ptr_original);
+    // res_custom = my_sscanf(test_buffer, "%p", &ptr_custom);
+    // assert(res_original == res_custom && ptr_original == ptr_custom);
+
+    // // Test invalid input
+    // const char *invalid_input = "not_a_pointer";
+    // res_original = sscanf(invalid_input, "%p", &ptr_original);
+    // res_custom = my_sscanf(invalid_input, "%p", &ptr_custom);
+    // assert(res_original == res_custom);
 
     return 0;
 }
@@ -93,18 +128,18 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
             else if (*current == 'f') { f_specifier(args, &str); str_i++; }
             else if (*current == 's') { s_specifier(args, &str); str_i++; }
             else if (*current == 'n') { n_specifier(args, &str, start); }
+            else if (*current == 'p') { p_specifier(args, &str); str_i++;}
             else if (*current == '%') { current++; continue; }
             else { current++; continue; }
-            current++;
             continue;
         }
         if (isspace(*current)) {
             while (isspace(*current)) current++;
             while (isspace(*str)) str++;
-        } else if (*current == *str) {
+        } else if (*current == *str) { // literal matches: advance both pointers
             current++;
             str++;
-        } else break;
+        } else current++;
     }
     return str_i;
 }
@@ -289,4 +324,39 @@ void n_specifier(va_list *args, const char **str, const char *start) {
     int *count_ptr = va_arg(*args, int *);
     *count_ptr = *str - start;
 
+}
+
+void p_specifier(va_list *args, const char **str) {
+    s21_uintptr_t *addr_ptr = va_arg(*args, s21_uintptr_t *);
+    while(*str) {
+        if (**str == '0' && ((*str)[1] == 'x' || (*str)[1] == 'X')) {
+            *str += 2;
+            *addr_ptr = hex2dec(str);
+            break;
+        } else {
+            (*str)++;
+        }
+    }
+}
+
+// unsigned int numDigits(unsigned int n) {
+//     return (n == 0) ? 1 : (unsigned int)log10(abs(n)) + 1;
+// }
+
+s21_uintptr_t hex2dec(const char **str) {
+    s21_uintptr_t dec = 0;
+    while (**str != '\0') {
+        char ch = toupper(**str);
+        int val;
+        if (ch >= '0' && ch <= '9') {
+            val = ch - '0';
+        } else if (ch >= 'A' && ch <= 'F') {
+            val = ch - 'A' + 10;
+        } else {
+            continue;
+        }
+        dec = dec * 16 + val;
+        (*str)++;
+    }
+    return dec;
 }

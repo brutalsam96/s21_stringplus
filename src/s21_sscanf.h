@@ -8,6 +8,8 @@
 #include <stdarg.h>
 #include <math.h>
 
+typedef long long unsigned int s21_uintptr_t; // TODO could confilct with sprintf one
+
 int s21_sscanf(const char *str, const char *format, ...);
 int proccess_scanf(const char *str, const char *format, va_list *args);
 
@@ -24,6 +26,9 @@ void s_specifier(va_list *args, const char **str);
 // void p_specifier(va_list *args, const char **str);
 void n_specifier(va_list *args, const char **str, const char *start);
 
+void p_specifier(va_list *args, const char **str);
+s21_uintptr_t hex2dec(const char **str);
 
 
 #endif
+
