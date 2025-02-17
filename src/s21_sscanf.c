@@ -1,7 +1,7 @@
 #include "s21_sscanf.h"
 
-// #include <stdio.h>
-// #include <assert.h>
+#include <stdio.h>
+#include <assert.h>
 
 /* TASK LIST
 
@@ -21,11 +21,11 @@ G -
 o
 s - DONE
 u
-x
-X
-p
-n
-%
+x - DONE
+X - DONE
+p - DONE
+n - DONE
+% - DONE
 
 */
 
@@ -62,12 +62,6 @@ int main() {
     
     
     
-    const char *input = "Discount: 30%";
-    int discount;
-    
-    printf("%d\n", s21_sscanf(input, "Discount: %d", &discount));
-    printf("%d\n", sscanf(input, "Discount: %d", &discount));
-    printf("Matched: %d\n", discount);
 
 
     // const char *input = "0x7f9f5187daf0";
@@ -82,14 +76,18 @@ int main() {
 
 
     // int dummy;
+    // int dummy2;
     // char test_buffer[50];
     // void *ptr_original, *ptr_custom;
+    // void *ptr_original2, *ptr_custom2;
 
-    // sprintf(test_buffer, "%p", &dummy);
+    // sprintf(test_buffer, "%p %p", &dummy, &dummy2);
 
-    // int res_original = sscanf(test_buffer, "%p", &ptr_original);
-    // int res_custom = s21_sscanf(test_buffer, "%p", &ptr_custom);
-    // assert(res_original == res_custom && ptr_original == ptr_custom);
+    // int res_original = sscanf(test_buffer, "%p %p", &ptr_original, &ptr_original2);
+    // int res_custom = s21_sscanf(test_buffer, "%p %p", &ptr_custom, &ptr_custom2);
+
+    // printf("%p %p %p %p\n", ptr_original, ptr_custom, ptr_original2, ptr_custom2);
+    // printf("%d %d", res_original, res_custom);
 
     //     sprintf(test_buffer, "%p", (void*)NULL);
     // res_original = sscanf(test_buffer, "%p", &ptr_original);
@@ -102,6 +100,15 @@ int main() {
     // res_custom = my_sscanf(invalid_input, "%p", &ptr_custom);
     // assert(res_original == res_custom);
 
+
+    const char *input = "Discount: 0x74fa";
+    int discount;
+    
+    printf("%d\n", s21_sscanf(input, "Discount: %X", &discount));
+    // printf("%d\n", sscanf(input, "Discount: %x", &discount));
+    printf("Matched: %d\n", discount);
+
+    
 
     return 0;
 }
@@ -128,6 +135,7 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
             else if (*current == 'e') { e_specifier(args, &str) ? 0 : str_i++; }
             else if (*current == 'f') { f_specifier(args, &str) ? 0 : str_i++; }
             else if (*current == 's') { s_specifier(args, &str) ? 0 : str_i++; }
+            else if (*current == 'x' || *current == 'X') { x_specifier(args, &str) ? 0 : str_i++;}
             else if (*current == 'n') { n_specifier(args, &str, start); }
             else if (*current == 'p') { p_specifier(args, &str) ? 0 : str_i++;}
             else if (*current == '%') { current++; continue; }
@@ -279,8 +287,8 @@ int e_specifier(va_list *args, const char **str) {
 
         num *= pow(10, exp_sign * exponent);
     }
-    return 0;
     *double_ptr = num;
+    return 0;
 }
 
 
@@ -333,7 +341,7 @@ int n_specifier(va_list *args, const char **str, const char *start) {
 
 int p_specifier(va_list *args, const char **str) {
     s21_uintptr_t *addr_ptr = va_arg(*args, s21_uintptr_t *);
-    while(*str) {
+    while (isxdigit(**str)) {
         if (**str == '0' && ((*str)[1] == 'x' || (*str)[1] == 'X')) {
             *str += 2;
             *addr_ptr = hex2dec_ptr(str);
@@ -345,13 +353,30 @@ int p_specifier(va_list *args, const char **str) {
     return 0;
 }
 
-// unsigned int numDigits(unsigned int n) {
-//     return (n == 0) ? 1 : (unsigned int)log10(abs(n)) + 1;
-// }
+int x_specifier(va_list *args, const char **str) {
+    unsigned int *val  = va_arg(*args, unsigned int *);
+    unsigned int res = 0;
+    while (isxdigit(**str)) {
+        char ch = toupper(**str);
+        int rem;
+        if (**str == '0' && ((*str)[1] == 'x' || (*str)[1] == 'X')) {*str += 1;} // could bug out here
+        if (ch >= '0' && ch <= '9') {
+            rem = ch - '0';
+        } else if (ch >= 'A' && ch <= 'F') {
+            rem = ch - 'A' + 10;
+        } else {
+            continue;
+        }
+        res = res * 16 + rem;
+        (*str)++;
+    }
+    *val = res;
+    return 0;
+}
 
 s21_uintptr_t hex2dec_ptr(const char **str) {
     s21_uintptr_t dec = 0;
-    while (**str != '\0') {
+    while (isxdigit(**str))  {
         char ch = toupper(**str);
         int val;
         if (ch >= '0' && ch <= '9') {

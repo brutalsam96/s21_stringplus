@@ -23,10 +23,11 @@ int f_specifier(va_list *args, const char **str);
 int s_specifier(va_list *args, const char **str);
 // int u_specifier(va_list *args, const char **str);
 // int x_specifier(va_list *args, const char **str);
-// int p_specifier(va_list *args, const char **str);
 int n_specifier(va_list *args, const char **str, const char *start);
 
 int p_specifier(va_list *args, const char **str);
+int x_specifier(va_list *args, const char **str);
+
 s21_uintptr_t hex2dec_ptr(const char **str);
 
 
