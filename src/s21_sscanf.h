@@ -22,33 +22,8 @@ void s_specifier(va_list *args, const char **str);
 // void u_specifier(va_list *args, const char **str);
 // void x_specifier(va_list *args, const char **str);
 // void p_specifier(va_list *args, const char **str);
-// void n_specifier(va_list *args, const char **str);
+void n_specifier(va_list *args, const char **str, const char *start);
 
-typedef void (*Specifier)(va_list *args, const char **);
-
-typedef struct {
-    const char flag;
-    Specifier function;
-} SpecifierMap;
-
-SpecifierMap specifier_map[] = {
-    {'c', c_specifier},
-    {'d', d_specifier},
-    {'i', i_specifier},
-    {'e', e_specifier},
-    {'E', e_specifier},
-    {'f', f_specifier},
-    // {'g', g_specifier},
-    // {'G', g_specifier},
-    // {'o', o_specifier},
-    {'s', s_specifier},
-    // {'u', u_specifier},
-    // {'x', x_specifier},
-    // {'X', x_specifier},
-    // {'p', p_specifier},
-    // {'n', n_specifier},
-    {'\0', NULL}
-};
 
 
 #endif

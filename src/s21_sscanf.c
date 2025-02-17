@@ -54,12 +54,18 @@ int main() {
     // printf("Matched: %d\n", matched);
     // printf("num1 = %f num2 = %f num3 = %f\n", num1, num2, num3);
 
-    const char *input = "3.14 -0.001 42.0";
-    float num1, num2, num3;
-
-    int matched = s21_sscanf(input, "%f %f %f", &num1, &num2, &num3);
-    printf("Matched: %d\n", matched);
-    printf("num1 = %f num2 = %f num3 = %f\n", num1, num2, num3);
+    // const char *input = "3.14 -0.001 42.0";
+    // float num1, num2, num3;
+    
+    
+    
+    
+    const char *input = "Discount: 30%";
+    int discount;
+    
+    // printf("%d\n", s21_sscanf(input, "Discount: %d%%%%%%", &discount)); test case
+    printf("%d\n", s21_sscanf(input, "Discount: %n", &discount));
+    printf("Matched: %d\n", discount);
 
     return 0;
 }
@@ -69,47 +75,38 @@ int s21_sscanf(const char *str, const char *format, ...) {
     va_list args;
     va_start(args, format);
     done = proccess_scanf(str, format, &args);
+
     va_end(args);
     return done;
 }
 
 int proccess_scanf(const char *str, const char *format, va_list *args) {
-    const char *current = format;
-    int count = 0;
-
-    while (*current && *str) {
-        if (*current == '%') {
-            current++; // Move past '%'
-
-            int i = 0;
-            while (specifier_map[i].flag != '\0') {
-                if (specifier_map[i].flag == *current) {
-                    while (isspace(*str)) {
-                        (str)++;
-                    }
-                    specifier_map[i].function(args, &str);
-                    count++; // Increment count after a match
-                    break;
-                }
-                i++;
-            }
+    const char *current = format, *start = str;
+    int str_i = 0;
+    while (*current) {
+        if (*current == '%' && *(current + 1) != '\0') {
+            current++; 
+            if (*current == 'c') { c_specifier(args, &str); str_i++; }
+            else if (*current == 'd') { d_specifier(args, &str); str_i++; }
+            else if (*current == 'i') { i_specifier(args, &str); str_i++; }
+            else if (*current == 'e') { e_specifier(args, &str); str_i++; }
+            else if (*current == 'f') { f_specifier(args, &str); str_i++; }
+            else if (*current == 's') { s_specifier(args, &str); str_i++; }
+            else if (*current == 'n') { n_specifier(args, &str, start); }
+            else if (*current == '%') { current++; continue; }
+            else { current++; continue; }
             current++;
-        } else if (isspace(*current)) {
-            while (isspace(*current)) {
-                current++;
-            }
-            while (isspace(*str)) {
-                str++;
-            }
+            continue;
+        }
+        if (isspace(*current)) {
+            while (isspace(*current)) current++;
+            while (isspace(*str)) str++;
         } else if (*current == *str) {
             current++;
             str++;
-        } else {
-            break;
-        }
+        } else break;
     }
-
-    return count;
+    return str_i;
 }
 
 void c_specifier(va_list *args, const char **str) {
@@ -285,4 +282,11 @@ void f_specifier(va_list *args, const char **str) {
     num *= sign;
 
     *float_ptr = num;
+}
+
+
+void n_specifier(va_list *args, const char **str, const char *start) {
+    int *count_ptr = va_arg(*args, int *);
+    *count_ptr = *str - start;
+
 }
