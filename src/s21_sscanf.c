@@ -62,12 +62,12 @@ int main() {
     
     
     
-    // const char *input = "Discount: 30%";
-    // int discount;
+    const char *input = "Discount: 30%";
+    int discount;
     
-    // printf("%d\n", s21_sscanf(input, "Discount: %d%%%%%%", &discount));
-    // printf("%d\n", sscanf(input, "Discount: %p", &discount));
-    // printf("Matched: %d\n", discount);
+    printf("%d\n", s21_sscanf(input, "Discount: %d", &discount));
+    printf("%d\n", sscanf(input, "Discount: %d", &discount));
+    printf("Matched: %d\n", discount);
 
 
     // const char *input = "0x7f9f5187daf0";
@@ -102,6 +102,7 @@ int main() {
     // res_custom = my_sscanf(invalid_input, "%p", &ptr_custom);
     // assert(res_original == res_custom);
 
+
     return 0;
 }
 
@@ -122,13 +123,13 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
         if (*current == '%' && *(current + 1) != '\0') {
             current++; 
             if (*current == 'c') { c_specifier(args, &str); str_i++; }
-            else if (*current == 'd') { d_specifier(args, &str); str_i++; }
-            else if (*current == 'i') { i_specifier(args, &str); str_i++; }
-            else if (*current == 'e') { e_specifier(args, &str); str_i++; }
-            else if (*current == 'f') { f_specifier(args, &str); str_i++; }
-            else if (*current == 's') { s_specifier(args, &str); str_i++; }
+            else if (*current == 'd') { d_specifier(args, &str) ? 0 : str_i++; }
+            else if (*current == 'i') { i_specifier(args, &str) ? 0 : str_i++; }
+            else if (*current == 'e') { e_specifier(args, &str) ? 0 : str_i++; }
+            else if (*current == 'f') { f_specifier(args, &str) ? 0 : str_i++; }
+            else if (*current == 's') { s_specifier(args, &str) ? 0 : str_i++; }
             else if (*current == 'n') { n_specifier(args, &str, start); }
-            else if (*current == 'p') { p_specifier(args, &str); str_i++;}
+            else if (*current == 'p') { p_specifier(args, &str) ? 0 : str_i++;}
             else if (*current == '%') { current++; continue; }
             else { current++; continue; }
             continue;
@@ -144,14 +145,15 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
     return str_i;
 }
 
-void c_specifier(va_list *args, const char **str) {
+int c_specifier(va_list *args, const char **str) {
     char *char_ptr = va_arg(*args, char *);
     *char_ptr = **str;
     (*str)++;
+    return 0;
 }
 
 
-void d_specifier(va_list *args, const char **str) {
+int d_specifier(va_list *args, const char **str) {
     int *int_ptr = va_arg(*args, int *);
     int num = 0;
     int sign = 1;
@@ -169,10 +171,11 @@ void d_specifier(va_list *args, const char **str) {
     }
 
     *int_ptr = sign * num;
+    return 0;
 }
 
 
-void s_specifier(va_list *args, const char **str) {
+int s_specifier(va_list *args, const char **str) {
     char *buffer = va_arg(*args, char *);
     int i = 0;
 
@@ -182,10 +185,11 @@ void s_specifier(va_list *args, const char **str) {
     }
 
     buffer[i] = '\0';
+    return 0;
 }
 
 
-void i_specifier(va_list *args, const char **str) {
+int i_specifier(va_list *args, const char **str) {
     int *num = va_arg(*args, int *);
     *num = 0;
     int sign = 1;
@@ -223,9 +227,10 @@ void i_specifier(va_list *args, const char **str) {
     }
 
     *num *= sign;
+    return 0;
 }
  
-void e_specifier(va_list *args, const char **str) {
+int e_specifier(va_list *args, const char **str) {
     double *double_ptr = va_arg(*args, double *);
     double num = 0.0;
     int sign = 1;
@@ -274,12 +279,12 @@ void e_specifier(va_list *args, const char **str) {
 
         num *= pow(10, exp_sign * exponent);
     }
-
+    return 0;
     *double_ptr = num;
 }
 
 
-void f_specifier(va_list *args, const char **str) {
+int f_specifier(va_list *args, const char **str) {
     double *float_ptr = va_arg(*args, double *);  // Retrieve argument
     double num = 0.0;  // Initialize result
     int sign = 1;
@@ -317,33 +322,34 @@ void f_specifier(va_list *args, const char **str) {
     num *= sign;
 
     *float_ptr = num;
+    return 0;
 }
 
 
-void n_specifier(va_list *args, const char **str, const char *start) {
+int n_specifier(va_list *args, const char **str, const char *start) {
     int *count_ptr = va_arg(*args, int *);
     *count_ptr = *str - start;
-
 }
 
-void p_specifier(va_list *args, const char **str) {
+int p_specifier(va_list *args, const char **str) {
     s21_uintptr_t *addr_ptr = va_arg(*args, s21_uintptr_t *);
     while(*str) {
         if (**str == '0' && ((*str)[1] == 'x' || (*str)[1] == 'X')) {
             *str += 2;
-            *addr_ptr = hex2dec(str);
+            *addr_ptr = hex2dec_ptr(str);
             break;
         } else {
             (*str)++;
         }
     }
+    return 0;
 }
 
 // unsigned int numDigits(unsigned int n) {
 //     return (n == 0) ? 1 : (unsigned int)log10(abs(n)) + 1;
 // }
 
-s21_uintptr_t hex2dec(const char **str) {
+s21_uintptr_t hex2dec_ptr(const char **str) {
     s21_uintptr_t dec = 0;
     while (**str != '\0') {
         char ch = toupper(**str);
