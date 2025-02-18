@@ -18,7 +18,7 @@ E -
 f 
 g - 
 G - 
-o
+o - DONE
 s - DONE
 u - DONE
 x - DONE
@@ -26,7 +26,7 @@ X - DONE
 p - DONE
 n - DONE
 % - DONE
-
+git 
 */
 
 
@@ -110,14 +110,14 @@ int main() {
 
 
     
-    const char *input = "Discount: 120";
+    // const char *input = "Discount: 1.250000e+02";
+    const char *input = "Discount: 0x74f";
     unsigned int discount;
     unsigned int discount2;
-    printf("%d\n", s21_sscanf(input, "Discount: %o", &discount));
-    printf("Matched: %o\n", discount);
-    printf("%d\n", sscanf(input, "Discount: %o", &discount2));
-    printf("Matched: %o\n", discount);
-
+    printf("%d\n", s21_sscanf(input, "Discount: %i", &discount));
+    printf("Matched: %i\n", discount);
+    printf("%d\n", sscanf(input, "Discount: %i", &discount2));
+    printf("Matched: %i\n", discount);
     return 0;
 }
 
@@ -163,6 +163,30 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
     return str_i;
 }
 
+// int parse_decimal(const char **str) {
+//     int num = 0;
+//     while (isdigit(**str)) {
+//         num = num * 10 + (**str - '0');
+//         (*str)++;
+//     }
+//     return num;
+// }
+
+void parse_number(const char **str, int base, int *num) {
+    while ((base == 10 && isdigit(**str)) ||
+           (base == 8 && **str >= '0' && **str <= '7') ||
+           (base == 16 && (isdigit(**str) ||
+                           ((**str >= 'a' && **str <= 'f') ||
+                            (**str >= 'A' && **str <= 'F'))))) {
+        *num = (*num * base) +
+               (isdigit(**str) ? (**str - '0') :
+               ((**str >= 'a' && **str <= 'f') ? (**str - 'a' + 10) :
+                (**str - 'A' + 10)));
+        (*str)++;
+    }
+}
+
+
 int c_specifier(va_list *args, const char **str) {
     char *char_ptr = va_arg(*args, char *);
     *char_ptr = **str;
@@ -183,10 +207,7 @@ int d_specifier(va_list *args, const char **str) {
         (*str)++; // Ignore the '+' sign
     }
 
-    while (isdigit(**str)) {
-        num = num * 10 + (**str - '0');
-        (*str)++;
-    }
+    parse_number(str, 10, &num);
 
     *int_ptr = sign * num;
     return 0;
@@ -195,34 +216,16 @@ int d_specifier(va_list *args, const char **str) {
 int u_specifier(va_list *args, const char **str) {
     unsigned int *int_ptr = va_arg(*args, int *);
     int num = 0;
-
-
-    while (isdigit(**str)) {
-        num = num * 10 + (**str - '0');
-        (*str)++;
-    }
-
+    parse_number(str, 10, &num);
+    *int_ptr = num;
     return 0;
 }
 
 int o_specifier(va_list *args, const char **str) {
     unsigned int *val  = va_arg(*args, unsigned int *);
-    unsigned int res = 0;
-    while (isxdigit(**str)) {
-        if (**str == '0' && ((*str)[1] == 'x' || (*str)[1] == 'X')) {*str += 2;} // could bug out here
-        char ch = toupper(**str);
-        int rem;
-        if (ch >= '0' && ch <= '9') {
-            rem = ch - '0';
-        } else if (ch >= 'A' && ch <= 'F') {
-            rem = ch - 'A' + 10;
-        } else {
-            continue;
-        }
-        res = res * 8 + rem;
-        (*str)++;
-    }
-    *val = res;
+    int num = 0;
+    parse_number(str, 8, &num);
+    *val = num;
     return 0;
 }
 
@@ -264,18 +267,7 @@ int i_specifier(va_list *args, const char **str) {
         }
     }
 
-    while ((base == 10 && isdigit(**str)) ||
-           (base == 8 && **str >= '0' && **str <= '7') ||
-           (base == 16 && (isdigit(**str) || 
-                           (**str >= 'a' && **str <= 'f') || 
-                           (**str >= 'A' && **str <= 'F')))) {
-        *num = (*num * base) +
-               ((isdigit(**str)) ? (**str - '0') : 
-                ((**str >= 'a' && **str <= 'f') ? (**str - 'a' + 10) :
-                 (**str - 'A' + 10)));
-
-        (*str)++;
-    }
+    parse_number(str, base, num);
 
     *num *= sign;
     return 0;
@@ -294,19 +286,18 @@ int e_specifier(va_list *args, const char **str) {
     }
 
     double base = 0.0;
-    while (isdigit(**str) || **str == '.') {
-        if (**str == '.') {
-            (*str)++;
-            double decimal_place = 0.1;
-            while (isdigit(**str)) {
-                
-                base += (int)(**str) * decimal_place;
-                decimal_place /= 10;
+    while (isdigit(**str) || **str == '.' || **str == '.') {
+        while (**str != '.') {
+            int int_part = 0;
+            if (isdigit(**str)) {
+                int_part = int_part * 10 + (**str - '0');
                 (*str)++;
             }
-        } else {
-            base = base * 10 + (**str - '0');
+        }     
+        if (**str == '.') {
             (*str)++;
+            int decimal_place = 0;
+            parse_number(str, 10, & decimal_place);
         }
     }
 
@@ -400,20 +391,7 @@ int p_specifier(va_list *args, const char **str) {
 int x_specifier(va_list *args, const char **str) {
     unsigned int *val  = va_arg(*args, unsigned int *);
     unsigned int res = 0;
-    while (isxdigit(**str)) {
-        if (**str == '0' && ((*str)[1] == 'x' || (*str)[1] == 'X')) {*str += 2;} // could bug out here
-        char ch = toupper(**str);
-        int rem;
-        if (ch >= '0' && ch <= '9') {
-            rem = ch - '0';
-        } else if (ch >= 'A' && ch <= 'F') {
-            rem = ch - 'A' + 10;
-        } else {
-            continue;
-        }
-        res = res * 16 + rem;
-        (*str)++;
-    }
+    parse(str, 16, &res);
     *val = res;
     return 0;
 }
