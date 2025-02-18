@@ -20,7 +20,7 @@ g -
 G - 
 o
 s - DONE
-u
+u - DONE
 x - DONE
 X - DONE
 p - DONE
@@ -101,14 +101,22 @@ int main() {
     // assert(res_original == res_custom);
 
 
-    const char *input = "Discount: 0x74fa";
-    int discount;
+    // const char *input = "Discount: 0x74fa";
+    // int discount;
     
-    printf("%d\n", s21_sscanf(input, "Discount: %X", &discount));
+    // printf("%d\n", s21_sscanf(input, "Discount: %X", &discount));
     // printf("%d\n", sscanf(input, "Discount: %x", &discount));
-    printf("Matched: %d\n", discount);
+    // printf("Matched: %d\n", discount);
+
 
     
+    const char *input = "Discount: 120";
+    unsigned int discount;
+    unsigned int discount2;
+    printf("%d\n", s21_sscanf(input, "Discount: %o", &discount));
+    printf("Matched: %o\n", discount);
+    printf("%d\n", sscanf(input, "Discount: %o", &discount2));
+    printf("Matched: %o\n", discount);
 
     return 0;
 }
@@ -128,13 +136,15 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
     int str_i = 0;
     while (*current) {
         if (*current == '%' && *(current + 1) != '\0') {
-            current++; 
+            current++;
             if (*current == 'c') { c_specifier(args, &str); str_i++; }
             else if (*current == 'd') { d_specifier(args, &str) ? 0 : str_i++; }
+            else if (*current == 'u') { u_specifier(args, &str) ? 0 : str_i++; }
             else if (*current == 'i') { i_specifier(args, &str) ? 0 : str_i++; }
             else if (*current == 'e') { e_specifier(args, &str) ? 0 : str_i++; }
             else if (*current == 'f') { f_specifier(args, &str) ? 0 : str_i++; }
             else if (*current == 's') { s_specifier(args, &str) ? 0 : str_i++; }
+            else if (*current == 'o') { o_specifier(args, &str) ? 0 : str_i++;}
             else if (*current == 'x' || *current == 'X') { x_specifier(args, &str) ? 0 : str_i++;}
             else if (*current == 'n') { n_specifier(args, &str, start); }
             else if (*current == 'p') { p_specifier(args, &str) ? 0 : str_i++;}
@@ -182,6 +192,39 @@ int d_specifier(va_list *args, const char **str) {
     return 0;
 }
 
+int u_specifier(va_list *args, const char **str) {
+    unsigned int *int_ptr = va_arg(*args, int *);
+    int num = 0;
+
+
+    while (isdigit(**str)) {
+        num = num * 10 + (**str - '0');
+        (*str)++;
+    }
+
+    return 0;
+}
+
+int o_specifier(va_list *args, const char **str) {
+    unsigned int *val  = va_arg(*args, unsigned int *);
+    unsigned int res = 0;
+    while (isxdigit(**str)) {
+        if (**str == '0' && ((*str)[1] == 'x' || (*str)[1] == 'X')) {*str += 2;} // could bug out here
+        char ch = toupper(**str);
+        int rem;
+        if (ch >= '0' && ch <= '9') {
+            rem = ch - '0';
+        } else if (ch >= 'A' && ch <= 'F') {
+            rem = ch - 'A' + 10;
+        } else {
+            continue;
+        }
+        res = res * 8 + rem;
+        (*str)++;
+    }
+    *val = res;
+    return 0;
+}
 
 int s_specifier(va_list *args, const char **str) {
     char *buffer = va_arg(*args, char *);
@@ -353,13 +396,14 @@ int p_specifier(va_list *args, const char **str) {
     return 0;
 }
 
+
 int x_specifier(va_list *args, const char **str) {
     unsigned int *val  = va_arg(*args, unsigned int *);
     unsigned int res = 0;
     while (isxdigit(**str)) {
+        if (**str == '0' && ((*str)[1] == 'x' || (*str)[1] == 'X')) {*str += 2;} // could bug out here
         char ch = toupper(**str);
         int rem;
-        if (**str == '0' && ((*str)[1] == 'x' || (*str)[1] == 'X')) {*str += 1;} // could bug out here
         if (ch >= '0' && ch <= '9') {
             rem = ch - '0';
         } else if (ch >= 'A' && ch <= 'F') {
