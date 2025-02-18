@@ -13,11 +13,11 @@ void va_end(va_list p) This macro allows to end traversal of the variadic functi
 c - DONE
 d - DONE
 i - DONE
-e - 
-E - 
-f 
-g - 
-G - 
+e - DONE
+E - DONE
+f - DONE
+g - DONE
+G - DONE
 o - DONE
 s - DONE
 u - DONE
@@ -109,15 +109,28 @@ int main() {
     // printf("Matched: %d\n", discount);
 
 
+    // const char *input = "Discount: 0x74f";
     
-    // const char *input = "Discount: 1.250000e+02";
-    const char *input = "Discount: 0x74f";
-    unsigned int discount;
-    unsigned int discount2;
-    printf("%d\n", s21_sscanf(input, "Discount: %i", &discount));
-    printf("Matched: %i\n", discount);
-    printf("%d\n", sscanf(input, "Discount: %i", &discount2));
-    printf("Matched: %i\n", discount);
+    // const char *input = "Discount: -1.250000";
+    // float discount;
+    // float discount2;
+    // printf("%d\n", s21_sscanf(input, "Discount: %f", &discount));
+    // printf("Matched: %f\n", discount);
+    // printf("%d\n", sscanf(input, "Discount: %f", &discount2));
+    // printf("Matched: %f\n", discount2);
+    
+    const char *input = "123.456 1.23e-4 -42.0";
+    float a, b, c;
+
+    int result = s21_sscanf(input, "%g %g %g", &a, &b, &c);
+    printf("Read values: a = %g, b = %g, c = %g\n", a, b, c);
+
+    // const char *input = "123.456 -42.0";
+    // float a, b;
+
+    // int result = s21_sscanf(input, "%f %f", &a, &b);
+    // printf("Read values: a = %f, b = %f", a, b);
+
     return 0;
 }
 
@@ -141,8 +154,9 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
             else if (*current == 'd') { d_specifier(args, &str) ? 0 : str_i++; }
             else if (*current == 'u') { u_specifier(args, &str) ? 0 : str_i++; }
             else if (*current == 'i') { i_specifier(args, &str) ? 0 : str_i++; }
-            else if (*current == 'e') { e_specifier(args, &str) ? 0 : str_i++; }
+            else if (*current == 'e' || *current == 'E') { e_specifier(args, &str) ? 0 : str_i++; }
             else if (*current == 'f') { f_specifier(args, &str) ? 0 : str_i++; }
+            else if (*current == 'g' || *current == 'G') { g_specifier(args, &str) ? 0 : str_i++; }
             else if (*current == 's') { s_specifier(args, &str) ? 0 : str_i++; }
             else if (*current == 'o') { o_specifier(args, &str) ? 0 : str_i++;}
             else if (*current == 'x' || *current == 'X') { x_specifier(args, &str) ? 0 : str_i++;}
@@ -163,15 +177,6 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
     return str_i;
 }
 
-// int parse_decimal(const char **str) {
-//     int num = 0;
-//     while (isdigit(**str)) {
-//         num = num * 10 + (**str - '0');
-//         (*str)++;
-//     }
-//     return num;
-// }
-
 void parse_number(const char **str, int base, int *num) {
     while ((base == 10 && isdigit(**str)) ||
            (base == 8 && **str >= '0' && **str <= '7') ||
@@ -184,6 +189,17 @@ void parse_number(const char **str, int base, int *num) {
                 (**str - 'A' + 10)));
         (*str)++;
     }
+}
+
+int check_e(const char *str) {
+    int has_dot = 0;
+    int has_exp = 0;
+    while (!isspace(*str) && *str != '\0') {
+        if (*str == '.') has_dot = 1;
+        if (*str == 'e' || *str == 'E') has_exp = 1;
+        str++;
+    }
+    return has_dot && has_exp ? 1 : 0;
 }
 
 
@@ -274,7 +290,7 @@ int i_specifier(va_list *args, const char **str) {
 }
  
 int e_specifier(va_list *args, const char **str) {
-    double *double_ptr = va_arg(*args, double *);
+    float *double_ptr = va_arg(*args, float *);
     double num = 0.0;
     int sign = 1;
 
@@ -285,50 +301,44 @@ int e_specifier(va_list *args, const char **str) {
         (*str)++;
     }
 
-    double base = 0.0;
-    while (isdigit(**str) || **str == '.' || **str == '.') {
-        while (**str != '.') {
-            int int_part = 0;
-            if (isdigit(**str)) {
-                int_part = int_part * 10 + (**str - '0');
-                (*str)++;
-            }
-        }     
-        if (**str == '.') {
+    int int_part = 0;
+    parse_number(str, 10, &int_part);
+    double fraction = 0.0;
+    if (**str == '.') {
+        (*str)++;  // Move past the decimal point
+        double divisor = 10.0;
+        while (isdigit(**str)) {
+            fraction += ((**str - '0') / divisor);
+            divisor *= 10.0;
             (*str)++;
-            int decimal_place = 0;
-            parse_number(str, 10, & decimal_place);
         }
     }
-
-    num = base * sign;
-
+    int exp_sign = 1;
     if (**str == 'e' || **str == 'E') {
         (*str)++;
-        int exp_sign = 1;
         if (**str == '-') {
             exp_sign = -1;
             (*str)++;
         } else if (**str == '+') {
             (*str)++;
         }
-
-        int exponent = 0;
-        while (isdigit(**str)) {
-            exponent = exponent * 10 + (**str - '0');
-            (*str)++;
-        }
-
-        num *= pow(10, exp_sign * exponent);
     }
-    *double_ptr = num;
+    int exponent = 0;
+    while (isdigit(**str)) {
+        exponent = exponent * 10 + (**str - '0');
+        (*str)++;
+    }
+
+    num = (int_part + fraction) * pow(10, exp_sign * exponent);
+    num *= sign;
+    *double_ptr = (float)num;
     return 0;
 }
 
 
 int f_specifier(va_list *args, const char **str) {
-    double *float_ptr = va_arg(*args, double *);  // Retrieve argument
-    double num = 0.0;  // Initialize result
+    float *float_ptr = va_arg(*args, float *);  // Retrieve argument
+    double num = 0;  // Initialize result
     int sign = 1;
 
     // Handle sign
@@ -340,24 +350,25 @@ int f_specifier(va_list *args, const char **str) {
     }
 
     // Parse integer part
-    while (isdigit(**str)) {
-        num = num * 10.0 + (**str - '0');
-        (*str)++;
-    }
+
+    // char *start = (char*)*str;
+    int int_part = 0;
+    parse_number(str, 10, &int_part);
+    // int exp = *str - start;
 
     // Parse fractional part
     if (**str == '.') {
         (*str)++;  // Move past the decimal point
-        double fractional = 0.0;
-        double decimal_place = 1.0;
+        int fractional = 0.0;
+        int decimal_place = 1;
 
         while (isdigit(**str)) {
-            fractional = fractional * 10.0 + (**str - '0');
-            decimal_place *= 10.0;
+            fractional = round(fractional * 10.0 + (**str - '0'));
+            decimal_place *= 10;
             (*str)++;
         }
 
-        num += fractional / decimal_place;
+        num += int_part + fractional / decimal_place;
     }
 
     // Apply sign
@@ -367,6 +378,10 @@ int f_specifier(va_list *args, const char **str) {
     return 0;
 }
 
+int g_specifier(va_list *args, const char **str) {
+    check_e(*str) ? e_specifier(args, str) : f_specifier(args, str);
+    return 0;
+}
 
 int n_specifier(va_list *args, const char **str, const char *start) {
     int *count_ptr = va_arg(*args, int *);
@@ -391,7 +406,7 @@ int p_specifier(va_list *args, const char **str) {
 int x_specifier(va_list *args, const char **str) {
     unsigned int *val  = va_arg(*args, unsigned int *);
     unsigned int res = 0;
-    parse(str, 16, &res);
+    parse_number(str, 16, &res);
     *val = res;
     return 0;
 }
