@@ -119,17 +119,30 @@ int main() {
     // printf("%d\n", sscanf(input, "Discount: %f", &discount2));
     // printf("Matched: %f\n", discount2);
     
-    const char *input = "1005";
-    short int a;
+    // const char *input = "1005";
+    // short int a;
 
-    int result = s21_sscanf(input, "%hd", &a);
-    printf("Read values: a = %hd\n", a);
+    // int result = s21_sscanf(input, "%hd", &a);
+    // printf("Read values: a = %hd\n", a);
 
     // const char *input = "123.456 -42.0";
     // float a, b;
 
     // int result = s21_sscanf(input, "%f %f", &a, &b);
     // printf("Read values: a = %f, b = %f", a, b);
+
+
+    char input[] = "Hello"; // ASCII narrow string
+    wchar_t ws[50];         // Wide string buffer
+
+    s21_sscanf(input, "%5ls", ws); // Works for ASCII but no encoding conversion
+    wprintf(L"Scanned wide string: %ls\n", ws);  // Output: Hello
+
+    char input2[] = "H";  // Single ASCII character
+    wchar_t wc2;
+
+    s21_sscanf(input2, "%11lc", &wc2); // Works fine for ASCII
+    wprintf(L"Scanned wide character: %lc\n", wc2);  // Output: H
 
     return 0;
 }
@@ -150,16 +163,18 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
     while (*current) {
         if (*current == '%' && *(current + 1) != '\0') {
             char len_mod = 0;
+            int width = 0;
             current++;
+            if (isdigit(*current)) {parse_number(&current, 10, &width); *current++;}
             if (*current == 'h' || *current == 'l' || *current == 'L') { len_mod = *current; *current++;}
-            if (*current == 'c') { c_specifier(args, &str); str_i++; }
+            if (*current == 'c') { c_specifier(args, &str, len_mod); str_i++; }
             else if (*current == 'd') { d_specifier(args, &str, len_mod) ? 0 : str_i++; }
             else if (*current == 'u') { u_specifier(args, &str, len_mod) ? 0 : str_i++; }
             else if (*current == 'i') { i_specifier(args, &str, len_mod) ? 0 : str_i++; }
             else if (*current == 'e' || *current == 'E') { e_specifier(args, &str, len_mod) ? 0 : str_i++; }
             else if (*current == 'f') { f_specifier(args, &str, len_mod) ? 0 : str_i++; }
             else if (*current == 'g' || *current == 'G') { g_specifier(args, &str, len_mod) ? 0 : str_i++; }
-            else if (*current == 's') { s_specifier(args, &str) ? 0 : str_i++; }
+            else if (*current == 's') { s_specifier(args, &str, len_mod) ? 0 : str_i++; }
             else if (*current == 'o') { o_specifier(args, &str, len_mod) ? 0 : str_i++;}
             else if (*current == 'x' || *current == 'X') { x_specifier(args, &str, len_mod) ? 0 : str_i++;}
             else if (*current == 'n') { n_specifier(args, &str, start); }
@@ -205,9 +220,18 @@ int check_e(const char *str) {
 }
 
 
-int c_specifier(va_list *args, const char **str) {
-    char *char_ptr = va_arg(*args, char *);
-    *char_ptr = **str;
+int c_specifier(va_list *args, const char **str, char len_mod) {
+    if (len_mod == 'l') {
+        wchar_t *wch_ptr = va_arg(*args, wchar_t *);
+        if (wch_ptr) {
+            *wch_ptr = **str;
+        }
+    } else {
+        char *char_ptr = va_arg(*args, char *);
+        if (char_ptr) {
+            *char_ptr = **str;
+        }
+    }
     (*str)++;
     return 0;
 }
@@ -286,16 +310,24 @@ int o_specifier(va_list *args, const char **str, char len_mod) {
     return 0;
 }
 
-int s_specifier(va_list *args, const char **str) {
-    char *buffer = va_arg(*args, char *);
-    int i = 0;
-
-    while (**str != '\0' && !isspace(**str)) {
-        buffer[i++] = **str;
-        (*str)++;
+int s_specifier(va_list *args, const char **str, char len_mod) {
+    if (len_mod == 'l'){
+        wchar_t *buffer = va_arg(*args, wchar_t *);
+        int i = 0;
+        while (**str != '\0' && !isspace(**str)) {
+            buffer[i++] = **str;
+            (*str)++;
+        }
+        buffer[i] = '\0';
+    } else {
+        char *buffer = va_arg(*args, char *);
+        int i = 0;
+        while (**str != '\0' && !isspace(**str)) {
+            buffer[i++] = **str;
+            (*str)++;
+        }
+        buffer[i] = '\0';
     }
-
-    buffer[i] = '\0';
     return 0;
 }
 

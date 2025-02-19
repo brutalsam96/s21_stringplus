@@ -7,6 +7,7 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include <math.h>
+#include <wchar.h>
 
 typedef long long unsigned int s21_uintptr_t; // TODO could confilct with sprintf one
 
@@ -16,7 +17,7 @@ int check_e(const char *str);
 int s21_sscanf(const char *str, const char *format, ...);
 
 int proccess_scanf(const char *str, const char *format, va_list *args);
-int c_specifier(va_list *args, const char **str);
+int c_specifier(va_list *args, const char **str, char len_mod);
 int d_specifier(va_list *args, const char **str, char len_mod);
 int u_specifier(va_list *args, const char **str, char len_mod);
 int i_specifier(va_list *args, const char **str, char len_mod);
@@ -24,7 +25,7 @@ int e_specifier(va_list *args, const char **str, char len_mod);
 int f_specifier(va_list *args, const char **str, char len_mod);
 int g_specifier(va_list *args, const char **str, char len_mod);
 int o_specifier(va_list *args, const char **str, char len_mod);
-int s_specifier(va_list *args, const char **str);
+int s_specifier(va_list *args, const char **str, char len_mod);
 int u_specifier(va_list *args, const char **str, char len_mod);
 int x_specifier(va_list *args, const char **str, char len_mod);
 int n_specifier(va_list *args, const char **str, const char *start);
