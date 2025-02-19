@@ -119,11 +119,11 @@ int main() {
     // printf("%d\n", sscanf(input, "Discount: %f", &discount2));
     // printf("Matched: %f\n", discount2);
     
-    const char *input = "123.456 1.23e-4 -42.0";
-    float a, b, c;
+    const char *input = "1005";
+    short int a;
 
-    int result = s21_sscanf(input, "%g %g %g", &a, &b, &c);
-    printf("Read values: a = %g, b = %g, c = %g\n", a, b, c);
+    int result = s21_sscanf(input, "%hd", &a);
+    printf("Read values: a = %hd\n", a);
 
     // const char *input = "123.456 -42.0";
     // float a, b;
@@ -149,17 +149,19 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
     int str_i = 0;
     while (*current) {
         if (*current == '%' && *(current + 1) != '\0') {
+            char len_mod = 0;
             current++;
-            if (*current == 'c') { c_specifier(args, &str); str_i++; }
-            else if (*current == 'd') { d_specifier(args, &str) ? 0 : str_i++; }
-            else if (*current == 'u') { u_specifier(args, &str) ? 0 : str_i++; }
-            else if (*current == 'i') { i_specifier(args, &str) ? 0 : str_i++; }
-            else if (*current == 'e' || *current == 'E') { e_specifier(args, &str) ? 0 : str_i++; }
-            else if (*current == 'f') { f_specifier(args, &str) ? 0 : str_i++; }
-            else if (*current == 'g' || *current == 'G') { g_specifier(args, &str) ? 0 : str_i++; }
+            if (*current == 'h' || *current == 'l' || *current == 'L') { len_mod = *current; *current++;}
+            else if (*current == 'c') { c_specifier(args, &str); str_i++; }
+            else if (*current == 'd') { d_specifier(args, &str, len_mod) ? 0 : str_i++; }
+            else if (*current == 'u') { u_specifier(args, &str, len_mod) ? 0 : str_i++; }
+            else if (*current == 'i') { i_specifier(args, &str, len_mod) ? 0 : str_i++; }
+            else if (*current == 'e' || *current == 'E') { e_specifier(args, &str, len_mod) ? 0 : str_i++; }
+            else if (*current == 'f') { f_specifier(args, &str, len_mod) ? 0 : str_i++; }
+            else if (*current == 'g' || *current == 'G') { g_specifier(args, &str, len_mod) ? 0 : str_i++; }
             else if (*current == 's') { s_specifier(args, &str) ? 0 : str_i++; }
-            else if (*current == 'o') { o_specifier(args, &str) ? 0 : str_i++;}
-            else if (*current == 'x' || *current == 'X') { x_specifier(args, &str) ? 0 : str_i++;}
+            else if (*current == 'o') { o_specifier(args, &str, len_mod) ? 0 : str_i++;}
+            else if (*current == 'x' || *current == 'X') { x_specifier(args, &str, len_mod) ? 0 : str_i++;}
             else if (*current == 'n') { n_specifier(args, &str, start); }
             else if (*current == 'p') { p_specifier(args, &str) ? 0 : str_i++;}
             else if (*current == '%') { current++; continue; }
@@ -211,17 +213,29 @@ int c_specifier(va_list *args, const char **str) {
 }
 
 
-int d_specifier(va_list *args, const char **str) {
-    int *int_ptr = va_arg(*args, int *);
+int d_specifier(va_list *args, const char **str, char len_mod) {
     int num = 0;
     int sign = 1;
+    short int *short_ptr;
+    long int *long_ptr;
+    int *int_ptr = NULL;
+
+    if (len_mod == 'h') {
+        short_ptr = va_arg(*args, short int *);
+        int_ptr = (int *)short_ptr;
+    } else if (len_mod == 'l') {
+        long_ptr = va_arg(*args, long int *);
+        int_ptr = (int *)long_ptr;
+    } else {
+        int_ptr = va_arg(*args, int *);
+    }
 
     if (**str == '-') {
-        sign = -1;
-        (*str)++;
-    } else if (**str == '+') {
-        (*str)++; // Ignore the '+' sign
-    }
+    parse_number(str, 10, &num);
+
+    if (int_ptr) *int_ptr = sign * num;
+    return 0;
+}
 
     parse_number(str, 10, &num);
 
@@ -229,7 +243,7 @@ int d_specifier(va_list *args, const char **str) {
     return 0;
 }
 
-int u_specifier(va_list *args, const char **str) {
+int u_specifier(va_list *args, const char **str, char len_mod) {
     unsigned int *int_ptr = va_arg(*args, int *);
     int num = 0;
     parse_number(str, 10, &num);
@@ -237,7 +251,7 @@ int u_specifier(va_list *args, const char **str) {
     return 0;
 }
 
-int o_specifier(va_list *args, const char **str) {
+int o_specifier(va_list *args, const char **str, char len_mod) {
     unsigned int *val  = va_arg(*args, unsigned int *);
     int num = 0;
     parse_number(str, 8, &num);
@@ -259,7 +273,7 @@ int s_specifier(va_list *args, const char **str) {
 }
 
 
-int i_specifier(va_list *args, const char **str) {
+int i_specifier(va_list *args, const char **str, char len_mod) {
     int *num = va_arg(*args, int *);
     *num = 0;
     int sign = 1;
@@ -289,7 +303,7 @@ int i_specifier(va_list *args, const char **str) {
     return 0;
 }
  
-int e_specifier(va_list *args, const char **str) {
+int e_specifier(va_list *args, const char **str, char len_mod) {
     float *double_ptr = va_arg(*args, float *);
     double num = 0.0;
     int sign = 1;
@@ -336,7 +350,7 @@ int e_specifier(va_list *args, const char **str) {
 }
 
 
-int f_specifier(va_list *args, const char **str) {
+int f_specifier(va_list *args, const char **str, char len_mod) {
     float *float_ptr = va_arg(*args, float *);  // Retrieve argument
     double num = 0;  // Initialize result
     int sign = 1;
@@ -378,8 +392,8 @@ int f_specifier(va_list *args, const char **str) {
     return 0;
 }
 
-int g_specifier(va_list *args, const char **str) {
-    check_e(*str) ? e_specifier(args, str) : f_specifier(args, str);
+int g_specifier(va_list *args, const char **str, char len_mod) {
+    check_e(*str) ? e_specifier(args, str, len_mod) : f_specifier(args, str, len_mod);
     return 0;
 }
 
@@ -403,7 +417,7 @@ int p_specifier(va_list *args, const char **str) {
 }
 
 
-int x_specifier(va_list *args, const char **str) {
+int x_specifier(va_list *args, const char **str, char len_mod) {
     unsigned int *val  = va_arg(*args, unsigned int *);
     unsigned int res = 0;
     parse_number(str, 16, &res);

@@ -17,16 +17,16 @@ int s21_sscanf(const char *str, const char *format, ...);
 
 int proccess_scanf(const char *str, const char *format, va_list *args);
 int c_specifier(va_list *args, const char **str);
-int d_specifier(va_list *args, const char **str);
-int u_specifier(va_list *args, const char **str);
-int i_specifier(va_list *args, const char **str);
-int e_specifier(va_list *args, const char **str);
-int f_specifier(va_list *args, const char **str);
-int g_specifier(va_list *args, const char **str);
-int o_specifier(va_list *args, const char **str);
+int d_specifier(va_list *args, const char **str, char len_mod);
+int u_specifier(va_list *args, const char **str, char len_mod);
+int i_specifier(va_list *args, const char **str, char len_mod);
+int e_specifier(va_list *args, const char **str, char len_mod);
+int f_specifier(va_list *args, const char **str, char len_mod);
+int g_specifier(va_list *args, const char **str, char len_mod);
+int o_specifier(va_list *args, const char **str, char len_mod);
 int s_specifier(va_list *args, const char **str);
-int u_specifier(va_list *args, const char **str);
-int x_specifier(va_list *args, const char **str);
+int u_specifier(va_list *args, const char **str, char len_mod);
+int x_specifier(va_list *args, const char **str, char len_mod);
 int n_specifier(va_list *args, const char **str, const char *start);
 int p_specifier(va_list *args, const char **str);
 
