@@ -46,7 +46,7 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
     return str_i;
 }
 
-void parse_number(const char **str, int base, int *num) {
+void parse_number(const char **str, int base, long long *num) {
     while ((base == 10 && isdigit(**str)) ||
            (base == 8 && **str >= '0' && **str <= '7') ||
            (base == 16 && (isdigit(**str) ||
@@ -82,8 +82,10 @@ int c_specifier(va_list *args, const char **str) {
 
 int d_specifier(va_list *args, const char **str) {
     int *int_ptr = va_arg(*args, int *);
-    int num = 0;
+    long long num = 0;
     int sign = 1;
+
+    while (isspace(**str)) (*str)++;
 
     if (**str == '-') {
         sign = -1;
@@ -91,24 +93,42 @@ int d_specifier(va_list *args, const char **str) {
     } else if (**str == '+') {
         (*str)++; // Ignore the '+' sign
     }
-
     parse_number(str, 10, &num);
 
     *int_ptr = sign * num;
     return 0;
 }
 
+
 int u_specifier(va_list *args, const char **str) {
-    unsigned int *int_ptr = va_arg(*args, int *);
-    int num = 0;
+    unsigned int *int_ptr = va_arg(*args, unsigned int *);
+    long long num = 0;
+
+    while (isspace(**str)) (*str)++;
+
+    int is_negative = 0;
+    if (**str == '-') {
+        is_negative = 1;
+        (*str)++;
+    }
+
     parse_number(str, 10, &num);
-    *int_ptr = num;
+
+    if (is_negative) {
+        *int_ptr = (unsigned int)(pow(2, 32) - num);
+    } else {
+        *int_ptr = (unsigned int)num;
+    }
+
     return 0;
 }
 
 int o_specifier(va_list *args, const char **str) {
     unsigned int *val  = va_arg(*args, unsigned int *);
-    int num = 0;
+    long long num = 0;
+
+    while (isspace(**str)) (*str)++;
+
     parse_number(str, 8, &num);
     *val = num;
     return 0;
@@ -117,6 +137,8 @@ int o_specifier(va_list *args, const char **str) {
 int s_specifier(va_list *args, const char **str) {
     char *buffer = va_arg(*args, char *);
     int i = 0;
+
+    while (isspace(**str)) (*str)++;
 
     while (**str != '\0' && !isspace(**str)) {
         buffer[i++] = **str;
@@ -129,9 +151,12 @@ int s_specifier(va_list *args, const char **str) {
 
 
 int i_specifier(va_list *args, const char **str) {
-    int *num = va_arg(*args, int *);
-    *num = 0;
+    int *i_val = va_arg(*args, int *);
+    long long num = 0;
     int sign = 1;
+
+    while (isspace(**str)) (*str)++;
+
 
     if (**str == '-') {
         sign = -1;
@@ -152,9 +177,9 @@ int i_specifier(va_list *args, const char **str) {
         }
     }
 
-    parse_number(str, base, num);
+    parse_number(str, base, &num);
 
-    *num *= sign;
+    *i_val = num * sign;
     return 0;
 }
  
@@ -170,7 +195,7 @@ int e_specifier(va_list *args, const char **str) {
         (*str)++;
     }
 
-    int int_part = 0;
+    long long int_part = 0;
     parse_number(str, 10, &int_part);
     double fraction = 0.0;
     if (**str == '.') {
@@ -206,11 +231,12 @@ int e_specifier(va_list *args, const char **str) {
 
 
 int f_specifier(va_list *args, const char **str) {
-    float *float_ptr = va_arg(*args, float *);  // Retrieve argument
-    double num = 0;  // Initialize result
+    float *float_ptr = va_arg(*args, float *);
+    double num = 0;
     int sign = 1;
 
-    // Handle sign
+    while (isspace(**str)) (*str)++;
+
     if (**str == '-') {
         sign = -1;
         (*str)++;
@@ -218,32 +244,29 @@ int f_specifier(va_list *args, const char **str) {
         (*str)++;
     }
 
-    // Parse integer part
-
-    // char *start = (char*)*str;
-    int int_part = 0;
+    long long int_part = 0;
     parse_number(str, 10, &int_part);
-    // int exp = *str - start;
 
-    // Parse fractional part
     if (**str == '.') {
         (*str)++;  // Move past the decimal point
-        int fractional = 0.0;
-        int decimal_place = 1;
+        float fractional = 0.0;
+        float decimal_place = 1.0;
 
-        while (isdigit(**str)) {
-            fractional = round(fractional * 10.0 + (**str - '0'));
+        int precision = 0;
+        while (isdigit(**str) && precision < 6) {
+            fractional = fractional * 10.0 + (**str - '0');
             decimal_place *= 10;
             (*str)++;
+            precision++;
         }
 
         num += int_part + fractional / decimal_place;
     }
 
-    // Apply sign
     num *= sign;
 
-    *float_ptr = num;
+    num = round(num * 1000000) / 1000000;
+    *float_ptr = (float)num;
     return 0;
 }
 
@@ -273,10 +296,18 @@ int p_specifier(va_list *args, const char **str) {
 
 
 int x_specifier(va_list *args, const char **str) {
-    unsigned int *val  = va_arg(*args, unsigned int *);
-    unsigned int res = 0;
+    unsigned int *val = va_arg(*args, unsigned int *);
+    long long res = 0;
+
+    while (isspace(**str)) (*str)++;
+
+    if (**str == '0' && (*(*str + 1) == 'x' || *(*str + 1) == 'X')) {
+        (*str) += 2;
+    }
+
     parse_number(str, 16, &res);
-    *val = res;
+
+    *val = (unsigned int)res;
     return 0;
 }
 
@@ -297,3 +328,15 @@ s21_uintptr_t hex2dec_ptr(const char **str) {
     }
     return dec;
 }
+
+
+// int main() {
+//     char input[] = "No match";
+//     int s21_value, std_value;
+
+//     s21_sscanf(input, "Yes match%n", &s21_value);
+//     sscanf(input, "Yes match%n", &std_value);
+
+//     printf("s21_value %d std_value %d\n", s21_value, std_value);
+
+// } 
