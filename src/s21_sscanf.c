@@ -152,7 +152,7 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
             char len_mod = 0;
             current++;
             if (*current == 'h' || *current == 'l' || *current == 'L') { len_mod = *current; *current++;}
-            else if (*current == 'c') { c_specifier(args, &str); str_i++; }
+            if (*current == 'c') { c_specifier(args, &str); str_i++; }
             else if (*current == 'd') { d_specifier(args, &str, len_mod) ? 0 : str_i++; }
             else if (*current == 'u') { u_specifier(args, &str, len_mod) ? 0 : str_i++; }
             else if (*current == 'i') { i_specifier(args, &str, len_mod) ? 0 : str_i++; }
@@ -244,16 +244,43 @@ int d_specifier(va_list *args, const char **str, char len_mod) {
 }
 
 int u_specifier(va_list *args, const char **str, char len_mod) {
-    unsigned int *int_ptr = va_arg(*args, int *);
     int num = 0;
+
+    unsigned short int *short_ptr;
+    unsigned long int *long_ptr;
+    unsigned int *int_ptr = NULL;
+
+    if (len_mod == 'h') {
+        short_ptr = va_arg(*args, unsigned short int *);
+        int_ptr = (unsigned int *)short_ptr;
+    } else if (len_mod == 'l') {
+        long_ptr = va_arg(*args,unsigned  long int *);
+        int_ptr = (unsigned int *)long_ptr;
+    } else {
+        unsigned int *int_ptr = va_arg(*args, unsigned int *);
+    }
+    
+    
     parse_number(str, 10, &num);
     *int_ptr = num;
     return 0;
 }
 
 int o_specifier(va_list *args, const char **str, char len_mod) {
-    unsigned int *val  = va_arg(*args, unsigned int *);
     int num = 0;
+    unsigned short int *short_ptr;
+    unsigned long int *long_ptr;
+    unsigned int *val = NULL;
+
+    if (len_mod == 'h') {
+        short_ptr = va_arg(*args, unsigned short int *);
+        val = (unsigned int *)short_ptr;
+    } else if (len_mod == 'l') {
+        long_ptr = va_arg(*args,unsigned  long int *);
+        val = (unsigned int *)long_ptr;
+    } else {
+        unsigned int *val = va_arg(*args, unsigned int *);
+    }
     parse_number(str, 8, &num);
     *val = num;
     return 0;
@@ -274,9 +301,21 @@ int s_specifier(va_list *args, const char **str) {
 
 
 int i_specifier(va_list *args, const char **str, char len_mod) {
-    int *num = va_arg(*args, int *);
-    *num = 0;
     int sign = 1;
+
+    unsigned short int *short_ptr;
+    unsigned long int *long_ptr;
+    unsigned int *num = NULL;
+
+    if (len_mod == 'h') {
+        short_ptr = va_arg(*args, unsigned short int *);
+        num = (unsigned int *)short_ptr;
+    } else if (len_mod == 'l') {
+        long_ptr = va_arg(*args,unsigned  long int *);
+        num = (unsigned int *)long_ptr;
+    } else {
+        unsigned int *num = va_arg(*args, unsigned int *);
+    }
 
     if (**str == '-') {
         sign = -1;
@@ -304,9 +343,17 @@ int i_specifier(va_list *args, const char **str, char len_mod) {
 }
  
 int e_specifier(va_list *args, const char **str, char len_mod) {
-    float *double_ptr = va_arg(*args, float *);
-    double num = 0.0;
+    // float *double_ptr = va_arg(*args, float *);
+    float *num = NULL;
+    double long *long_ptr;
     int sign = 1;
+
+    if (len_mod == 'L') {
+        long_ptr = va_arg(*args, double long *);
+        num = (float *)long_ptr;
+    } else {
+        float *num = va_arg(*args, float *);
+    }
 
     if (**str == '-') {
         sign = -1;
@@ -343,17 +390,25 @@ int e_specifier(va_list *args, const char **str, char len_mod) {
         (*str)++;
     }
 
-    num = (int_part + fraction) * pow(10, exp_sign * exponent);
-    num *= sign;
-    *double_ptr = (float)num;
+    *num = (int_part + fraction) * pow(10, exp_sign * exponent);
+    *num *= sign;
+    // *double_ptr = (float)num;
     return 0;
 }
 
 
 int f_specifier(va_list *args, const char **str, char len_mod) {
-    float *float_ptr = va_arg(*args, float *);  // Retrieve argument
-    double num = 0;  // Initialize result
+    
+    float *num = NULL;
+    double long *long_ptr;
     int sign = 1;
+
+    if (len_mod == 'L') {
+        long_ptr = va_arg(*args, double long *);
+        num = (float *)long_ptr;
+    } else {
+        float *num = va_arg(*args, float *);
+    }
 
     // Handle sign
     if (**str == '-') {
@@ -386,9 +441,9 @@ int f_specifier(va_list *args, const char **str, char len_mod) {
     }
 
     // Apply sign
-    num *= sign;
+    *num *= sign;
 
-    *float_ptr = num;
+    // *float_ptr = num;
     return 0;
 }
 
@@ -418,7 +473,21 @@ int p_specifier(va_list *args, const char **str) {
 
 
 int x_specifier(va_list *args, const char **str, char len_mod) {
-    unsigned int *val  = va_arg(*args, unsigned int *);
+
+    unsigned short int *short_ptr;
+    unsigned long int *long_ptr;
+    unsigned int *val = NULL;
+
+    if (len_mod == 'h') {
+        short_ptr = va_arg(*args, unsigned short int *);
+        val = (unsigned int *)short_ptr;
+    } else if (len_mod == 'l') {
+        long_ptr = va_arg(*args,unsigned  long int *);
+        val = (unsigned int *)long_ptr;
+    } else {
+        unsigned int *val = va_arg(*args, unsigned int *);
+    }
+
     unsigned int res = 0;
     parse_number(str, 16, &res);
     *val = res;
