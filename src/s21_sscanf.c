@@ -132,18 +132,21 @@ int main() {
     // printf("Read values: a = %f, b = %f", a, b);
 
 
-    char input[] = "Hello"; // ASCII narrow string
-    wchar_t ws[50];         // Wide string buffer
+    // char input[] = "Hello"; // ASCII narrow string
+    // wchar_t ws[50];         // Wide string buffer
 
-    s21_sscanf(input, "%5ls", ws); // Works for ASCII but no encoding conversion
-    wprintf(L"Scanned wide string: %ls\n", ws);  // Output: Hello
+    // s21_sscanf(input, "%*ls", 5 ,ws); // Works for ASCII but no encoding conversion
+    // wprintf(L"Scanned wide string: %ls\n", ws);  // Output: Hello
 
-    char input2[] = "H";  // Single ASCII character
-    wchar_t wc2;
+    // char input2[] = "H";  // Single ASCII character
+    // wchar_t wc2;
 
-    s21_sscanf(input2, "%11lc", &wc2); // Works fine for ASCII
-    wprintf(L"Scanned wide character: %lc\n", wc2);  // Output: H
+    // s21_sscanf(input2, "%11lc", &wc2); // Works fine for ASCII
+    // wprintf(L"Scanned wide character: %lc\n", wc2);  // Output: H
 
+    char input[] = "12345";
+    int ws = 0;
+    s21_sscanf(input, "%3d", &ws);
     return 0;
 }
 
@@ -165,18 +168,19 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
             char len_mod = 0;
             int width = 0;
             current++;
-            if (isdigit(*current)) {parse_number(&current, 10, &width); *current++;}
+            if (isdigit(*current)) {parse_number(&current, 10, &width, 0);}
+            else if (*current == '*') {width = va_arg(*args, int); *current++;}
             if (*current == 'h' || *current == 'l' || *current == 'L') { len_mod = *current; *current++;}
-            if (*current == 'c') { c_specifier(args, &str, len_mod); str_i++; }
-            else if (*current == 'd') { d_specifier(args, &str, len_mod) ? 0 : str_i++; }
-            else if (*current == 'u') { u_specifier(args, &str, len_mod) ? 0 : str_i++; }
-            else if (*current == 'i') { i_specifier(args, &str, len_mod) ? 0 : str_i++; }
-            else if (*current == 'e' || *current == 'E') { e_specifier(args, &str, len_mod) ? 0 : str_i++; }
-            else if (*current == 'f') { f_specifier(args, &str, len_mod) ? 0 : str_i++; }
-            else if (*current == 'g' || *current == 'G') { g_specifier(args, &str, len_mod) ? 0 : str_i++; }
-            else if (*current == 's') { s_specifier(args, &str, len_mod) ? 0 : str_i++; }
-            else if (*current == 'o') { o_specifier(args, &str, len_mod) ? 0 : str_i++;}
-            else if (*current == 'x' || *current == 'X') { x_specifier(args, &str, len_mod) ? 0 : str_i++;}
+            if (*current == 'c') { c_specifier(args, &str, len_mod, width); str_i++; }
+            else if (*current == 'd') { d_specifier(args, &str, len_mod, width) ? 0 : str_i++; }
+            else if (*current == 'u') { u_specifier(args, &str, len_mod, width) ? 0 : str_i++; }
+            else if (*current == 'i') { i_specifier(args, &str, len_mod, width) ? 0 : str_i++; }
+            else if (*current == 'e' || *current == 'E') { e_specifier(args, &str, len_mod, width) ? 0 : str_i++; }
+            else if (*current == 'f') { f_specifier(args, &str, len_mod, width) ? 0 : str_i++; }
+            else if (*current == 'g' || *current == 'G') { g_specifier(args, &str, len_mod, width) ? 0 : str_i++; }
+            else if (*current == 's') { s_specifier(args, &str, len_mod, width) ? 0 : str_i++; }
+            else if (*current == 'o') { o_specifier(args, &str, len_mod, width) ? 0 : str_i++;}
+            else if (*current == 'x' || *current == 'X') { x_specifier(args, &str, len_mod, width) ? 0 : str_i++;}
             else if (*current == 'n') { n_specifier(args, &str, start); }
             else if (*current == 'p') { p_specifier(args, &str) ? 0 : str_i++;}
             else if (*current == '%') { current++; continue; }
@@ -194,7 +198,8 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
     return str_i;
 }
 
-void parse_number(const char **str, int base, int *num) {
+void parse_number(const char **str, int base, int *num, int width) {
+    int count = 1;
     while ((base == 10 && isdigit(**str)) ||
            (base == 8 && **str >= '0' && **str <= '7') ||
            (base == 16 && (isdigit(**str) ||
@@ -205,6 +210,8 @@ void parse_number(const char **str, int base, int *num) {
                ((**str >= 'a' && **str <= 'f') ? (**str - 'a' + 10) :
                 (**str - 'A' + 10)));
         (*str)++;
+        if (count == width) break;
+        count++;
     }
 }
 
@@ -220,7 +227,7 @@ int check_e(const char *str) {
 }
 
 
-int c_specifier(va_list *args, const char **str, char len_mod) {
+int c_specifier(va_list *args, const char **str, char len_mod, int width) {
     if (len_mod == 'l') {
         wchar_t *wch_ptr = va_arg(*args, wchar_t *);
         if (wch_ptr) {
@@ -237,7 +244,7 @@ int c_specifier(va_list *args, const char **str, char len_mod) {
 }
 
 
-int d_specifier(va_list *args, const char **str, char len_mod) {
+int d_specifier(va_list *args, const char **str, char len_mod, int width) {
     int num = 0;
     int sign = 1;
     short int *short_ptr;
@@ -255,19 +262,19 @@ int d_specifier(va_list *args, const char **str, char len_mod) {
     }
 
     if (**str == '-') {
-    parse_number(str, 10, &num);
+    parse_number(str, 10, &num, width);
 
     if (int_ptr) *int_ptr = sign * num;
     return 0;
 }
 
-    parse_number(str, 10, &num);
+    parse_number(str, 10, &num, width);
 
     *int_ptr = sign * num;
     return 0;
 }
 
-int u_specifier(va_list *args, const char **str, char len_mod) {
+int u_specifier(va_list *args, const char **str, char len_mod, int width) {
     int num = 0;
 
     unsigned short int *short_ptr;
@@ -285,12 +292,12 @@ int u_specifier(va_list *args, const char **str, char len_mod) {
     }
     
     
-    parse_number(str, 10, &num);
+    parse_number(str, 10, &num, width);
     *int_ptr = num;
     return 0;
 }
 
-int o_specifier(va_list *args, const char **str, char len_mod) {
+int o_specifier(va_list *args, const char **str, char len_mod, int width) {
     int num = 0;
     unsigned short int *short_ptr;
     unsigned long int *long_ptr;
@@ -305,12 +312,12 @@ int o_specifier(va_list *args, const char **str, char len_mod) {
     } else {
         unsigned int *val = va_arg(*args, unsigned int *);
     }
-    parse_number(str, 8, &num);
+    parse_number(str, 8, &num, width);
     *val = num;
     return 0;
 }
 
-int s_specifier(va_list *args, const char **str, char len_mod) {
+int s_specifier(va_list *args, const char **str, char len_mod, int width) {
     if (len_mod == 'l'){
         wchar_t *buffer = va_arg(*args, wchar_t *);
         int i = 0;
@@ -332,7 +339,7 @@ int s_specifier(va_list *args, const char **str, char len_mod) {
 }
 
 
-int i_specifier(va_list *args, const char **str, char len_mod) {
+int i_specifier(va_list *args, const char **str, char len_mod, int width) {
     int sign = 1;
 
     unsigned short int *short_ptr;
@@ -368,13 +375,13 @@ int i_specifier(va_list *args, const char **str, char len_mod) {
         }
     }
 
-    parse_number(str, base, num);
+    parse_number(str, base, num, width);
 
     *num *= sign;
     return 0;
 }
  
-int e_specifier(va_list *args, const char **str, char len_mod) {
+int e_specifier(va_list *args, const char **str, char len_mod, int width) {
     // float *double_ptr = va_arg(*args, float *);
     float *num = NULL;
     double long *long_ptr;
@@ -395,7 +402,7 @@ int e_specifier(va_list *args, const char **str, char len_mod) {
     }
 
     int int_part = 0;
-    parse_number(str, 10, &int_part);
+    parse_number(str, 10, &int_part, width);
     double fraction = 0.0;
     if (**str == '.') {
         (*str)++;  // Move past the decimal point
@@ -429,7 +436,7 @@ int e_specifier(va_list *args, const char **str, char len_mod) {
 }
 
 
-int f_specifier(va_list *args, const char **str, char len_mod) {
+int f_specifier(va_list *args, const char **str, char len_mod, int width) {
     
     float *num = NULL;
     double long *long_ptr;
@@ -454,7 +461,7 @@ int f_specifier(va_list *args, const char **str, char len_mod) {
 
     // char *start = (char*)*str;
     int int_part = 0;
-    parse_number(str, 10, &int_part);
+    parse_number(str, 10, &int_part, width);
     // int exp = *str - start;
 
     // Parse fractional part
@@ -479,8 +486,8 @@ int f_specifier(va_list *args, const char **str, char len_mod) {
     return 0;
 }
 
-int g_specifier(va_list *args, const char **str, char len_mod) {
-    check_e(*str) ? e_specifier(args, str, len_mod) : f_specifier(args, str, len_mod);
+int g_specifier(va_list *args, const char **str, char len_mod, int width) {
+    check_e(*str) ? e_specifier(args, str, len_mod, width) : f_specifier(args, str, len_mod, width);
     return 0;
 }
 
@@ -504,7 +511,7 @@ int p_specifier(va_list *args, const char **str) {
 }
 
 
-int x_specifier(va_list *args, const char **str, char len_mod) {
+int x_specifier(va_list *args, const char **str, char len_mod, int width) {
 
     unsigned short int *short_ptr;
     unsigned long int *long_ptr;
@@ -521,7 +528,7 @@ int x_specifier(va_list *args, const char **str, char len_mod) {
     }
 
     unsigned int res = 0;
-    parse_number(str, 16, &res);
+    parse_number(str, 16, &res, width);
     *val = res;
     return 0;
 }
