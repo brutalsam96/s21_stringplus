@@ -143,10 +143,30 @@ int main() {
 
     // s21_sscanf(input2, "%11lc", &wc2); // Works fine for ASCII
     // wprintf(L"Scanned wide character: %lc\n", wc2);  // Output: H
+    
+    // char input[] = "ABCD";
+    // char ws[5];
+    // sscanf(input, "%3c", ws);
 
-    char input[] = "12345";
-    int ws = 0;
-    s21_sscanf(input, "%3d", &ws);
+
+    // char str[] = "ABC";
+    // char buffer[4];  // 3 characters + null terminator
+
+    // s21_sscanf(str, "%3c", buffer);
+    // buffer[3] = '\0';
+
+    // printf("Read characters: '%s'\n", buffer);
+
+
+    // int num;
+    // s21_sscanf("-12345", "%3d", &num);
+    // printf("%d", num);
+    // printf("Read characters: '%s'\n", buffer);
+
+    // char input [] = "Hello World";
+    // char buffer[20];
+    // s21_sscanf(input, "%3s", buffer);
+    // printf("%s\n", buffer);
     return 0;
 }
 
@@ -231,15 +251,33 @@ int c_specifier(va_list *args, const char **str, char len_mod, int width) {
     if (len_mod == 'l') {
         wchar_t *wch_ptr = va_arg(*args, wchar_t *);
         if (wch_ptr) {
-            *wch_ptr = **str;
+            if (width > wcslen(wch_ptr)) {
+                for (int i = 0; i < width; i++) {
+                    *wch_ptr = **str;
+                    (*str)++;
+                    (*wch_ptr)++;
+                }
+            } else {
+                *wch_ptr = **str;
+                (*str)++;
+            }
         }
     } else {
         char *char_ptr = va_arg(*args, char *);
         if (char_ptr) {
-            *char_ptr = **str;
+            if (width > strlen(char_ptr)) {
+                for (int i = 0; i < width; i++) {
+                    char_ptr[i] = **str;
+                    (*str)++;
+                    
+                }
+            } else {
+                *char_ptr = **str;
+                (*str)++;
+            }
         }
     }
-    (*str)++;
+
     return 0;
 }
 
@@ -262,11 +300,10 @@ int d_specifier(va_list *args, const char **str, char len_mod, int width) {
     }
 
     if (**str == '-') {
-    parse_number(str, 10, &num, width);
-
-    if (int_ptr) *int_ptr = sign * num;
-    return 0;
-}
+        (*str)++;
+        sign = -sign;
+        width--;
+    }
 
     parse_number(str, 10, &num, width);
 
@@ -324,6 +361,7 @@ int s_specifier(va_list *args, const char **str, char len_mod, int width) {
         while (**str != '\0' && !isspace(**str)) {
             buffer[i++] = **str;
             (*str)++;
+            if (i == width) break;
         }
         buffer[i] = '\0';
     } else {
@@ -332,6 +370,8 @@ int s_specifier(va_list *args, const char **str, char len_mod, int width) {
         while (**str != '\0' && !isspace(**str)) {
             buffer[i++] = **str;
             (*str)++;
+            if (i == width) break;
+            
         }
         buffer[i] = '\0';
     }
