@@ -12,6 +12,7 @@
 typedef long long unsigned int s21_uintptr_t; // TODO could confilct with sprintf one
 
 void parse_number(const char **str, int base, int *num, int width);
+void parse_number_u(const char **str, int base, unsigned int *num, int width);
 int check_e(const char *str);
 
 int s21_sscanf(const char *str, const char *format, ...);

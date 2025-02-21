@@ -1,3 +1,4 @@
+# CFLAGS = -Wall -Wextra -Werror -std=c11
 CFLAGS = -Wall -Wextra -Werror -std=c11
 GCOVFLAGS = -fprofile-arcs -ftest-coverage
 
@@ -27,6 +28,10 @@ test_sprintf: s21_string.a tests/sprintf/test_s21sprintf.c
 test_string: s21_string.a tests/s21_string/test_s21string.c
 	gcc -Wall -Wextra tests/s21_string/test_s21string.c s21_string.a -o test_sprintf.out -lcheck -lm -lpthread -lsubunit
 	./test_sprintf.out
+
+test_sscanf: s21_string.a tests/sscanf/test_s21sscanf.c
+	gcc -Wall -Wextra tests/s21_string/test_s21string.c s21_string.a -o test_s21sscanf.c -lcheck -lm -lpthread -lsubunit
+	./test_s21sscanf.c
 
 gcov_report: s21_string.a tests/s21_string/test_s21string.c
 	gcc $(GCOVFLAGS) tests/s21_string/test_s21string.c $(SOURCES) -o ./report_sprintf.out -lcheck -lm -lpthread -lsubunit

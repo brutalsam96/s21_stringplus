@@ -282,7 +282,7 @@ END_TEST
 
 START_TEST(test_sscanf_i_basic) {
     char input[] = "42";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%i", &s21_value);
     sscanf(input, "%i", &std_value);
@@ -293,7 +293,7 @@ END_TEST
 
 START_TEST(test_sscanf_i_negative) {
     char input[] = "-123";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%i", &s21_value);
     sscanf(input, "%i", &std_value);
@@ -304,7 +304,7 @@ END_TEST
 
 START_TEST(test_sscanf_i_zero) {
     char input[] = "0";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%i", &s21_value);
     sscanf(input, "%i", &std_value);
@@ -315,7 +315,7 @@ END_TEST
 
 START_TEST(test_sscanf_i_octal) {
     char input[] = "052";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%i", &s21_value);
     sscanf(input, "%i", &std_value);
@@ -326,7 +326,7 @@ END_TEST
 
 START_TEST(test_sscanf_i_hex) {
     char input[] = "0x2A";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%i", &s21_value);
     sscanf(input, "%i", &std_value);
@@ -337,7 +337,7 @@ END_TEST
 
 START_TEST(test_sscanf_i_mixed_spaces) {
     char input[] = "  -987   ";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%i", &s21_value);
     sscanf(input, "%i", &std_value);
@@ -348,7 +348,7 @@ END_TEST
 
 START_TEST(test_sscanf_i_large_number) {
     char input[] = "2147483647";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%i", &s21_value);
     sscanf(input, "%i", &std_value);
