@@ -8,7 +8,7 @@
 // %c specifer
 START_TEST(test_sscanf_c_spec) {
     char input[] = "ab A cd";
-    char s21_value, std_value;
+    char s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "ab %c cd", &s21_value);
     sscanf(input, "ab %c cd", &std_value);
@@ -19,7 +19,7 @@ END_TEST
 
 START_TEST(test_sscanf_c_single_char) {
     char input[] = "X";
-    char s21_value, std_value;
+    char s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%c", &s21_value);
     sscanf(input, "%c", &std_value);
@@ -30,7 +30,7 @@ END_TEST
 
 START_TEST(test_sscanf_c_with_leading_spaces) {
     char input[] = "   A";
-    char s21_value, std_value;
+    char s21_value = 0, std_value = 0;
 
     s21_sscanf(input, " %c", &s21_value);
     sscanf(input, " %c", &std_value);
@@ -41,7 +41,7 @@ END_TEST
 
 START_TEST(test_sscanf_c_with_trailing_spaces) {
     char input[] = "A   ";
-    char s21_value, std_value;
+    char s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%c ", &s21_value);
     sscanf(input, "%c ", &std_value);
@@ -52,8 +52,8 @@ END_TEST
 
 START_TEST(test_sscanf_c_multiple_chars) {
     char input[] = "X Y Z";
-    char s21_value1, s21_value2, s21_value3;
-    char std_value1, std_value2, std_value3;
+    char s21_value1 = 0, s21_value2 = 0, s21_value3 = 0;
+    char std_value1 = 0, std_value2 = 0, std_value3 = 0;
 
     s21_sscanf(input, "%c %c %c", &s21_value1, &s21_value2, &s21_value3);
     sscanf(input, "%c %c %c", &std_value1, &std_value2, &std_value3);
@@ -66,7 +66,7 @@ END_TEST
 
 START_TEST(test_sscanf_c_newline_character) {
     char input[] = "\n";
-    char s21_value, std_value;
+    char s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%c", &s21_value);
     sscanf(input, "%c", &std_value);
@@ -77,7 +77,7 @@ END_TEST
 
 START_TEST(test_sscanf_c_tab_character) {
     char input[] = "\t";
-    char s21_value, std_value;
+    char s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%c", &s21_value);
     sscanf(input, "%c", &std_value);
@@ -88,7 +88,7 @@ END_TEST
 
 START_TEST(test_sscanf_c_special_character) {
     char input[] = "@";
-    char s21_value, std_value;
+    char s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%c", &s21_value);
     sscanf(input, "%c", &std_value);
@@ -99,7 +99,7 @@ END_TEST
 
 START_TEST(test_sscanf_c_numeric_character) {
     char input[] = "9";
-    char s21_value, std_value;
+    char s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%c", &s21_value);
     sscanf(input, "%c", &std_value);
@@ -110,7 +110,7 @@ END_TEST
 
 START_TEST(test_sscanf_c_with_format_string) {
     char input[] = "abXcd";
-    char s21_value, std_value;
+    char s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "ab%ccd", &s21_value);
     sscanf(input, "ab%ccd", &std_value);
@@ -123,7 +123,7 @@ END_TEST
 
 START_TEST(test_sscanf_d_positive_number) {
     char input[] = "123";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%d", &s21_value);
     sscanf(input, "%d", &std_value);
@@ -134,7 +134,7 @@ END_TEST
 
 START_TEST(test_sscanf_d_negative_number) {
     char input[] = "-456";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%d", &s21_value);
     sscanf(input, "%d", &std_value);
@@ -145,7 +145,7 @@ END_TEST
 
 START_TEST(test_sscanf_d_zero) {
     char input[] = "0";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%d", &s21_value);
     sscanf(input, "%d", &std_value);
@@ -156,7 +156,7 @@ END_TEST
 
 START_TEST(test_sscanf_d_with_leading_spaces) {
     char input[] = "   789";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%d", &s21_value);
     sscanf(input, "%d", &std_value);
@@ -167,8 +167,8 @@ END_TEST
 
 START_TEST(test_sscanf_d_multiple_numbers) {
     char input[] = "10 20 30";
-    int s21_value1, s21_value2, s21_value3;
-    int std_value1, std_value2, std_value3;
+    int s21_value1 = 0, s21_value2 = 0, s21_value3 = 0;
+    int std_value1 = 0, std_value2 = 0, std_value3 = 0;
 
     s21_sscanf(input, "%d %d %d", &s21_value1, &s21_value2, &s21_value3);
     sscanf(input, "%d %d %d", &std_value1, &std_value2, &std_value3);
@@ -181,7 +181,7 @@ END_TEST
 
 START_TEST(test_sscanf_d_number_with_trailing_text) {
     char input[] = "999abc";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%d", &s21_value);
     sscanf(input, "%d", &std_value);
@@ -192,7 +192,7 @@ END_TEST
 
 START_TEST(test_sscanf_d_with_format_string) {
     char input[] = "Value: 42";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "Value: %d", &s21_value);
     sscanf(input, "Value: %d", &std_value);
@@ -203,7 +203,7 @@ END_TEST
 
 START_TEST(test_sscanf_d_large_number) {
     char input[] = "2147483647";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%d", &s21_value);
     sscanf(input, "%d", &std_value);
@@ -214,7 +214,7 @@ END_TEST
 
 START_TEST(test_sscanf_d_small_number) {
     char input[] = "-2147483648";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%d", &s21_value);
     sscanf(input, "%d", &std_value);
@@ -236,7 +236,7 @@ END_TEST
 
 START_TEST(test_sscanf_d_with_plus_sign) {
     char input[] = "+77";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%d", &s21_value);
     sscanf(input, "%d", &std_value);
@@ -247,7 +247,7 @@ END_TEST
 
 START_TEST(test_sscanf_d_number_with_extra_spaces) {
     char input[] = "   123   ";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, " %d ", &s21_value);
     sscanf(input, " %d ", &std_value);
@@ -381,8 +381,8 @@ END_TEST
 
 START_TEST(test_sscanf_i_multiple_numbers) {
     char input[] = "42 -13 0xF";
-    int s21_val1, s21_val2, s21_val3;
-    int std_val1, std_val2, std_val3;
+    int s21_val1 = 0, s21_val2 = 0, s21_val3 = 0;
+    int std_val1 = 0, std_val2 = 0, std_val3 = 0;
 
     s21_sscanf(input, "%i %i %i", &s21_val1, &s21_val2, &s21_val3);
     sscanf(input, "%i %i %i", &std_val1, &std_val2, &std_val3);
@@ -495,8 +495,8 @@ END_TEST
 
 START_TEST(test_sscanf_e_multiple_numbers) {
     char input[] = "3.14e2 -4.56e-3 1.23E4";
-    float s21_val1, s21_val2, s21_val3;
-    float std_val1, std_val2, std_val3;
+    float s21_val1 = 0, s21_val2 = 0, s21_val3 = 0;
+    float std_val1 = 0, std_val2 = 0, std_val3 = 0;
 
     s21_sscanf(input, "%e %e %e", &s21_val1, &s21_val2, &s21_val3);
     sscanf(input, "%e %e %e", &std_val1, &std_val2, &std_val3);
@@ -609,8 +609,8 @@ END_TEST
 
 START_TEST(test_sscanf_E_multiple_numbers) {
     char input[] = "3.14E2 -4.56E-3 1.23E4";
-    float s21_val1, s21_val2, s21_val3;
-    float std_val1, std_val2, std_val3;
+    float s21_val1 = 0, s21_val2 = 0, s21_val3 = 0;
+    float std_val1 = 0, std_val2 = 0, std_val3 = 0;
 
     s21_sscanf(input, "%E %E %E", &s21_val1, &s21_val2, &s21_val3);
     sscanf(input, "%E %E %E", &std_val1, &std_val2, &std_val3);
@@ -701,8 +701,8 @@ END_TEST
 
 START_TEST(test_sscanf_f_multiple_numbers) {
     char input[] = "1.23 4.56 7.89";
-    float s21_val1, s21_val2, s21_val3;
-    float std_val1, std_val2, std_val3;
+    float s21_val1 = 0, s21_val2 = 0, s21_val3 = 0;
+    float std_val1 = 0, std_val2 = 0, std_val3 = 0;
 
     s21_sscanf(input, "%f %f %f", &s21_val1, &s21_val2, &s21_val3);
     sscanf(input, "%f %f %f", &std_val1, &std_val2, &std_val3);
@@ -746,9 +746,9 @@ START_TEST(test_sscanf_f_invalid_input) {
 }
 END_TEST
 
-START_TEST(test_sscanf_f_precision) {
+START_TEST(test_sscanf_f_precision) { 
     char input[] = "3.14159265358979";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -757,9 +757,11 @@ START_TEST(test_sscanf_f_precision) {
 }
 END_TEST
 
+
+
 START_TEST(test_sscanf_f_exponent) {
     char input[] = "3.14e2";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -781,7 +783,7 @@ END_TEST
 
 START_TEST(test_sscanf_g_basic) {
     char input[] = "3.14159";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%g", (float *)&s21_value);
     sscanf(input, "%g", (float *)&std_value);
@@ -792,7 +794,7 @@ END_TEST
 
 START_TEST(test_sscanf_g_negative) {
     char input[] = "-3.14159";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%g", (float *)&s21_value);
     sscanf(input, "%g", (float *)&std_value);
@@ -803,7 +805,7 @@ END_TEST
 
 START_TEST(test_sscanf_g_zero) {
     char input[] = "0";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%g", (float *)&s21_value);
     sscanf(input, "%g", (float *)&std_value);
@@ -814,7 +816,7 @@ END_TEST
 
 START_TEST(test_sscanf_g_large_number) {
     char input[] = "1234567890.12345";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%g", &s21_value);
     sscanf(input, "%g", (float *)&std_value);
@@ -825,7 +827,7 @@ END_TEST
 
 START_TEST(test_sscanf_g_scientific) {
     char input[] = "1.23e4";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%g", &s21_value);
     sscanf(input, "%g", (float *)&std_value);
@@ -836,7 +838,7 @@ END_TEST
 
 START_TEST(test_sscanf_g_precision) {
     char input[] = "3.14159265358979";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%g", &s21_value);
     sscanf(input, "%g", (float *)&std_value);
@@ -847,7 +849,7 @@ END_TEST
 
 START_TEST(test_sscanf_g_exponent_large) {
     char input[] = "1e100";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%g", &s21_value);
     sscanf(input, "%g", (float *)&std_value);
@@ -858,7 +860,7 @@ END_TEST
 
 START_TEST(test_sscanf_g_exponent_small) {
     char input[] = "1e-100";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%g", &s21_value);
     sscanf(input, "%g", (float *)&std_value);
@@ -869,7 +871,7 @@ END_TEST
 
 START_TEST(test_sscanf_g_exponent_mixed) {
     char input[] = "3.14e+2";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%g", &s21_value);
     sscanf(input, "%g", (float *)&std_value);
@@ -891,8 +893,8 @@ END_TEST
 
 START_TEST(test_sscanf_g_multiple_values) {
     char input[] = "3.14 1.23e3 5.67e-1";
-    double s21_val1, s21_val2, s21_val3;
-    double std_val1, std_val2, std_val3;
+    double s21_val1=0, s21_val2=0, s21_val3=0;
+    double std_val1=0, std_val2=0, std_val3=0;
 
     s21_sscanf(input, "%g %g %g", &s21_val1, &s21_val2, &s21_val3);
     sscanf(input, "%g %g %g", (float *)&std_val1, (float *)&std_val2, (float *)&std_val3);
@@ -905,7 +907,7 @@ END_TEST
 
 START_TEST(test_sscanf_g_edge_case_zero) {
     char input[] = "0.0";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%g", &s21_value);
     sscanf(input, "%g", (float *)&std_value);
@@ -916,7 +918,7 @@ END_TEST
 
 START_TEST(test_sscanf_g_edge_case_negative_zero) {
     char input[] = "-0.0";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%g", &s21_value);
     sscanf(input, "%g", (float *)&std_value);
@@ -938,7 +940,7 @@ END_TEST
 
 START_TEST(test_sscanf_G_basic) {
     char input[] = "3.14159";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%G", &s21_value);
     sscanf(input, "%G", (float *)&std_value);
@@ -949,7 +951,7 @@ END_TEST
 
 START_TEST(test_sscanf_G_negative) {
     char input[] = "-3.14159";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%G", &s21_value);
     sscanf(input, "%G", (float *)&std_value);
@@ -960,7 +962,7 @@ END_TEST
 
 START_TEST(test_sscanf_G_zero) {
     char input[] = "0";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%G", &s21_value);
     sscanf(input, "%G", (float *)&std_value);
@@ -971,7 +973,7 @@ END_TEST
 
 START_TEST(test_sscanf_G_large_number) {
     char input[] = "1234567890.12345";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%G", &s21_value);
     sscanf(input, "%G", (float *)&std_value);
@@ -982,7 +984,7 @@ END_TEST
 
 START_TEST(test_sscanf_G_scientific) {
     char input[] = "1.23e4";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%G", &s21_value);
     sscanf(input, "%G", (float *)&std_value);
@@ -993,7 +995,7 @@ END_TEST
 
 START_TEST(test_sscanf_G_precision) {
     char input[] = "3.14159265358979";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%G", &s21_value);
     sscanf(input, "%G", (float *)&std_value);
@@ -1004,7 +1006,7 @@ END_TEST
 
 START_TEST(test_sscanf_G_exponent_large) {
     char input[] = "1e100";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%G", &s21_value);
     sscanf(input, "%G", (float *)&std_value);
@@ -1015,7 +1017,7 @@ END_TEST
 
 START_TEST(test_sscanf_G_exponent_small) {
     char input[] = "1e-100";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%G", &s21_value);
     sscanf(input, "%G", (float *)&std_value);
@@ -1026,7 +1028,7 @@ END_TEST
 
 START_TEST(test_sscanf_G_exponent_mixed) {
     char input[] = "3.14e+2";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%G", &s21_value);
     sscanf(input, "%G", (float *)&std_value);
@@ -1048,8 +1050,8 @@ END_TEST
 
 START_TEST(test_sscanf_G_multiple_values) {
     char input[] = "3.14 1.23e3 5.67e-1";
-    double s21_val1, s21_val2, s21_val3;
-    double std_val1, std_val2, std_val3;
+    double s21_val1 = 0, s21_val2 = 0, s21_val3 = 0;
+    double std_val1 = 0, std_val2 = 0, std_val3 = 0;
 
     s21_sscanf(input, "%G %G %G", &s21_val1, &s21_val2, &s21_val3);
     sscanf(input, "%G %G %G", (float *)&std_val1, (float *)&std_val2, (float *)&std_val3);
@@ -1062,7 +1064,7 @@ END_TEST
 
 START_TEST(test_sscanf_G_edge_case_zero) {
     char input[] = "0.0";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%G", &s21_value);
     sscanf(input, "%G", (float *)&std_value);
@@ -1073,7 +1075,7 @@ END_TEST
 
 START_TEST(test_sscanf_G_edge_case_negative_zero) {
     char input[] = "-0.0";
-    double s21_value, std_value;
+    double s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%G", &s21_value);
     sscanf(input, "%G", (float *)&std_value);
@@ -1150,8 +1152,8 @@ END_TEST
 
 START_TEST(test_sscanf_o_multiple_values) {
     char input[] = "12 34 56";
-    unsigned int s21_val1, s21_val2, s21_val3;
-    unsigned int std_val1, std_val2, std_val3;
+    unsigned int s21_val1 = 0, s21_val2 = 0, s21_val3 = 0;
+    unsigned int std_val1 = 0, std_val2 = 0, std_val3 = 0;
 
     s21_sscanf(input, "%o %o %o", &s21_val1, &s21_val2, &s21_val3);
     sscanf(input, "%o %o %o", &std_val1, &std_val2, &std_val3);
@@ -1208,8 +1210,8 @@ END_TEST
 
 START_TEST(test_sscanf_o_multiple_octal) {
     char input[] = "012 034 056";
-    unsigned int s21_val1, s21_val2, s21_val3;
-    unsigned int std_val1, std_val2, std_val3;
+    unsigned int s21_val1 = 0, s21_val2 = 0, s21_val3 = 0;
+    unsigned int std_val1 = 0, std_val2 = 0, std_val3 = 0;
 
     s21_sscanf(input, "%o %o %o", &s21_val1, &s21_val2, &s21_val3);
     sscanf(input, "%o %o %o", &std_val1, &std_val2, &std_val3);
@@ -1389,7 +1391,7 @@ END_TEST
 
 START_TEST(test_sscanf_u_large_number) {
     char input[] = "4294967295";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%u", &s21_value);
     sscanf(input, "%u", &std_value);
@@ -1400,7 +1402,7 @@ END_TEST
 
 START_TEST(test_sscanf_u_non_numeric) {
     char input[] = "abc";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     int s21_result = s21_sscanf(input, "%u", &s21_value);
     int std_result = sscanf(input, "%u", &std_value);
@@ -1412,7 +1414,7 @@ END_TEST
 
 START_TEST(test_sscanf_u_with_spaces) {
     char input[] = " 12345 ";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%u", &s21_value);
     sscanf(input, "%u", &std_value);
@@ -1423,7 +1425,7 @@ END_TEST
 
 START_TEST(test_sscanf_u_negative_input) {
     char input[] = "-12345";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     int s21_ret = s21_sscanf(input, "%u", &s21_value);
     int std_ret = sscanf(input, "%u", &std_value);
@@ -1449,7 +1451,7 @@ END_TEST
 
 START_TEST(test_sscanf_u_with_leading_zero) {
     char input[] = "012345";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%u", &s21_value);
     sscanf(input, "%u", &std_value);
@@ -1460,7 +1462,7 @@ END_TEST
 
 START_TEST(test_sscanf_u_with_non_decimal) {
     char input[] = "0x12345";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     int s21_result = s21_sscanf(input, "%u", &s21_value);
     int std_result = sscanf(input, "%u", &std_value);
@@ -1486,7 +1488,7 @@ END_TEST
 
 START_TEST(test_sscanf_u_edge_case_zero_input) {
     char input[] = "0";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%u", &s21_value);
     sscanf(input, "%u", &std_value);
@@ -1497,7 +1499,7 @@ END_TEST
 
 START_TEST(test_sscanf_x_hexadecimal_lowercase) {
     char input[] = "deadbeef";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%x", &s21_value);
     sscanf(input, "%x", &std_value);
@@ -1508,7 +1510,7 @@ END_TEST
 
 START_TEST(test_sscanf_x_hexadecimal_uppercase) {
     char input[] = "DEADBEEF";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%x", &s21_value);
     sscanf(input, "%x", &std_value);
@@ -1519,7 +1521,7 @@ END_TEST
 
 START_TEST(test_sscanf_x_with_leading_zero) {
     char input[] = "0x1a2b3c4d";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%x", &s21_value);
     sscanf(input, "%x", &std_value);
@@ -1530,7 +1532,7 @@ END_TEST
 
 START_TEST(test_sscanf_x_with_mixed_case) {
     char input[] = "AbCdEf";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%x", &s21_value);
     sscanf(input, "%x", &std_value);
@@ -1541,7 +1543,7 @@ END_TEST
 
 START_TEST(test_sscanf_x_with_non_hex_characters) {
     char input[] = "abcxyz";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%x", &s21_value);
     sscanf(input, "%x", &std_value);
@@ -1552,7 +1554,7 @@ END_TEST
 
 START_TEST(test_sscanf_x_with_decimal_input) {
     char input[] = "12345";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%x", &s21_value);
     sscanf(input, "%x", &std_value);
@@ -1563,7 +1565,7 @@ END_TEST
 
 START_TEST(test_sscanf_x_with_spaces) {
     char input[] = "  1f4a3b ";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%x", &s21_value);
     sscanf(input, "%x", &std_value);
@@ -1574,7 +1576,7 @@ END_TEST
 
 START_TEST(test_sscanf_x_empty_input) {
     char input[] = "";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%x", &s21_value);
     sscanf(input, "%x", &std_value);
@@ -1585,7 +1587,7 @@ END_TEST
 
 START_TEST(test_sscanf_x_edge_case_zero) {
     char input[] = "0";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%x", &s21_value);
     sscanf(input, "%x", &std_value);
@@ -1596,7 +1598,7 @@ END_TEST
 
 START_TEST(test_sscanf_X_hexadecimal_uppercase) {
     char input[] = "DEADBEEF";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%X", &s21_value);
     sscanf(input, "%X", &std_value);
@@ -1607,7 +1609,7 @@ END_TEST
 
 START_TEST(test_sscanf_X_hexadecimal_lowercase) {
     char input[] = "deadbeef";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%X", &s21_value);
     sscanf(input, "%X", &std_value);
@@ -1618,7 +1620,7 @@ END_TEST
 
 START_TEST(test_sscanf_X_with_leading_zero) {
     char input[] = "0x1A2B3C4D";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%X", &s21_value);
     sscanf(input, "%X", &std_value);
@@ -1629,7 +1631,7 @@ END_TEST
 
 START_TEST(test_sscanf_X_mixed_case) {
     char input[] = "AbCdEf";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%X", &s21_value);
     sscanf(input, "%X", &std_value);
@@ -1640,7 +1642,7 @@ END_TEST
 
 START_TEST(test_sscanf_X_with_non_hex_characters) {
     char input[] = "abcxyz";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%X", &s21_value);
     sscanf(input, "%X", &std_value);
@@ -1651,7 +1653,7 @@ END_TEST
 
 START_TEST(test_sscanf_X_with_decimal_input) {
     char input[] = "12345";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%X", &s21_value);
     sscanf(input, "%X", &std_value);
@@ -1662,7 +1664,7 @@ END_TEST
 
 START_TEST(test_sscanf_X_with_spaces) {
     char input[] = "  1F4A3B ";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%X", &s21_value);
     sscanf(input, "%X", &std_value);
@@ -1673,7 +1675,7 @@ END_TEST
 
 START_TEST(test_sscanf_X_empty_input) {
     char input[] = "";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%X", &s21_value);
     sscanf(input, "%X", &std_value);
@@ -1684,7 +1686,7 @@ END_TEST
 
 START_TEST(test_sscanf_X_edge_case_zero) {
     char input[] = "0";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%X", &s21_value);
     sscanf(input, "%X", &std_value);
@@ -1706,7 +1708,7 @@ END_TEST
 
 START_TEST(test_sscanf_p_null_pointer) {
     char input[] = "(nil)";
-    void *s21_value, *std_value;
+    void *s21_value = 0, *std_value = 0;
 
     s21_sscanf(input, "%p", &s21_value);
     sscanf(input, "%p", &std_value);
@@ -1717,7 +1719,7 @@ END_TEST
 
 START_TEST(test_sscanf_p_invalid_pointer_format) {
     char input[] = "xyz123";
-    void *s21_value, *std_value;
+    void *s21_value = 0, *std_value = 0;
 
     s21_sscanf(input, "%p", &s21_value);
     sscanf(input, "%p", &std_value);
@@ -1728,7 +1730,7 @@ END_TEST
 
 START_TEST(test_sscanf_p_with_leading_zero) {
     char input[] = "0x00112233445566778899aabbccddeeff";
-    void *s21_value, *std_value;
+    void *s21_value = 0, *std_value = 0;
 
     s21_sscanf(input, "%p", &s21_value);
     sscanf(input, "%p", &std_value);
@@ -1739,7 +1741,7 @@ END_TEST
 
 START_TEST(test_sscanf_p_with_spaces) {
     char input[] = " 0x7fffe80f9c98 ";
-    void *s21_value, *std_value;
+    void *s21_value = 0, *std_value = 0;
 
     s21_sscanf(input, "%p", &s21_value);
     sscanf(input, "%p", &std_value);
@@ -1750,7 +1752,7 @@ END_TEST
 
 START_TEST(test_sscanf_p_empty_input) {
     char input[] = "";
-    void *s21_value, *std_value;
+    void *s21_value = 0, *std_value = 0;
 
     s21_sscanf(input, "%p", &s21_value);
     sscanf(input, "%p", &std_value);
@@ -1761,7 +1763,7 @@ END_TEST
 
 START_TEST(test_sscanf_p_with_hex_format) {
     char input[] = "0xdeadbeef";
-    void *s21_value, *std_value;
+    void *s21_value = 0, *std_value = 0;
 
     s21_sscanf(input, "%p", &s21_value);
     sscanf(input, "%p", &std_value);
@@ -1772,7 +1774,7 @@ END_TEST
 
 START_TEST(test_sscanf_p_invalid_pointer_format_with_text) {
     char input[] = "pointer is 0x7fffe80f9c98";
-    void *s21_value, *std_value;
+    void *s21_value = 0, *std_value = 0;
 
     s21_sscanf(input, "%p", &s21_value);
     sscanf(input, "%p", &std_value);
@@ -1783,7 +1785,7 @@ END_TEST
 
 START_TEST(test_sscanf_p_with_multiple_pointers) {
     char input[] = "0x7fffe80f9c98 0x123456789abc";
-    void *s21_value1, *std_value1, *s21_value2, *std_value2;
+    void *s21_value1 = 0, *std_value1 = 0, *s21_value2 = 0, *std_value2 = 0;
 
     s21_sscanf(input, "%p %p", &s21_value1, &s21_value2);
     sscanf(input, "%p %p", &std_value1, &std_value2);
@@ -1795,7 +1797,7 @@ END_TEST
 
 START_TEST(test_sscanf_p_mixed_valid_invalid) {
     char input[] = "0x7fffe80f9c98 not_a_pointer";
-    void *s21_value1, *std_value1, *s21_value2, *std_value2;
+    void *s21_value1 = 0, *std_value1 = 0, *s21_value2 = 0, *std_value2 = 0;
 
     s21_sscanf(input, "%p %p", &s21_value1, &s21_value2);
     sscanf(input, "%p %p", &std_value1, &std_value2);
@@ -1807,7 +1809,7 @@ END_TEST
 
 START_TEST(test_sscanf_n_basic) {
     char input[] = "Hello, world!";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%n", &s21_value);
     sscanf(input, "%n", &std_value);
@@ -1818,7 +1820,7 @@ END_TEST
 
 START_TEST(test_sscanf_n_after_specifier) {
     char input[] = "Hello, 123 world!";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "Hello, %d world!%n", &s21_value, &s21_value);
     sscanf(input, "Hello, %d world!%n", &std_value, &std_value);
@@ -1829,7 +1831,7 @@ END_TEST
 
 START_TEST(test_sscanf_n_with_spaces) {
     char input[] = "   Hello, world!";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "   Hello, world!%n", &s21_value);
     sscanf(input, "   Hello, world!%n", &std_value);
@@ -1840,7 +1842,7 @@ END_TEST
 
 START_TEST(test_sscanf_n_invalid_input) {
     char input[] = "123abc";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%n", &s21_value);
     sscanf(input, "%n", &std_value);
@@ -1851,7 +1853,7 @@ END_TEST
 
 START_TEST(test_sscanf_n_multiple_n_specifiers) {
     char input[] = "Hello there!";
-    int s21_value1, s21_value2, std_value1, std_value2;
+    int s21_value1 = 0, s21_value2 = 0, std_value1 = 0, std_value2 = 0;
 
     s21_sscanf(input, "Hello%n there!%n", &s21_value1, &s21_value2);
     sscanf(input, "Hello%n there!%n", &std_value1, &std_value2);
@@ -1863,7 +1865,7 @@ END_TEST
 
 START_TEST(test_sscanf_n_with_no_match) {
     char input[] = "No match";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;;
 
     s21_sscanf(input, "Yes match%n", &s21_value);
     sscanf(input, "Yes match%n", &std_value);
@@ -1874,7 +1876,7 @@ END_TEST
 
 START_TEST(test_sscanf_n_with_text_before) {
     char input[] = "1234Hello";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%dHello%n", &s21_value, &s21_value);
     sscanf(input, "%dHello%n", &std_value, &std_value);
@@ -1885,7 +1887,7 @@ END_TEST
 
 START_TEST(test_sscanf_n_with_no_format) {
     char input[] = "Just text";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%n", &s21_value);
     sscanf(input, "%n", &std_value);
@@ -1896,7 +1898,7 @@ END_TEST
 
 START_TEST(test_sscanf_n_with_multiple_formats) {
     char input[] = "123 Hello 456 World!";
-    int s21_value1, s21_value2, std_value1, std_value2;
+    int s21_value1 = 0, s21_value2 = 0, std_value1 = 0, std_value2 = 0;
 
     s21_sscanf(input, "%d Hello %d World!%n", &s21_value1, &s21_value2, &s21_value2);
     sscanf(input, "%d Hello %d World!%n", &std_value1, &std_value2, &std_value2);
@@ -1907,7 +1909,7 @@ END_TEST
 
 START_TEST(test_sscanf_n_with_end_of_string) {
     char input[] = "Last test";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "Last test%n", &s21_value);
     sscanf(input, "Last test%n", &std_value);
@@ -1918,7 +1920,7 @@ END_TEST
 
 START_TEST(test_sscanf_n_after_string_literal) {
     char input[] = "Testing 1, 2, 3";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "Testing %d, %d, %d%n", &s21_value, &s21_value, &s21_value, &s21_value);
     sscanf(input, "Testing %d, %d, %d%n", &std_value, &std_value, &std_value, &std_value);
@@ -1940,7 +1942,7 @@ END_TEST
 
 START_TEST(test_sscanf_percent_no_match) {
     char input[] = "Hello world!";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_value = s21_sscanf(input, "Hello %% world!");
     std_value = sscanf(input, "Hello %% world!");
@@ -1951,7 +1953,7 @@ END_TEST
 
 START_TEST(test_sscanf_percent_multiple_percent) {
     char input[] = "100% test % and % check";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%d%% test %% and %% check", &s21_value);
     sscanf(input, "%d%% test %% and %% check", &std_value);
@@ -1963,7 +1965,7 @@ END_TEST
 
 START_TEST(test_sscanf_percent_with_integer) {
     char input[] = "Value 100% complete";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "Value %d%% complete", &s21_value);
     sscanf(input, "Value %d%% complete", &std_value);
@@ -1974,7 +1976,7 @@ END_TEST
 
 START_TEST(test_sscanf_percent_with_spaces) {
     char input[] = "Testing 10 % cases!";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "Testing %d %% cases!", &s21_value);
     sscanf(input, "Testing %d %% cases!", &std_value);
@@ -1985,7 +1987,7 @@ END_TEST
 
 START_TEST(test_sscanf_percent_multiple_percent_at_start) {
     char input[] = "%% start of string";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_value = s21_sscanf(input, "%% start of string");
     std_value = sscanf(input, "%% start of string");
@@ -1996,7 +1998,7 @@ END_TEST
 
 START_TEST(test_sscanf_percent_with_string) {
     char input[] = "percent %% in string";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_value = s21_sscanf(input, "percent %% in string");
     std_value = sscanf(input, "percent %% in string");
@@ -2007,7 +2009,7 @@ END_TEST
 
 START_TEST(test_sscanf_percent_after_number) {
     char input[] = "Number 50% complete";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "Number %d%% complete", &s21_value);
     sscanf(input, "Number %d%% complete", &std_value);
@@ -2018,7 +2020,7 @@ END_TEST
 
 START_TEST(test_sscanf_percent_with_extra_text) {
     char input[] = "Some text %% with percent";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_value = s21_sscanf(input, "Some text %% with percent");
     std_value = sscanf(input, "Some text %% with percent");
@@ -2029,7 +2031,7 @@ END_TEST
 
 START_TEST(test_sscanf_percent_at_end_of_string) {
     char input[] = "End of string %";
-    int s21_value, std_value;
+    int s21_value = 0, std_value = 0;
 
     s21_value = s21_sscanf(input, "End of string %%");
     std_value = sscanf(input, "End of string %%");
@@ -2176,7 +2178,7 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_d_with_format_string);
     tcase_add_test(tc, test_sscanf_d_large_number);
     tcase_add_test(tc, test_sscanf_d_small_number);
-    // tcase_add_test(tc, test_sscanf_d_invalid_input);
+    tcase_add_test(tc, test_sscanf_d_invalid_input);
     tcase_add_test(tc, test_sscanf_d_with_plus_sign);
     tcase_add_test(tc, test_sscanf_d_number_with_extra_spaces);
     tcase_add_test(tc, test_sscanf_d_spec);
@@ -2191,7 +2193,7 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_i_mixed_spaces);
     tcase_add_test(tc, test_sscanf_i_large_number);
     tcase_add_test(tc, test_sscanf_i_overflow);
-    // tcase_add_test(tc, test_sscanf_i_invalid);
+    tcase_add_test(tc, test_sscanf_i_invalid);
     tcase_add_test(tc, test_sscanf_i_multiple_numbers);
 
     // %e specifier
@@ -2203,7 +2205,7 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_e_scientific_notation);
     tcase_add_test(tc, test_sscanf_e_edge_case_zero);
     tcase_add_test(tc, test_sscanf_e_edge_case_negative_zero);
-    // tcase_add_test(tc, test_sscanf_e_invalid_input);
+    tcase_add_test(tc, test_sscanf_e_invalid_input);
     tcase_add_test(tc, test_sscanf_e_multiple_numbers);
 
     // %E specifier
@@ -2215,7 +2217,7 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_E_scientific_notation);
     tcase_add_test(tc, test_sscanf_E_edge_case_zero);
     tcase_add_test(tc, test_sscanf_E_edge_case_negative_zero);
-    // tcase_add_test(tc, test_sscanf_E_invalid_input);
+    tcase_add_test(tc, test_sscanf_E_invalid_input);
     tcase_add_test(tc, test_sscanf_E_multiple_numbers);
 
     // %f specifier
@@ -2229,42 +2231,42 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_f_multiple_numbers);
     tcase_add_test(tc, test_sscanf_f_edge_case_zero);
     tcase_add_test(tc, test_sscanf_f_edge_case_negative_zero);
-    // tcase_add_test(tc, test_sscanf_f_invalid_input);
-    // tcase_add_test(tc, test_sscanf_f_precision);
-    // tcase_add_test(tc, test_sscanf_f_exponent);
-    // tcase_add_test(tc, test_sscanf_f_invalid_float);
+    tcase_add_test(tc, test_sscanf_f_invalid_input);
+    tcase_add_test(tc, test_sscanf_f_precision);
+    tcase_add_test(tc, test_sscanf_f_exponent);
+    tcase_add_test(tc, test_sscanf_f_invalid_float);
 
     // %g specifier
-    // tcase_add_test(tc, test_sscanf_g_basic);
-    // tcase_add_test(tc, test_sscanf_g_negative);
-    // tcase_add_test(tc, test_sscanf_g_zero);
-    // tcase_add_test(tc, test_sscanf_g_large_number);
-    // tcase_add_test(tc, test_sscanf_g_scientific);
-    // tcase_add_test(tc, test_sscanf_g_precision);
-    // tcase_add_test(tc, test_sscanf_g_exponent_large);
-    // tcase_add_test(tc, test_sscanf_g_exponent_small);
-    // tcase_add_test(tc, test_sscanf_g_exponent_mixed);
-    // tcase_add_test(tc, test_sscanf_g_invalid_input);
-    // tcase_add_test(tc, test_sscanf_g_multiple_values);
-    // tcase_add_test(tc, test_sscanf_g_edge_case_zero);
-    // tcase_add_test(tc, test_sscanf_g_edge_case_negative_zero);
-    // tcase_add_test(tc, test_sscanf_g_invalid_exponent);
+    tcase_add_test(tc, test_sscanf_g_basic);
+    tcase_add_test(tc, test_sscanf_g_negative);
+    tcase_add_test(tc, test_sscanf_g_zero);
+    tcase_add_test(tc, test_sscanf_g_large_number);
+    tcase_add_test(tc, test_sscanf_g_scientific);
+    tcase_add_test(tc, test_sscanf_g_precision);
+    tcase_add_test(tc, test_sscanf_g_exponent_large);
+    tcase_add_test(tc, test_sscanf_g_exponent_small);
+    tcase_add_test(tc, test_sscanf_g_exponent_mixed);
+    tcase_add_test(tc, test_sscanf_g_invalid_input);
+    tcase_add_test(tc, test_sscanf_g_multiple_values);
+    tcase_add_test(tc, test_sscanf_g_edge_case_zero);
+    tcase_add_test(tc, test_sscanf_g_edge_case_negative_zero);
+    tcase_add_test(tc, test_sscanf_g_invalid_exponent);
 
     // %G specifier
-    // tcase_add_test(tc, test_sscanf_G_basic);
-    // tcase_add_test(tc, test_sscanf_G_negative);
-    // tcase_add_test(tc, test_sscanf_G_zero);
-    // tcase_add_test(tc, test_sscanf_G_large_number);
-    // tcase_add_test(tc, test_sscanf_G_scientific);
-    // tcase_add_test(tc, test_sscanf_G_precision);
-    // tcase_add_test(tc, test_sscanf_G_exponent_large);
-    // tcase_add_test(tc, test_sscanf_G_exponent_small);
-    // tcase_add_test(tc, test_sscanf_G_exponent_mixed);
-    // tcase_add_test(tc, test_sscanf_G_invalid_input);
-    // tcase_add_test(tc, test_sscanf_G_multiple_values);
-    // tcase_add_test(tc, test_sscanf_G_edge_case_zero);
-    // tcase_add_test(tc, test_sscanf_G_edge_case_negative_zero);
-    // tcase_add_test(tc, test_sscanf_G_invalid_exponent);
+    tcase_add_test(tc, test_sscanf_G_basic);
+    tcase_add_test(tc, test_sscanf_G_negative);
+    tcase_add_test(tc, test_sscanf_G_zero);
+    tcase_add_test(tc, test_sscanf_G_large_number);
+    tcase_add_test(tc, test_sscanf_G_scientific);
+    tcase_add_test(tc, test_sscanf_G_precision);
+    tcase_add_test(tc, test_sscanf_G_exponent_large);
+    tcase_add_test(tc, test_sscanf_G_exponent_small);
+    tcase_add_test(tc, test_sscanf_G_exponent_mixed);
+    tcase_add_test(tc, test_sscanf_G_invalid_input);
+    tcase_add_test(tc, test_sscanf_G_multiple_values);
+    tcase_add_test(tc, test_sscanf_G_edge_case_zero);
+    tcase_add_test(tc, test_sscanf_G_edge_case_negative_zero);
+    tcase_add_test(tc, test_sscanf_G_invalid_exponent);
 
     // %o specifier
     tcase_add_test(tc, test_sscanf_o_basic);
@@ -2275,13 +2277,13 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_o_multiple_values);
     tcase_add_test(tc, test_sscanf_o_invalid_input);
     tcase_add_test(tc, test_sscanf_o_exceeding_size);
-    // tcase_add_test(tc, test_sscanf_o_invalid_format);
+    tcase_add_test(tc, test_sscanf_o_invalid_format);
     tcase_add_test(tc, test_sscanf_o_prefixed);
     tcase_add_test(tc, test_sscanf_o_multiple_octal);
 
     // %s specifier
     tcase_add_test(tc, test_sscanf_s_basic);
-    // tcase_add_test(tc, test_sscanf_s_empty_string);
+    tcase_add_test(tc, test_sscanf_s_empty_string);
     tcase_add_test(tc, test_sscanf_s_whitespace);
     tcase_add_test(tc, test_sscanf_s_multiple_words);
     tcase_add_test(tc, test_sscanf_s_non_alphanumeric);
@@ -2297,7 +2299,7 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_u_basic);
     tcase_add_test(tc, test_sscanf_u_zero);
     tcase_add_test(tc, test_sscanf_u_large_number);
-    // tcase_add_test(tc, test_sscanf_u_non_numeric);
+    tcase_add_test(tc, test_sscanf_u_non_numeric);
     tcase_add_test(tc, test_sscanf_u_with_spaces);
     tcase_add_test(tc, test_sscanf_u_negative_input);
     tcase_add_test(tc, test_sscanf_u_multiple_values);
@@ -2312,7 +2314,7 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_x_with_non_hex_characters);
     tcase_add_test(tc, test_sscanf_x_with_decimal_input);
     tcase_add_test(tc, test_sscanf_x_with_spaces);
-    // tcase_add_test(tc, test_sscanf_x_empty_input);
+    tcase_add_test(tc, test_sscanf_x_empty_input);
     tcase_add_test(tc, test_sscanf_x_edge_case_zero);    
 
     // %X specifier
@@ -2323,21 +2325,21 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_X_with_non_hex_characters);
     tcase_add_test(tc, test_sscanf_X_with_decimal_input);
     tcase_add_test(tc, test_sscanf_X_with_spaces);
-    // tcase_add_test(tc, test_sscanf_X_empty_input);
+    tcase_add_test(tc, test_sscanf_X_empty_input);
     tcase_add_test(tc, test_sscanf_X_edge_case_zero);
 
 
     // %p specifier
-    // tcase_add_test(tc, test_sscanf_p_valid_pointer);
-    // tcase_add_test(tc, test_sscanf_p_null_pointer);
-    // tcase_add_test(tc, test_sscanf_p_invalid_pointer_format);    
-    // tcase_add_test(tc, test_sscanf_p_with_leading_zero);
-    // tcase_add_test(tc, test_sscanf_p_with_spaces);
-    // tcase_add_test(tc, test_sscanf_p_empty_input);
-    // tcase_add_test(tc, test_sscanf_p_with_hex_format);
-    // tcase_add_test(tc, test_sscanf_p_invalid_pointer_format_with_text);
-    // tcase_add_test(tc, test_sscanf_p_with_multiple_pointers);
-    // tcase_add_test(tc, test_sscanf_p_mixed_valid_invalid);
+    tcase_add_test(tc, test_sscanf_p_valid_pointer);
+    tcase_add_test(tc, test_sscanf_p_null_pointer);
+    tcase_add_test(tc, test_sscanf_p_invalid_pointer_format);    
+    tcase_add_test(tc, test_sscanf_p_with_leading_zero);
+    tcase_add_test(tc, test_sscanf_p_with_spaces);
+    tcase_add_test(tc, test_sscanf_p_empty_input);
+    tcase_add_test(tc, test_sscanf_p_with_hex_format);
+    tcase_add_test(tc, test_sscanf_p_invalid_pointer_format_with_text);
+    tcase_add_test(tc, test_sscanf_p_with_multiple_pointers);
+    tcase_add_test(tc, test_sscanf_p_mixed_valid_invalid);
 
     // %n specifier
     tcase_add_test(tc, test_sscanf_n_basic);
@@ -2345,7 +2347,7 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_n_with_spaces);    
     tcase_add_test(tc, test_sscanf_n_invalid_input);
     tcase_add_test(tc, test_sscanf_n_multiple_n_specifiers);
-    // tcase_add_test(tc, test_sscanf_n_with_no_match);
+    tcase_add_test(tc, test_sscanf_n_with_no_match);
     tcase_add_test(tc, test_sscanf_n_with_text_before);
     tcase_add_test(tc, test_sscanf_n_with_no_format);
     tcase_add_test(tc, test_sscanf_n_with_multiple_formats);
@@ -2363,17 +2365,17 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_percent_after_number);
     tcase_add_test(tc, test_sscanf_percent_with_extra_text);
     tcase_add_test(tc, test_sscanf_percent_at_end_of_string);
-    // tcase_add_test(tc, test_sscanf_max_width_string);
-    // tcase_add_test(tc, test_sscanf_max_width_int);
-    // tcase_add_test(tc, test_sscanf_max_width_float);
-    // tcase_add_test(tc, test_sscanf_max_width_hex);
-    // tcase_add_test(tc, test_sscanf_max_width_char);
+    tcase_add_test(tc, test_sscanf_max_width_string);
+    tcase_add_test(tc, test_sscanf_max_width_int);
+    tcase_add_test(tc, test_sscanf_max_width_float);
+    tcase_add_test(tc, test_sscanf_max_width_hex);
+    tcase_add_test(tc, test_sscanf_max_width_char);
 
-    // tcase_add_test(tc, test_sscanf_suppress_int);
-    // tcase_add_test(tc, test_sscanf_suppress_float);
-    // tcase_add_test(tc, test_sscanf_suppress_string);
-    // tcase_add_test(tc, test_sscanf_suppress_hex);
-    // tcase_add_test(tc, test_sscanf_suppress_char);
+    tcase_add_test(tc, test_sscanf_suppress_int);
+    tcase_add_test(tc, test_sscanf_suppress_float);
+    tcase_add_test(tc, test_sscanf_suppress_string);
+    tcase_add_test(tc, test_sscanf_suppress_hex);
+    tcase_add_test(tc, test_sscanf_suppress_char);
 
 
     suite_add_tcase(s, tc);

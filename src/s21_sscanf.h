@@ -1,6 +1,7 @@
 #ifndef S21_SSCANF
 #define S21_SSCANF
 
+#define S21_NULL 0
 
 #include <stdio.h>
 #include <string.h>
@@ -9,6 +10,8 @@
 #include <math.h>
 #include <wchar.h>
 
+
+// TODO could confilct with string one
 typedef long long unsigned int s21_uintptr_t; // TODO could confilct with sprintf one
 
 void parse_number(const char **str, int base, int *num, int width);
@@ -29,10 +32,11 @@ int o_specifier(va_list *args, const char **str, char len_mod, int width);
 int s_specifier(va_list *args, const char **str, char len_mod, int width);
 int u_specifier(va_list *args, const char **str, char len_mod, int width);
 int x_specifier(va_list *args, const char **str, char len_mod, int width);
-int n_specifier(va_list *args, char *buffer, int len);
+int n_specifier(va_list *args, const char **str, const char *start);
 int p_specifier(va_list *args, const char **str);
 
 s21_uintptr_t hex2dec_ptr(const char **str);
+
 
 
 #endif
