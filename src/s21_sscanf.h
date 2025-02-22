@@ -29,7 +29,7 @@ int o_specifier(va_list *args, const char **str, char len_mod, int width);
 int s_specifier(va_list *args, const char **str, char len_mod, int width);
 int u_specifier(va_list *args, const char **str, char len_mod, int width);
 int x_specifier(va_list *args, const char **str, char len_mod, int width);
-int n_specifier(va_list *args, const char **str, const char *start);
+int n_specifier(va_list *args, const char *start);
 int p_specifier(va_list *args, const char **str);
 
 s21_uintptr_t hex2dec_ptr(const char **str);

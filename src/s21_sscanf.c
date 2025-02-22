@@ -1,7 +1,5 @@
 #include "s21_sscanf.h"
-
-#include <stdio.h>
-#include <assert.h>
+#include "s21_string.h"
 
 int s21_sscanf(const char *str, const char *format, ...) {
     int done;
@@ -14,12 +12,18 @@ int s21_sscanf(const char *str, const char *format, ...) {
 }
 
 int proccess_scanf(const char *str, const char *format, va_list *args) {
-    const char *current = format, *start = str;
+    const char *current = format, *start = format;
+    int str_count = s21_strlen(str);
     int str_i = 0;
+    if (!*str) return -1;  // Return -1 if input string is empty
     while (*current) {
         if (*str == ' ') {
             while (isspace(*str)) str++;
-            if (*str == '\0') return 0;
+            if (*str == '\0'){
+                int *last_count = va_arg(*args, int *);
+                *last_count = str_count;
+                return str_i;  // Return current count if we've reached end of input
+            }
         }
         if (*current == '%' && *(current + 1) != '\0') {
             char len_mod = 0;
@@ -38,7 +42,7 @@ int proccess_scanf(const char *str, const char *format, va_list *args) {
             else if (*current == 's') { s_specifier(args, &str, len_mod, width) ? 0 : str_i++; (void)*current++;}
             else if (*current == 'o') { o_specifier(args, &str, len_mod, width) ? 0 : str_i++;(void)*current++;}
             else if (*current == 'x' || *current == 'X') { x_specifier(args, &str, len_mod, width) ? 0 : str_i++;(void)*current++;}
-            else if (*current == 'n') { n_specifier(args, &str, start); (void)*current++;}
+            else if (*current == 'n') { n_specifier(args, start); (void)*current++;}
             else if (*current == 'p') { p_specifier(args, &str) ? 0 : str_i++;(void)*current++;}
             else if (*current == '%') { current++; continue; }
             else { current++; continue; }
@@ -155,7 +159,7 @@ int d_specifier(va_list *args, const char **str, char len_mod, int width) {
     int sign = 1;
     short int *short_ptr;
     long int *long_ptr;
-    int *int_ptr = NULL;
+    int *int_ptr = S21_NULL;
 
     if (len_mod == 'h') {
         short_ptr = va_arg(*args, short int *);
@@ -185,7 +189,7 @@ int d_specifier(va_list *args, const char **str, char len_mod, int width) {
 int u_specifier(va_list *args, const char **str, char len_mod, int width) {
     unsigned short int *short_ptr;
     unsigned long int *long_ptr;
-    unsigned int *val = NULL;
+    unsigned int *val = S21_NULL;
     int is_negative = 0;
     if (len_mod == 'h') {
         short_ptr = va_arg(*args, unsigned short int *);
@@ -216,7 +220,7 @@ int u_specifier(va_list *args, const char **str, char len_mod, int width) {
 int o_specifier(va_list *args, const char **str, char len_mod, int width) {
     unsigned short int *short_ptr;
     unsigned long int *long_ptr;
-    unsigned int *val = NULL;
+    unsigned int *val = S21_NULL;
 
     if (len_mod == 'h') {
         short_ptr = va_arg(*args, unsigned short int *);
@@ -262,7 +266,7 @@ int i_specifier(va_list *args, const char **str, char len_mod, int width) {
 
     short int *short_ptr;
     long int *long_ptr;
-    int *num = NULL;
+    int *num = S21_NULL;
 
     if (len_mod == 'h') {
         short_ptr = va_arg(*args, short int *);
@@ -304,7 +308,7 @@ int i_specifier(va_list *args, const char **str, char len_mod, int width) {
  
 int e_specifier(va_list *args, const char **str, char len_mod, int width) {
     // float *double_ptr = va_arg(*args, float *);
-    float *num = NULL;
+    float *num = S21_NULL;
     double long *long_ptr;
     int sign = 1;
 
@@ -360,7 +364,7 @@ int e_specifier(va_list *args, const char **str, char len_mod, int width) {
 
 int f_specifier(va_list *args, const char **str, char len_mod, int width) {
     
-    float *num = NULL;
+    float *num = S21_NULL;
     double long *long_ptr;
     int sign = 1;
 
@@ -413,9 +417,11 @@ int g_specifier(va_list *args, const char **str, char len_mod, int width) {
     return 0;
 }
 
-int n_specifier(va_list *args, const char **str, const char *start) {
+int n_specifier(va_list *args, const char *start) {
     int *count_ptr = va_arg(*args, int *);
-    *count_ptr = *str - start;
+    if (count_ptr == S21_NULL) return 1;
+    *count_ptr = (int)s21_strcspn(start, "%%");
+    return 0;
 }
 
 int p_specifier(va_list *args, const char **str) {
@@ -437,7 +443,7 @@ int x_specifier(va_list *args, const char **str, char len_mod, int width) {
 
     unsigned short int *short_ptr;
     unsigned long int *long_ptr;
-    unsigned int *val = NULL;
+    unsigned int *val = S21_NULL;
 
     if (len_mod == 'h') {
         short_ptr = va_arg(*args, unsigned short int *);
@@ -446,12 +452,12 @@ int x_specifier(va_list *args, const char **str, char len_mod, int width) {
         long_ptr = va_arg(*args,unsigned  long int *);
         val = (unsigned int *)long_ptr;
     } else {
-        unsigned int *val = va_arg(*args, unsigned int *);
+        val = va_arg(*args, unsigned int *);
     }
 
-    unsigned int res = 0;
-    parse_number(str, 16, &res, width);
-    *val = res;
+    if (**str == '0' && (*(*str + 1) == 'x' || *(*str + 1) == 'X')) (*str) += 2;
+    *val = 0;
+    parse_number_u(str, 16, val, width);
     return 0;
 }
 
@@ -549,3 +555,13 @@ s21_uintptr_t hex2dec_ptr(const char **str) {
 //     s21_sscanf(input, "%f", &s21_value);
 //     return 0;
 // }
+
+int main(int argc, char const *argv[]) {
+    char input[] = "Hello   there! ";
+    int s21_value1, s21_value2;
+
+    sscanf(input, "Hello  %nthere!     %n", &s21_value1, &s21_value2);
+
+
+    return 0;
+}
