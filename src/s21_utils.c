@@ -141,61 +141,61 @@ int parse_length_modifiers(const char **current, markers *mrk) {
 }
 
 void parse_type_spec(const char **current, char *str, va_list *args, int *index,
-           markers *mrk) {
+                     markers *mrk) {
   char spec = **current;
   if (spec == 'd' || spec == 'i') {
-  union signed_value value = {0};
-  if (mrk->length_modifier == 'h')
-    value.s = (short)va_arg(*args, int);
-  else if (mrk->length_modifier == 'l')
-    value.l = va_arg(*args, long);
-  else
-    value.i = va_arg(*args, int);
-  process_signed_int(str, &value, index, mrk);
+    union signed_value value = {0};
+    if (mrk->length_modifier == 'h')
+      value.s = (short)va_arg(*args, int);
+    else if (mrk->length_modifier == 'l')
+      value.l = va_arg(*args, long);
+    else
+      value.i = va_arg(*args, int);
+    process_signed_int(str, &value, index, mrk);
   } else if (spec == 'u' || spec == 'o' || spec == 'x' || spec == 'X') {
-  union unsigned_value u_value = {0};
-  int base = (spec == 'o') ? 8 : ((spec == 'x' || spec == 'X') ? 16 : 10);
-  if (mrk->length_modifier == 'h')
-    u_value.s = (unsigned short)va_arg(*args, unsigned int);
-  else if (mrk->length_modifier == 'l')
-    u_value.l = va_arg(*args, unsigned long);
-  else
-    u_value.i = va_arg(*args, unsigned int);
-  process_unsigned_int(str, &u_value, index, mrk, base, spec == 'X',
-             (spec == 'x' || spec == 'X'));
+    union unsigned_value u_value = {0};
+    int base = (spec == 'o') ? 8 : ((spec == 'x' || spec == 'X') ? 16 : 10);
+    if (mrk->length_modifier == 'h')
+      u_value.s = (unsigned short)va_arg(*args, unsigned int);
+    else if (mrk->length_modifier == 'l')
+      u_value.l = va_arg(*args, unsigned long);
+    else
+      u_value.i = va_arg(*args, unsigned int);
+    process_unsigned_int(str, &u_value, index, mrk, base, spec == 'X',
+                         (spec == 'x' || spec == 'X'));
   } else if (spec == 'F' || spec == 'f') {
-  union signed_value value = {0};
-  if (mrk->length_modifier == 'L')
-    value.dll = va_arg(*args, long double);
-  else
-    value.db = va_arg(*args, double);
-  process_float(str, &value, index, mrk, spec == 'F');
+    union signed_value value = {0};
+    if (mrk->length_modifier == 'L')
+      value.dll = va_arg(*args, long double);
+    else
+      value.db = va_arg(*args, double);
+    process_float(str, &value, index, mrk, spec == 'F');
   } else if (spec == 'E' || spec == 'e') {
-  union signed_value value = {0};
-  if (mrk->length_modifier == 'L')
-    value.dll = va_arg(*args, long double);
-  else
-    value.db = va_arg(*args, double);
-  process_scientific(str, &value, index, mrk, spec == 'E');
+    union signed_value value = {0};
+    if (mrk->length_modifier == 'L')
+      value.dll = va_arg(*args, long double);
+    else
+      value.db = va_arg(*args, double);
+    process_scientific(str, &value, index, mrk, spec == 'E');
   } else if (spec == 'g' || spec == 'G') {
-  union signed_value value = {0};
-  if (mrk->length_modifier == 'L')
-    value.dll = va_arg(*args, long double);
-  else
-    value.db = va_arg(*args, double);
-  process_compact(str, &value, index, mrk, spec == 'G');
+    union signed_value value = {0};
+    if (mrk->length_modifier == 'L')
+      value.dll = va_arg(*args, long double);
+    else
+      value.db = va_arg(*args, double);
+    process_compact(str, &value, index, mrk, spec == 'G');
   } else if (spec == 's')
-  process_string_arg(str, args, index, mrk);
+    process_string_arg(str, args, index, mrk);
   else if (spec == 'c')
-  process_char(str, args, index, mrk);
+    process_char(str, args, index, mrk);
   else if (spec == 'p')
-  process_pointer(str, args, index, mrk);
+    process_pointer(str, args, index, mrk);
   else if (spec == 'n')
-  process_char_counter(args, index);
-  else if (spec == '%' )
-  str[(*index)++] = '%';
+    process_char_counter(args, index);
+  else if (spec == '%')
+    str[(*index)++] = '%';
   else
-  str[(*index)++] = '%';
+    str[(*index)++] = '%';
   (*current)++;
 }
 
@@ -575,13 +575,19 @@ int process_string_arg(char *str, va_list *args, int *index, markers *mrk) {
 }
 
 int process_char(char *str, va_list *args, int *index, markers *mrk) {
-  char value = va_arg(*args, int);
+  void *value = S21_NULL;
+  if (mrk->length_modifier == "l"){
+    wchar_t value = va_arg(*args, wchar_t);
+  } else {
+    value = va_arg(*args, int);
+  }
+
   if (mrk->flags & FLAG_ZERO) mrk->flags &= ~FLAG_ZERO;
   if (mrk->flags & FLAG_SIGN) mrk->flags &= ~FLAG_SIGN;
   if (!(mrk->flags & FLAG_LEFT) && mrk->width > 1) {
     handle_width_padding(str, index, mrk->width - 1, mrk->flags);
   }
-  str[*index] = (unsigned char)value;
+  str[*index] = *(unsigned char*)value;
   *index += 1;
   if ((mrk->flags & FLAG_LEFT) && mrk->width > 1) {
     handle_width_padding(str, index, mrk->width - 1, mrk->flags);
@@ -617,7 +623,6 @@ int process_pointer(char *str, va_list *args, int *index, markers *mrk) {
   *index += s21_strlen(itc);
   return 0;
 }
-
 
 void handle_width_padding(char *str, int *index, int width, int flags) {
   if (flags & FLAG_ZERO) {
@@ -671,7 +676,6 @@ void handle_sign_space(char *str, int *index, int value, int flags) {
   }
 }
 
-
 void reverse(char *str, int length) {
   int start = 0;
   int end = length - 1;
@@ -683,7 +687,6 @@ void reverse(char *str, int length) {
     end--;
   }
 }
-
 
 int round_to_sig_digits(double *value, int *precision, int IsComp) {
   if (*value == 0.0) return 0;
@@ -731,7 +734,7 @@ int round_to_sig_digits(double *value, int *precision, int IsComp) {
 
 int round_to_sig_digits_l(long double *value, int *precision, int IsComp) {
   if (*value == 0.0) return 0;
-  
+
   int exponent = (int)floor(log10(fabsl(*value)));
 
   if (IsComp) {
@@ -784,7 +787,6 @@ int remove_trailing_zeroes(char *itc) {
   if (i_len >= 0 && itc[i_len] == '.') itc[i_len] = '\0';
   return removed_count;
 }
-
 
 char *s21_itoa(int value, char *buffer, int base) {
   if (base < 2 ||

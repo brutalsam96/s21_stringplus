@@ -6,6 +6,7 @@ HEADERS = s21_string.h s21_sprintf.h
 SOURCES = $(wildcard *.c)
 GCOVPREFIX = report_sprintf.out-
 GCOVPREFIX2 = report_s21string.out-
+GCOVPREFIX3 = report_s21sscanf.out-
 OBJ_LIBRARY := $(patsubst %.c, %.o, $(SOURCES))
 # SOURCES = *.c
 
@@ -26,12 +27,12 @@ test_sprintf: s21_string.a tests/sprintf/test_s21sprintf.c
 	./test_sprintf.out
 
 test_string: s21_string.a tests/s21_string/test_s21string.c
-	gcc -Wall -Wextra tests/s21_string/test_s21string.c s21_string.a -o test_sprintf.out -lcheck -lm -lpthread -lsubunit
-	./test_sprintf.out
+	gcc -Wall -Wextra tests/s21_string/test_s21string.c s21_string.a -o test_s21string.out -lcheck -lm -lpthread -lsubunit
+	./test_s21string.out
 
-test_sscanf: s21_string.a tests/sscanf/test_s21sscanf.c
-	gcc -Wall -Wextra tests/sscanf/test_s21sscanf.c s21_string.a -o test_s21sscanf.c -lcheck -lm -lpthread -lsubunit
-	./test_s21sscanf.c
+test_sscanf: tests/sscanf/test_s21sscanf.c
+	gcc -Wall -Wextra tests/sscanf/test_s21sscanf.c s21_string.a -o test_s21sscanf.out -lcheck -lm -lpthread -lsubunit
+	./test_s21sscanf.out
 
 gcov_report: s21_string.a tests/s21_string/test_s21string.c
 	gcc $(GCOVFLAGS) tests/s21_string/test_s21string.c $(SOURCES) -o ./report_sprintf.out -lcheck -lm -lpthread -lsubunit
@@ -40,8 +41,13 @@ gcov_report: s21_string.a tests/s21_string/test_s21string.c
 	gcc $(GCOVFLAGS) tests/sprintf/test_s21sprintf.c $(SOURCES) -o ./report_s21string.out -lcheck -lm -lpthread -lsubunit
 	./report_s21string.out
 
+	gcc $(GCOVFLAGS) tests/sscanf/test_s21sscanf.c $(SOURCES) -o ./report_s21sscanf.out -lcheck -lm -lpthread -lsubunit
+	./report_s21sscanf.out
+
 	gcov -f $(GCOVPREFIX)s21_sprintf.c $(GCOVPREFIX)s21_string.c $(GCOVPREFIX)s21_utils.c
 	gcov -f $(GCOVPREFIX2)s21_sprintf.c $(GCOVPREFIX2)s21_string.c $(GCOVPREFIX2)s21_utils.c
+	gcov -f $(GCOVPREFIX3)s21_sscanf.c
+	
 	lcov -t "gcov_report" -o Coverage_Report.info -c -d .
 	genhtml -o ./report Coverage_Report.info
 	rm -f *.gcno *.gcda *.info report.out *.gcov

@@ -400,7 +400,7 @@ int e_specifier(va_list *args, const char **str, char len_mod, int width) {
     if (**str == '-') {
         sign = -1;
         (*str)++;
-        width--;
+        if (has_width) width--;
     } else if (**str == '+') {
         (*str)++;
     }
@@ -427,7 +427,7 @@ int e_specifier(va_list *args, const char **str, char len_mod, int width) {
     double fraction = 0.0;
     if (**str == '.') {
         (*str)++;  // Move past the decimal point
-        width--;
+        if (has_width) width--;
         double divisor = 10.0;
         while (isdigit(**str)) {
             fraction += ((**str - '0') / divisor);
@@ -451,7 +451,7 @@ int e_specifier(va_list *args, const char **str, char len_mod, int width) {
     while (isdigit(**str)) {
         exponent = exponent * 10 + (**str - '0');
         (*str)++;
-        width--;
+        if (has_width) width--;
         if (has_width && width == 0) break;
     }
 
@@ -488,7 +488,7 @@ int f_specifier(va_list *args, const char **str, char len_mod, int width) {
     if (**str == '-') {
         sign = -1;
         (*str)++;
-        width--;
+        if (has_width) width--;
     } else if (**str == '+') {
         (*str)++;
     }
@@ -502,21 +502,26 @@ int f_specifier(va_list *args, const char **str, char len_mod, int width) {
     // char *start = (char*)*str;
     long int int_part = 0;
     parse_number_l(str, 10, &int_part, width);
-    if (int_part > 0){
-        int dig_counter = 0;
+    int dig_counter = 0;
+    if (int_part > 0 && has_width){
         int int_part_cpy = int_part;
         while (int_part_cpy > 0){
             dig_counter++;
             int_part_cpy = int_part_cpy / 10;
         }
-        width -= dig_counter;
+        if (dig_counter == width || dig_counter + 1 == width){
+            width = 0;
+            *num = int_part;
+            return 0;
+        } else{
+            width -= dig_counter;
+        }
     }
-
 
 
     if (**str == '.') {
         (*str)++;  // Move past the decimal point
-        width--;
+        if (has_width) width--;
         float fractional = 0.0;
         float decimal_place = 1.0;
 
@@ -524,7 +529,7 @@ int f_specifier(va_list *args, const char **str, char len_mod, int width) {
             fractional = fractional * 10.0 + (**str - '0');
             decimal_place *= 10.0;
             (*str)++;
-            width--;
+            if (has_width) width--;
             if (has_width && width == 0) break;
         }
         fractional /= decimal_place;
@@ -856,3 +861,13 @@ s21_uintptr_t hex2dec_ptr(const char **str) {
 //         printf("OK");
 //     }
 // }
+
+int main(int argc, char const *argv[])
+{
+    char input[] = "3.1";
+    float s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%3f", &s21_value);
+    sscanf(input, "%3f", &std_value);
+    return 0;
+}
