@@ -12,7 +12,7 @@ int s21_sscanf(const char *str, const char *format, ...) {
 }
 
 int proccess_scanf(const char *str, const char *format, va_list *args) {
-    const char *current = format, *start = format, *start_str = str;
+    const char *current = format, *start_str = str;
 
     int str_i = 0;
     if (!*str) return -1;  // Return -1 if input string is empty

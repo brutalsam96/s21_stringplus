@@ -2294,6 +2294,7 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_s_trailing_spaces);
     tcase_add_test(tc, test_sscanf_s_special_characters);
     tcase_add_test(tc, test_sscanf_s_ignore_non_alphanumeric);
+    tcase_add_test(tc, test_sscanf_s_with_numbers);
 
     // %u specifier
     tcase_add_test(tc, test_sscanf_u_basic);
@@ -2305,6 +2306,8 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_u_multiple_values);
     tcase_add_test(tc, test_sscanf_u_with_non_decimal);
     tcase_add_test(tc, test_sscanf_u_with_spaces_between_numbers);
+    tcase_add_test(tc, test_sscanf_u_edge_case_zero_input);
+    tcase_add_test(tc, test_sscanf_u_with_leading_zero);
     
     // %x specifier
     tcase_add_test(tc, test_sscanf_x_hexadecimal_lowercase);
