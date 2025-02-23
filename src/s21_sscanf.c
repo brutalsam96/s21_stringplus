@@ -911,3 +911,15 @@ s21_uintptr_t hex2dec_ptr(const char **str) {
 //     sscanf(input, "%hx", &std_value);
 //     return 0;
 // }
+
+// int main(int argc, char const *argv[])
+// {
+//     char input[] = "1.234567e2";  // 123.4567
+//     long double s21_value = 0.0, std_value = 0.0;
+
+//     s21_sscanf(input, "%Le", &s21_value);
+//     sscanf(input, "%Le", &std_value);
+//     printf("%.15Le\n%.15Le", s21_value,std_value);
+
+//     return 0;
+// }
