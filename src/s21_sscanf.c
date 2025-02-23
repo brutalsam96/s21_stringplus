@@ -373,29 +373,26 @@ int i_specifier(va_list *args, const char **str, char len_mod, int width) {
 }
  
 int e_specifier(va_list *args, const char **str, char len_mod, int width) {
-
-    
-    int has_width = 0; 
-
+    int has_width = 0;
+    long double *num;
+    float *float_ptr;
+    int sign = 1;
+    long double temp = 0.0;
     if (width == -5) {
         while(**str != '\0' && !isspace(**str)) {(*str)++;}
         return 1;
     }
-    
     if (width > 0) has_width = 1;
-    
-    long double *num = S21_NULL;
+
     if (len_mod == 'L') {
         num = va_arg(*args, long double *);
     } else {
-        float *float_ptr = va_arg(*args, float *);
-        num = (long double *)float_ptr;
+        float_ptr = va_arg(*args, float *);
+        num = &temp;
     }
-    int sign = 1;
 
     while(isspace(**str)) (*str)++;
 
-    
     if (**str == '-') {
         sign = -1;
         (*str)++;
@@ -407,20 +404,23 @@ int e_specifier(va_list *args, const char **str, char len_mod, int width) {
     if (!(isdigit(**str))) {
         return 1;
     }
-
     *num = 0.0;
-
-    int int_part = 0;
-    parse_number(str, 10, &int_part, width);
-
-    if (int_part > 0){
-        int dig_counter = 0;
+    long int int_part = 0;
+    parse_number_l(str, 10, &int_part, width);
+    int dig_counter = 0;
+    if (int_part > 0 && has_width){
         int int_part_cpy = int_part;
         while (int_part_cpy > 0){
             dig_counter++;
             int_part_cpy = int_part_cpy / 10;
         }
-        width -= dig_counter;
+        if (dig_counter == width || dig_counter + 1 == width){
+            width = 0;
+            *num = int_part;
+            return 0;
+        } else{
+            width -= dig_counter;
+        }
     }
 
     double fraction = 0.0;
@@ -460,6 +460,8 @@ int e_specifier(va_list *args, const char **str, char len_mod, int width) {
     *num *= pow(10, exp_sign * exponent);
     *num *= sign;
     
+    if (len_mod != 'L') *float_ptr = (float)temp;
+
     // *double_ptr = (float)num;
     return 0;
 }
@@ -535,13 +537,6 @@ int f_specifier(va_list *args, const char **str, char len_mod, int width) {
         num = &temp;
     }
 
-    // if (len_mod == 'L') {
-    //     long_ptr = va_arg(*args, double long *);
-    //     num = (long double *)long_ptr;
-    // } else {
-    //     num = va_arg(*args, long double *);
-    // }
-
     while(isspace(**str)) (*str)++;
 
     if (**str == '-') {
@@ -555,7 +550,7 @@ int f_specifier(va_list *args, const char **str, char len_mod, int width) {
     if (!(isdigit(**str))) {
         return 1;
     }
-
+    *num = 0.0;
     long int int_part = 0;
     parse_number_l(str, 10, &int_part, width);
     int dig_counter = 0;
