@@ -157,11 +157,10 @@ int c_specifier(va_list *args, const char **str, char len_mod, int width) {
 
 
 int d_specifier(va_list *args, const char **str, char len_mod, int width) {
-    int num = 0;
     int sign = 1;
     short int *short_ptr;
     long int *long_ptr;
-    int *int_ptr = S21_NULL;
+    int *int_ptr;
     
     if (width == -5) {
         while(**str != '\0' && !isspace(**str)) {(*str)++;}
@@ -182,7 +181,7 @@ int d_specifier(va_list *args, const char **str, char len_mod, int width) {
 
     if (**str == '-') {
         (*str)++;
-        sign = -sign;
+        sign = -1;
         width--;
     } else if (**str == '+') {
         (*str)++;
@@ -192,10 +191,17 @@ int d_specifier(va_list *args, const char **str, char len_mod, int width) {
         return 1;
     }
 
-    *int_ptr = 0;
-    parse_number(str, 10, &num, width);
-
-    *int_ptr = sign * num;
+    int temp_int = 0;
+    if (len_mod == 'h') {
+        parse_number(str, 10, &temp_int, width);
+        *short_ptr = sign * (short)temp_int;
+    } else if (len_mod == 'l') {
+        parse_number(str, 10, &temp_int, width);
+        *long_ptr = sign * (long)temp_int;
+    } else {
+        parse_number(str, 10, &temp_int, width);
+        *int_ptr = sign * temp_int;
+    }
     return 0;
 }
 
@@ -366,7 +372,7 @@ int i_specifier(va_list *args, const char **str, char len_mod, int width) {
     *num *= sign;
     return 0;
 }
- 
+
 int e_specifier(va_list *args, const char **str, char len_mod, int width) {
     // float *double_ptr = va_arg(*args, float *);
     int has_width = 0; 
@@ -588,6 +594,7 @@ int x_specifier(va_list *args, const char **str, char len_mod, int width) {
     unsigned short int *short_ptr;
     unsigned long int *long_ptr;
     unsigned int *val = S21_NULL;
+    int sign = 1;
 
     if (width == -5) {
         while(**str != '\0' && !isspace(**str)) {(*str)++;}
@@ -603,14 +610,37 @@ int x_specifier(va_list *args, const char **str, char len_mod, int width) {
     } else {
         val = va_arg(*args, unsigned int *);
     }
+
     while(isspace(**str)) (*str)++;
+
+    if (**str == '-') {
+        sign = -1; (*str)++;
+    }  else if (**str == '-') {
+        sign = 1; (*str)++;
+    }
+
     if (**str == '0' && (*(*str + 1) == 'x' || *(*str + 1) == 'X')) (*str) += 2;
-    
+
     if (!(isxdigit(**str))) {
         return 1;
     }
-    *val = 0;
-    parse_number_u(str, 16, val, width);
+    // *val = 0;
+    // parse_number_u(str, 16, val, width);
+
+    int temp_int = 0;
+
+    if (len_mod == 'h') {
+        parse_number(str, 16, &temp_int, width);
+        *short_ptr = sign * (short)temp_int;
+    } else if (len_mod == 'l') {
+        parse_number(str, 16, &temp_int, width);
+        *long_ptr = sign * (long)temp_int;
+    } else {
+        parse_number(str, 16, &temp_int, width);
+        *val = sign * temp_int;
+    }
+
+    // *val *= sign;
     return 0;
 }
 
@@ -812,11 +842,17 @@ s21_uintptr_t hex2dec_ptr(const char **str) {
 
 // int main(int argc, char const *argv[])
 // {
-//     char input[] = "123 456";
-//     int s21_value = 0, std_value = 0;
+//     char input[] = "1.234567e2";  // 123.4567
+//     long double s21_value = 0.0, std_value = 0.0;
 
-//     s21_sscanf(input, "%*d %d", &s21_value);
-//     sscanf(input, "%*d %d", &std_value);
+//     s21_sscanf(input, "%Le", &s21_value);
+//     sscanf(input, "%Le", &std_value);
 
-//     return 0;
+//     printf("%Lf\n", s21_value);
+//     printf("%Lf\n", _value);
+
+
+//     if (s21_value == std_value) {
+//         printf("OK");
+//     }
 // }
