@@ -28,6 +28,9 @@ typedef struct {
 // union to cast signed data types
 union signed_value {
   char c;
+  wchar_t wc;
+  char *str;
+  wchar_t *wcstr;
   short s;
   int i;
   long l;
@@ -66,8 +69,8 @@ int process_unsigned_int(char *str, void *u_value, int *index, markers *mrk, int
 int process_float(char *str, void *value, int *index, markers *mrk, int IsUpper);
 int process_scientific(char *str, void *value, int *index, markers *mrk, int IsUpper);
 int process_compact(char *str, void *value, int *index, markers *mrk, int IsUpper);
-int process_string_arg(char *str, va_list *args, int *index, markers *mrk);
-int process_char(char *str, va_list *args, int *index, markers *mrk);
+int process_string_arg(char *str, void *value, int *index, markers *mrk);
+int process_char(char *str, void *value, int *index, markers *mrk);
 int process_char_counter(va_list *args, int *index);
 int process_pointer(char *str, va_list *args, int *index, markers *mrk);
 

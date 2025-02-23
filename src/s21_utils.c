@@ -184,10 +184,22 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
     else
       value.db = va_arg(*args, double);
     process_compact(str, &value, index, mrk, spec == 'G');
-  } else if (spec == 's')
-    process_string_arg(str, args, index, mrk);
-  else if (spec == 'c')
-    process_char(str, args, index, mrk);
+  } else if (spec == 's'){
+    union signed_value value = {0};
+    if (mrk->length_modifier == 'l')
+      value.wcstr = va_arg(*args, wchar_t*);
+    else
+      value.str = va_arg(*args, char*);
+    process_string_arg(str, &value, index, mrk);
+  }
+  else if (spec == 'c'){
+      union signed_value value = {0};
+    if (mrk->length_modifier == 'l')
+      value.wc = va_arg(*args, wchar_t);
+    else
+      value.c = va_arg(*args, int);
+    process_char(str, &value, index, mrk);
+  }
   else if (spec == 'p')
     process_pointer(str, args, index, mrk);
   else if (spec == 'n')
@@ -549,9 +561,23 @@ int process_compact(char *str, void *value, int *index, markers *mrk,
 /* Removed flags, width, precision and length for string, char, char counter and
 pointer i don't think they are required by task*/
 
-int process_string_arg(char *str, va_list *args, int *index, markers *mrk) {
-  char *value = va_arg(*args, char *);
-  int val_len = s21_strlen(value);
+int process_string_arg(char *str, void *value, int *index, markers *mrk) {
+
+  char *val;
+  char *temp;
+
+  if (mrk->length_modifier == 'l') {
+    wchar_t *wstr = ((union signed_value *)value)->wcstr;
+    size_t wlen = wcslen(wstr);
+    temp = (char*)malloc((wlen * MB_CUR_MAX + 1) * sizeof(char));
+    wcstombs(temp, wstr, wlen * MB_CUR_MAX + 1);
+    val = temp;
+  } else {
+    val = (((union signed_value *)value)->str);
+  }
+  
+
+  int val_len = s21_strlen(val);
   if (mrk->flags & FLAG_ZERO) mrk->flags &= ~FLAG_ZERO;
 
   if (!(mrk->flags & FLAG_LEFT) && mrk->width > val_len) {
@@ -565,21 +591,23 @@ int process_string_arg(char *str, va_list *args, int *index, markers *mrk) {
       val_len = mrk->precision;
     }
   }
-  s21_strncpy(&str[*index], value, val_len);
+  s21_strncpy(&str[*index], val, val_len);
 
   *index += val_len;
   if ((mrk->flags & FLAG_LEFT) && mrk->width > val_len) {
     handle_width_padding(str, index, mrk->width - val_len, mrk->flags);
   }
+  if (mrk->length_modifier == 'l') free(temp);
   return 0;
 }
 
-int process_char(char *str, va_list *args, int *index, markers *mrk) {
-  void *value = S21_NULL;
-  if (mrk->length_modifier == 'l'){
-    value = va_arg(*args, wchar_t);
+int process_char(char *str, void *value, int *index, markers *mrk) {
+  wchar_t val;
+
+  if (mrk->length_modifier == 'l') {
+    val = *(wchar_t *)value;
   } else {
-    value = va_arg(*args, int);
+    val = *(char *)value;
   }
 
   if (mrk->flags & FLAG_ZERO) mrk->flags &= ~FLAG_ZERO;
@@ -587,7 +615,7 @@ int process_char(char *str, va_list *args, int *index, markers *mrk) {
   if (!(mrk->flags & FLAG_LEFT) && mrk->width > 1) {
     handle_width_padding(str, index, mrk->width - 1, mrk->flags);
   }
-  str[*index] = *(unsigned char*)value;
+  str[*index] = val;
   *index += 1;
   if ((mrk->flags & FLAG_LEFT) && mrk->width > 1) {
     handle_width_padding(str, index, mrk->width - 1, mrk->flags);
@@ -1092,3 +1120,12 @@ char *s21_etoa(double value, char *buffer, int precision) {
   buffer[i] = '\0';
   return buffer;
 }
+
+// int main()
+// {
+  // char a[] = "abc";
+//   wchar_t a[] = L"abc";
+//   char buf[256];
+//   s21_sprintf(buf, "a b %s", a);
+//   return 0;
+// }
