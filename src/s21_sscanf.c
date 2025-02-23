@@ -373,27 +373,25 @@ int i_specifier(va_list *args, const char **str, char len_mod, int width) {
 }
  
 int e_specifier(va_list *args, const char **str, char len_mod, int width) {
-    // float *double_ptr = va_arg(*args, float *);
+
+    
     int has_width = 0; 
-    long double *num = S21_NULL;
-    long double *long_ptr;
-    double *double_ptr;
-    int sign = 1;
 
     if (width == -5) {
         while(**str != '\0' && !isspace(**str)) {(*str)++;}
         return 1;
     }
-
+    
     if (width > 0) has_width = 1;
-
+    
+    long double *num = S21_NULL;
     if (len_mod == 'L') {
-        long_ptr = va_arg(*args, double long *);
-        num = long_ptr;
+        num = va_arg(*args, long double *);
     } else {
-        double_ptr = va_arg(*args, double *);
-        num = (long double *)double_ptr;
+        float *float_ptr = va_arg(*args, float *);
+        num = (long double *)float_ptr;
     }
+    int sign = 1;
 
     while(isspace(**str)) (*str)++;
 
@@ -466,13 +464,63 @@ int e_specifier(va_list *args, const char **str, char len_mod, int width) {
     return 0;
 }
 
+// long double parse_float(const char **str, int sign, int has_width, int width) {
+//     long double num = 0;
+//     long int int_part = 0;
+//     parse_number_l(str, 10, &int_part, width);
+//     int dig_counter = 0;
+//     if (int_part > 0 && has_width){
+//         int int_part_cpy = int_part;
+//         while (int_part_cpy > 0){
+//             dig_counter++;
+//             int_part_cpy = int_part_cpy / 10;
+//         }
+//         if (dig_counter == width || dig_counter + 1 == width){
+//             return int_part * sign;
+//         } else{
+//             width -= dig_counter;
+//         }
+//     }
+
+//     if (**str == '.') {
+//         (*str)++;  
+//         if (has_width) width--;
+//         double fractional = 0.0;
+//         double decimal_place = 1.0;
+
+//         while (isdigit(**str)) {
+//             fractional = fractional * 10.0 + (**str - '0');
+//             decimal_place *= 10.0;
+//             (*str)++;
+//             if (has_width) width--;
+//             if (has_width && width == 0) break;
+//         }
+//         fractional /= decimal_place;
+//         fractional = roundl(fractional * 10000000000) / 10000000000.0;
+//         num = ((long double)((int_part + fractional)* 10000000000.0) / 10000000000.0);
+//     } else {
+//         return 0;
+//     }
+//     if (**str == 'e' || **str == 'E') {
+//         (*str)++;
+//         int exponent = 0;
+//         while (isdigit(**str)) {
+//             exponent = exponent * 10 + (**str - '0');
+//             (*str)++;
+//         }
+//         num *= pow(10, exponent);
+//     }
+
+//     return num * sign;
+// }
+
 
 int f_specifier(va_list *args, const char **str, char len_mod, int width) {
     int has_width = 0;
-    long double *num = S21_NULL;
-    double long *long_ptr;
+    long double *num;
+    float *float_ptr;
     int sign = 1;
-
+    long double temp = 0.0;
     if (width == -5) {
         while(**str != '\0' && !isspace(**str)) {(*str)++;}
         return 1;
@@ -481,15 +529,21 @@ int f_specifier(va_list *args, const char **str, char len_mod, int width) {
     if (width > 0) has_width = 1;
 
     if (len_mod == 'L') {
-        long_ptr = va_arg(*args, double long *);
-        num = (long double *)long_ptr;
-    } else {
         num = va_arg(*args, long double *);
+    } else {
+        float_ptr = va_arg(*args, float *);
+        num = &temp;
     }
+
+    // if (len_mod == 'L') {
+    //     long_ptr = va_arg(*args, double long *);
+    //     num = (long double *)long_ptr;
+    // } else {
+    //     num = va_arg(*args, long double *);
+    // }
 
     while(isspace(**str)) (*str)++;
 
-    // Handle sign
     if (**str == '-') {
         sign = -1;
         (*str)++;
@@ -502,8 +556,6 @@ int f_specifier(va_list *args, const char **str, char len_mod, int width) {
         return 1;
     }
 
-
-    // char *start = (char*)*str;
     long int int_part = 0;
     parse_number_l(str, 10, &int_part, width);
     int dig_counter = 0;
@@ -542,7 +594,7 @@ int f_specifier(va_list *args, const char **str, char len_mod, int width) {
     } else {
         return 1;
     }
-    if (**str == 'e') {
+    if (**str == 'e' || **str == 'E') {
         (*str)++;
         int exponent =  0;
         while (isdigit(**str))
@@ -552,9 +604,11 @@ int f_specifier(va_list *args, const char **str, char len_mod, int width) {
         }
         *num *= pow(10, exponent);
     }
-    // Apply sign
+
     *num *= sign;
-    // *float_ptr = num;
+
+    if (len_mod != 'L') *float_ptr = (float)temp;
+
     return 0;
 }
 
@@ -798,17 +852,14 @@ s21_uintptr_t hex2dec_ptr(const char **str) {
 //     return 0;
 // }
 
-int main(int argc, char const *argv[])
-{
-    char input[] = "3.14e2";
-    // float s21_value = 0, std_value = 0;
-    float std_value = 0;
+// int main(int argc, char const *argv[])
+// {
+//     char input[] = "3.14e2";;
+//     float std_value = 0;
+//     s21_sscanf(input, "%f", &std_value);
 
-    // s21_sscanf(input, "%f", &s21_value);
-    s21_sscanf(input, "%f", &std_value);
-
-    return 0;
-}
+//     return 0;
+// }
 
 
 
