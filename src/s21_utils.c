@@ -576,8 +576,8 @@ int process_string_arg(char *str, va_list *args, int *index, markers *mrk) {
 
 int process_char(char *str, va_list *args, int *index, markers *mrk) {
   void *value = S21_NULL;
-  if (mrk->length_modifier == "l"){
-    wchar_t value = va_arg(*args, wchar_t);
+  if (mrk->length_modifier == 'l'){
+    value = va_arg(*args, wchar_t);
   } else {
     value = va_arg(*args, int);
   }

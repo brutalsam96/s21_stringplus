@@ -1058,5 +1058,8 @@ int main(void) {
   srunner_run_all(sr, CK_VERBOSE);
   fails = srunner_ntests_failed(sr);
   srunner_free(sr);
+  wchar_t a = 'c';
+  char buf[256];
+  s21_sprintf(buf, "a b %lc", a);
   return (fails == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
