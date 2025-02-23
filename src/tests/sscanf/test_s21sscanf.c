@@ -396,7 +396,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_basic) {
     char input[] = "3.14e2";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -407,7 +407,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_negative_exponent) {
     char input[] = "3.14e-2";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -418,7 +418,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_large_exponent) {
     char input[] = "1.23e100";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -429,7 +429,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_small_exponent) {
     char input[] = "1.23e-100";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -440,7 +440,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_no_exponent) {
     char input[] = "123.456";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -451,7 +451,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_scientific_notation) {
     char input[] = "1.23E4";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -462,7 +462,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_edge_case_zero) {
     char input[] = "0e0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -473,7 +473,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_edge_case_negative_zero) {
     char input[] = "-0e0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -510,7 +510,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_basic) {
     char input[] = "3.14E2";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -521,7 +521,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_negative_exponent) {
     char input[] = "3.14E-2";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -532,7 +532,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_large_exponent) {
     char input[] = "1.23E100";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -543,7 +543,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_small_exponent) {
     char input[] = "1.23E-100";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -554,7 +554,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_no_exponent) {
     char input[] = "123.456";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -565,7 +565,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_scientific_notation) {
     char input[] = "1.23E4";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -576,7 +576,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_edge_case_zero) {
     char input[] = "0E0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -587,7 +587,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_edge_case_negative_zero) {
     char input[] = "-0E0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -624,7 +624,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_basic) {
     char input[] = "3.14";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -635,7 +635,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_negative) {
     char input[] = "-3.14";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -646,7 +646,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_zero) {
     char input[] = "0.0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -668,7 +668,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_large_number) {
     char input[] = "1234567890.123456789";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -679,7 +679,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_small_number) {
     char input[] = "0.000123";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -690,7 +690,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_large_negative) {
     char input[] = "-9876543210.987654321";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -715,7 +715,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_edge_case_zero) {
     char input[] = "0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -726,7 +726,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_edge_case_negative_zero) {
     char input[] = "-0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -1097,7 +1097,7 @@ END_TEST
 
 START_TEST(test_sscanf_o_basic) {
     char input[] = "1234";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%o", &s21_value);
     sscanf(input, "%o", &std_value);
@@ -1108,7 +1108,7 @@ END_TEST
 
 START_TEST(test_sscanf_o_zero) {
     char input[] = "0";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%o", &s21_value);
     sscanf(input, "%o", &std_value);
@@ -1130,7 +1130,7 @@ END_TEST
 
 START_TEST(test_sscanf_o_large_number) {
     char input[] = "37777777777";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%o", &s21_value);
     sscanf(input, "%o", &std_value);
@@ -1177,7 +1177,7 @@ END_TEST
 
 START_TEST(test_sscanf_o_exceeding_size) {
     char input[] = "777777777777777777777";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%o", &s21_value);
     sscanf(input, "%o", &std_value);
@@ -1199,7 +1199,7 @@ END_TEST
 
 START_TEST(test_sscanf_o_prefixed) {
     char input[] = "01234";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%o", &s21_value);
     sscanf(input, "%o", &std_value);
@@ -1369,7 +1369,7 @@ END_TEST
 
 START_TEST(test_sscanf_u_basic) {
     char input[] = "12345";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%u", &s21_value);
     sscanf(input, "%u", &std_value);
@@ -1380,7 +1380,7 @@ END_TEST
 
 START_TEST(test_sscanf_u_zero) {
     char input[] = "0";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%u", &s21_value);
     sscanf(input, "%u", &std_value);
@@ -2151,6 +2151,458 @@ START_TEST(test_sscanf_suppress_char) {
 }
 END_TEST
 
+// short
+
+START_TEST(test_sscanf_length_modifier_short_int) {
+    char input[] = "32767";
+    short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%3hd", &s21_value);
+    sscanf(input, "%3hd", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_short_int_with_more_length) {
+    char input[] = "32767";
+    short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%6hd", &s21_value);
+    sscanf(input, "%6hd", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_negative_short_int) {
+    char input[] = "-32767";
+    short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%4hd", &s21_value);
+    sscanf(input, "%4hd", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_unsigned_short_int) {
+    char input[] = "65535";
+    unsigned short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%6hu", &s21_value);
+    sscanf(input, "%6hu", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_short_int_leading_zeros) {
+    char input[] = "00032767";
+    short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%hd", &s21_value);
+    sscanf(input, "%hd", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_int_overflow) {
+    char input[] = "70000";
+    short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%hd", &s21_value);
+    sscanf(input, "%hd", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_zero_short_int) {
+    char input[] = "0";
+    short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%hd", &s21_value);
+    sscanf(input, "%hd", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_invalid_input) {
+    char input[] = "abcxyz";
+    short int s21_value = 0, std_value = 0;
+
+    int result_s21 = s21_sscanf(input, "%hd", &s21_value);
+    int result_std = sscanf(input, "%hd", &std_value);
+
+    ck_assert_int_eq(result_s21, result_std);
+}
+
+START_TEST(test_sscanf_length_modifier_short_int_integer) {
+    char input[] = "042";
+    short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%hi", &s21_value);
+    sscanf(input, "%hi", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_unsigned_short_int_decimal) {
+    char input[] = "65535";
+    unsigned short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%hu", &s21_value);
+    sscanf(input, "%hu", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_unsigned_short_int_negative) {
+    char input[] = "-65535";
+    unsigned short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%hu", &s21_value);
+    sscanf(input, "%hu", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_short_int_octal) {
+    char input[] = "0777";
+    short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%ho", &s21_value);
+    sscanf(input, "%ho", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+
+START_TEST(test_sscanf_length_modifier_short_int_hex_lower) {
+    char input[] = "1f4";  // 500
+    short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%hx", &s21_value);
+    sscanf(input, "%hx", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_short_int_hex_upper) {
+    char input[] = "1F4";  // 500
+    short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%hX", &s21_value);
+    sscanf(input, "%hX", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_negative_short_int_hex) {
+    char input[] = "-1f4";  // -500
+    short int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%hx", &s21_value);
+    sscanf(input, "%hx", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+
+START_TEST(test_sscanf_length_modifier_mixed_base) {
+    char input[] = "32767 0x1f4";
+    short int s21_value_1 = 0, std_value_1 = 0;
+    short int s21_value_2 = 0, std_value_2 = 0;
+
+    s21_sscanf(input, "%hd %hx", &s21_value_1, &s21_value_2);
+    sscanf(input, "%hd %hx", &std_value_1, &std_value_2);
+
+    ck_assert_int_eq(s21_value_1, std_value_1);
+    ck_assert_int_eq(s21_value_2, std_value_2);
+}
+
+// long
+
+START_TEST(test_sscanf_length_modifier_long_int_decimal) {
+    char input[] = "2147483647";
+    long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%ld", &s21_value);
+    sscanf(input, "%ld", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_negative_long_int_decimal) {
+    char input[] = "-2147";
+    long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%ld", &s21_value);
+    sscanf(input, "%ld", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value); 
+}
+
+START_TEST(test_sscanf_length_modifier_long_int_decimal_with_length) {
+    char input[] = "2147483647";
+    long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%5ld", &s21_value);
+    sscanf(input, "%5ld", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_negative_long_int_decimal_with_length) {
+    char input[] = "-2147483647";
+    long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%5ld", &s21_value);
+    sscanf(input, "%5ld", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value); 
+}
+
+START_TEST(test_sscanf_length_modifier_long_int_integer) {
+    char input[] = "042";
+    long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%li", &s21_value);
+    sscanf(input, "%li", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_unsigned_long_int_decimal) {
+    char input[] = "4294967295";
+    unsigned long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%lu", &s21_value);
+    sscanf(input, "%lu", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_long_int_octal) {
+    char input[] = "0777";
+    long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%lo", &s21_value);
+    sscanf(input, "%lo", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_invalid_octal) {
+    char input[] = "089";
+    long int s21_value = 0, std_value = 0;
+
+    int result_s21 = s21_sscanf(input, "%lo", &s21_value);
+    int result_std = sscanf(input, "%lo", &std_value);
+
+    ck_assert_int_eq(result_s21, result_std);
+}
+
+START_TEST(test_sscanf_length_modifier_long_int_hex_lower) {
+    char input[] = "1f4"; // 500
+    long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%lx", &s21_value);
+    sscanf(input, "%lx", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_long_int_hex_upper) {
+    char input[] = "1F4"; // 500
+    long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%lX", &s21_value);
+    sscanf(input, "%lX", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_negative_long_int_hex) {
+    char input[] = "-1f4";  // -500
+    long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%lx", &s21_value);
+    sscanf(input, "%lx", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_long_int_overflow) {
+    char input[] = "9223372036854775807";
+    long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%5ld", &s21_value);
+    sscanf(input, "%5ld", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);  // TODO: Make SURE --------------HERE----------------------
+}
+
+START_TEST(test_sscanf_length_modifier_long_int_leading_zeros) {
+    char input[] = "0002147483647";
+    long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%ld", &s21_value);
+    sscanf(input, "%ld", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);  // 2147483647
+}
+
+START_TEST(test_sscanf_length_modifier_mixed_long_int_and_unsigned_long_int) {
+    char input[] = "2147483647 4294967295";  //
+    long int s21_value_1 = 0, std_value_1 = 0;
+    unsigned long int s21_value_2 = 0, std_value_2 = 0;
+
+    s21_sscanf(input, "%ld %lu", &s21_value_1, &s21_value_2);
+    sscanf(input, "%ld %lu", &std_value_1, &std_value_2);
+
+    ck_assert_int_eq(s21_value_1, std_value_1);
+    ck_assert_int_eq(s21_value_2, std_value_2);
+}
+
+START_TEST(test_sscanf_length_modifier_unsigned_long_int_octal) {
+    char input[] = "0777";  // 511
+    unsigned long int s21_value = 0, std_value = 0;
+
+    s21_sscanf(input, "%lo", &s21_value);
+    sscanf(input, "%lo", &std_value);
+
+    ck_assert_int_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_unsigned_long_int_invalid_input) {
+    char input[] = "abcxyz";
+    unsigned long int s21_value = 0, std_value = 0;
+
+    int result_s21 = s21_sscanf(input, "%lu", &s21_value);
+    int result_std = sscanf(input, "%lu", &std_value);
+
+    ck_assert_int_eq(result_s21, result_std);
+}
+
+START_TEST(test_sscanf_length_modifier_long_double_scientific) {
+    char input[] = "1.234567e2";  // 123.4567
+    long double s21_value = 0.0, std_value = 0.0;
+
+    s21_sscanf(input, "%Le", &s21_value);
+    sscanf(input, "%Le", &std_value);
+
+    ck_assert_ldouble_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_negative_long_double_scientific) {
+    char input[] = "-1.234567e2";  // -123.4567
+    long double s21_value = 0.0, std_value = 0.0;
+
+    s21_sscanf(input, "%Le", &s21_value);
+    sscanf(input, "%Le", &std_value);
+
+    ck_assert_ldouble_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_long_double_standard) {
+    char input[] = "123.456";
+    long double s21_value = 0.0, std_value = 0.0;
+
+    s21_sscanf(input, "%Lf", &s21_value);
+    sscanf(input, "%Lf", &std_value);
+
+    ck_assert_ldouble_eq(s21_value, std_value);
+}
+
+
+START_TEST(test_sscanf_length_modifier_negative_long_double_standard) {
+    char input[] = "-123.456";
+    long double s21_value = 0.0, std_value = 0.0;
+
+    s21_sscanf(input, "%Lf", &s21_value);
+    sscanf(input, "%Lf", &std_value);
+
+    ck_assert_ldouble_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_long_double_exponential) {
+    char input[] = "1.23456e2";  // 123.456
+    long double s21_value = 0.0, std_value = 0.0;
+
+    s21_sscanf(input, "%Lg", &s21_value);
+    sscanf(input, "%Lg", &std_value);
+
+    ck_assert_ldouble_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_negative_long_double_exponential) {
+    char input[] = "-1.23456e2";  // -123.456
+    long double s21_value = 0.0, std_value = 0.0;
+
+    s21_sscanf(input, "%Lg", &s21_value);
+    sscanf(input, "%Lg", &std_value);
+
+    ck_assert_ldouble_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_long_double_precision) {
+    char input[] = "123.456789";
+    long double s21_value = 0.0, std_value = 0.0;
+
+    s21_sscanf(input, "%Lf", &s21_value);
+    sscanf(input, "%Lf", &std_value);
+
+    ck_assert_ldouble_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_long_double_precision_exponential) {
+    char input[] = "1.234567e2";  // 123.4567
+    long double s21_value = 0.0, std_value = 0.0;
+
+    s21_sscanf(input, "%Lg", &s21_value);
+    sscanf(input, "%Lg", &std_value);
+
+    ck_assert_ldouble_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_long_double_overflow) {
+    char input[] = "1.7e308";
+    long double s21_value = 0.0, std_value = 0.0;
+
+    s21_sscanf(input, "%Lf", &s21_value);
+    sscanf(input, "%Lf", &std_value);
+
+    ck_assert_ldouble_eq(s21_value, std_value);
+}
+
+START_TEST(test_sscanf_length_modifier_long_double_infinity) {
+    char input[] = "inf";
+    long double s21_value = 0.0, std_value = 0.0;
+
+    s21_sscanf(input, "%Lf", &s21_value);
+    sscanf(input, "%Lf", &std_value);
+
+    ck_assert_ldouble_eq(s21_value, std_value);  // Should be inf
+}
+
+START_TEST(test_sscanf_length_modifier_long_double_leading_zeros) {
+    char input[] = "000123.456";
+    long double s21_value = 0.0, std_value = 0.0;
+
+    s21_sscanf(input, "%Lf", &s21_value);
+    sscanf(input, "%Lf", &std_value);
+
+    ck_assert_ldouble_eq(s21_value, std_value);  // Should be 123.456
+}
+
+START_TEST(test_sscanf_length_modifier_long_double_mixed_format) {
+    char input[] = "123.456 1.23e2";
+    long double s21_value_1 = 0.0, std_value_1 = 0.0;
+    long double s21_value_2 = 0.0, std_value_2 = 0.0;
+
+    s21_sscanf(input, "%Lf %Le", &s21_value_1, &s21_value_2);
+    sscanf(input, "%Lf %Le", &std_value_1, &std_value_2);
+
+    ck_assert_ldouble_eq(s21_value_1, std_value_1);
+    ck_assert_ldouble_eq(s21_value_2, std_value_2);
+}
 
 
 Suite *sprintf_suite(void) {
@@ -2379,6 +2831,53 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_suppress_string);
     tcase_add_test(tc, test_sscanf_suppress_hex);
     tcase_add_test(tc, test_sscanf_suppress_char);
+
+
+    // length description
+    tcase_add_test(tc, test_sscanf_length_modifier_short_int);
+    tcase_add_test(tc, test_sscanf_length_modifier_short_int_with_more_length);
+    tcase_add_test(tc, test_sscanf_length_modifier_negative_short_int);
+    tcase_add_test(tc, test_sscanf_length_modifier_unsigned_short_int);
+    tcase_add_test(tc, test_sscanf_length_modifier_short_int_leading_zeros);
+    tcase_add_test(tc, test_sscanf_length_modifier_int_overflow);
+    tcase_add_test(tc, test_sscanf_length_modifier_zero_short_int);
+    tcase_add_test(tc, test_sscanf_length_modifier_invalid_input);
+    tcase_add_test(tc, test_sscanf_length_modifier_short_int_integer);
+    tcase_add_test(tc, test_sscanf_length_modifier_unsigned_short_int_decimal);
+    tcase_add_test(tc, test_sscanf_length_modifier_unsigned_short_int_negative);
+    tcase_add_test(tc, test_sscanf_length_modifier_short_int_octal);
+    tcase_add_test(tc, test_sscanf_length_modifier_invalid_octal);
+    tcase_add_test(tc, test_sscanf_length_modifier_short_int_hex_lower);
+    tcase_add_test(tc, test_sscanf_length_modifier_short_int_hex_upper);
+    tcase_add_test(tc, test_sscanf_length_modifier_negative_short_int_hex);
+    tcase_add_test(tc, test_sscanf_length_modifier_mixed_base);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_int_decimal);
+    tcase_add_test(tc, test_sscanf_length_modifier_negative_long_int_decimal);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_int_decimal_with_length);
+    tcase_add_test(tc, test_sscanf_length_modifier_negative_long_int_decimal_with_length);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_int_integer);
+    tcase_add_test(tc, test_sscanf_length_modifier_unsigned_long_int_decimal);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_int_octal);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_int_hex_lower);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_int_hex_upper);
+    tcase_add_test(tc, test_sscanf_length_modifier_negative_long_int_hex);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_int_overflow);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_int_leading_zeros);
+    tcase_add_test(tc, test_sscanf_length_modifier_mixed_long_int_and_unsigned_long_int);
+    tcase_add_test(tc, test_sscanf_length_modifier_unsigned_long_int_octal);
+    tcase_add_test(tc, test_sscanf_length_modifier_unsigned_long_int_invalid_input);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_double_scientific);
+    tcase_add_test(tc, test_sscanf_length_modifier_negative_long_double_scientific);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_double_standard);
+    tcase_add_test(tc, test_sscanf_length_modifier_negative_long_double_standard);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_double_exponential);
+    tcase_add_test(tc, test_sscanf_length_modifier_negative_long_double_exponential);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_double_precision);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_double_precision_exponential);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_double_overflow);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_double_infinity);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_double_leading_zeros);
+    tcase_add_test(tc, test_sscanf_length_modifier_long_double_mixed_format);
 
 
     suite_add_tcase(s, tc);
