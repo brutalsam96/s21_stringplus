@@ -1,7 +1,7 @@
 #ifndef S21_SSCANF
 #define S21_SSCANF
 
-#define S21_NULL 0
+#include "s21_string.h"
 
 #include <ctype.h>
 #include <math.h>

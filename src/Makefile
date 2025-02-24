@@ -34,6 +34,11 @@ test_sscanf: s21_string.a tests/sscanf/test_s21sscanf.c
 	gcc -Wall -Wextra tests/sscanf/test_s21sscanf.c s21_string.a -o test_s21sscanf.out -lcheck -lm -lpthread -lsubunit
 	./test_s21sscanf.out
 
+test: s21_string.a tests/sprintf/test_s21sprintf.c tests/s21_string/test_s21string.c tests/sscanf/test_s21sscanf.c
+	$(MAKE) test_sprintf
+	$(MAKE) test_string
+	$(MAKE) test_sscanf
+
 gcov_report: s21_string.a tests/s21_string/test_s21string.c
 	gcc $(GCOVFLAGS) tests/s21_string/test_s21string.c $(SOURCES) -o ./report_sprintf.out -lcheck -lm -lpthread -lsubunit
 	./report_sprintf.out

@@ -6,6 +6,7 @@
 
 #include "s21_sprintf.h"
 #include "s21_string.h"
+#include "s21_sscanf.h"
 
 // String types
 typedef long unsigned int s21_size_t;
