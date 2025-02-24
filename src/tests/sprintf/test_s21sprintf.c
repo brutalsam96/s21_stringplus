@@ -1055,8 +1055,10 @@ int main(void) {
   Suite *s = sprintf_suite();
   SRunner *sr = srunner_create(s);
 
+  
   srunner_run_all(sr, CK_VERBOSE);
   fails = srunner_ntests_failed(sr);
   srunner_free(sr);
+
   return (fails == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -396,7 +396,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_basic) {
     char input[] = "3.14e2";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -407,7 +407,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_negative_exponent) {
     char input[] = "3.14e-2";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -418,7 +418,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_large_exponent) {
     char input[] = "1.23e100";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -429,7 +429,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_small_exponent) {
     char input[] = "1.23e-100";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -440,7 +440,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_no_exponent) {
     char input[] = "123.456";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -451,7 +451,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_scientific_notation) {
     char input[] = "1.23E4";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -462,7 +462,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_edge_case_zero) {
     char input[] = "0e0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -473,7 +473,7 @@ END_TEST
 
 START_TEST(test_sscanf_e_edge_case_negative_zero) {
     char input[] = "-0e0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%e", &s21_value);
     sscanf(input, "%e", &std_value);
@@ -510,7 +510,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_basic) {
     char input[] = "3.14E2";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -521,7 +521,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_negative_exponent) {
     char input[] = "3.14E-2";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -532,7 +532,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_large_exponent) {
     char input[] = "1.23E100";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -543,7 +543,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_small_exponent) {
     char input[] = "1.23E-100";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -554,7 +554,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_no_exponent) {
     char input[] = "123.456";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -565,7 +565,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_scientific_notation) {
     char input[] = "1.23E4";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -576,7 +576,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_edge_case_zero) {
     char input[] = "0E0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -587,7 +587,7 @@ END_TEST
 
 START_TEST(test_sscanf_E_edge_case_negative_zero) {
     char input[] = "-0E0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%E", &s21_value);
     sscanf(input, "%E", &std_value);
@@ -624,7 +624,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_basic) {
     char input[] = "3.14";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -635,7 +635,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_negative) {
     char input[] = "-3.14";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -646,7 +646,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_zero) {
     char input[] = "0.0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -668,7 +668,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_large_number) {
     char input[] = "1234567890.123456789";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -679,7 +679,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_small_number) {
     char input[] = "0.000123";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -690,7 +690,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_large_negative) {
     char input[] = "-9876543210.987654321";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -715,7 +715,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_edge_case_zero) {
     char input[] = "0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -726,7 +726,7 @@ END_TEST
 
 START_TEST(test_sscanf_f_edge_case_negative_zero) {
     char input[] = "-0";
-    float s21_value, std_value;
+    float s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%f", &s21_value);
     sscanf(input, "%f", &std_value);
@@ -1097,7 +1097,7 @@ END_TEST
 
 START_TEST(test_sscanf_o_basic) {
     char input[] = "1234";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%o", &s21_value);
     sscanf(input, "%o", &std_value);
@@ -1108,7 +1108,7 @@ END_TEST
 
 START_TEST(test_sscanf_o_zero) {
     char input[] = "0";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%o", &s21_value);
     sscanf(input, "%o", &std_value);
@@ -1130,7 +1130,7 @@ END_TEST
 
 START_TEST(test_sscanf_o_large_number) {
     char input[] = "37777777777";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%o", &s21_value);
     sscanf(input, "%o", &std_value);
@@ -1177,7 +1177,7 @@ END_TEST
 
 START_TEST(test_sscanf_o_exceeding_size) {
     char input[] = "777777777777777777777";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%o", &s21_value);
     sscanf(input, "%o", &std_value);
@@ -1199,7 +1199,7 @@ END_TEST
 
 START_TEST(test_sscanf_o_prefixed) {
     char input[] = "01234";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%o", &s21_value);
     sscanf(input, "%o", &std_value);
@@ -1369,7 +1369,7 @@ END_TEST
 
 START_TEST(test_sscanf_u_basic) {
     char input[] = "12345";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%u", &s21_value);
     sscanf(input, "%u", &std_value);
@@ -1380,7 +1380,7 @@ END_TEST
 
 START_TEST(test_sscanf_u_zero) {
     char input[] = "0";
-    unsigned int s21_value, std_value;
+    unsigned int s21_value = 0, std_value = 0;
 
     s21_sscanf(input, "%u", &s21_value);
     sscanf(input, "%u", &std_value);
