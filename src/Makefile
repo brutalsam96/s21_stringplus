@@ -53,6 +53,9 @@ gcov_report: s21_string.a tests/s21_string/test_s21string.c
 	rm -f *.gcno *.gcda *.info report.out *.gcov
 	open ./report/index-sort-f.html
 
+
+rebuild: clean all
+
 clean:
 	rm -f *.o *.a *.gcno *.gcda *.info *.out *.gcov
 	rm -rf ./report
