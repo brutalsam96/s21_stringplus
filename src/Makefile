@@ -15,7 +15,7 @@ OBJ_LIBRARY := $(patsubst %.c, %.o, $(SOURCES))
 %.o: %.c $(HEADER)
 	gcc $(CFLAGS) -c $< -o $@
 
-all: s21_string.a gcov_report test_s21sprintf test_s21string
+all: s21_string.a test_sprintf test_string test_sscanf gcov_report
 
 s21_string.a: $(OBJ_LIBRARY) $(HEADERS)
 	ar rcs s21_string.a $(OBJ_LIBRARY)
@@ -30,7 +30,7 @@ test_string: s21_string.a tests/s21_string/test_s21string.c
 	gcc -Wall -Wextra tests/s21_string/test_s21string.c s21_string.a -o test_s21string.out -lcheck -lm -lpthread -lsubunit
 	./test_s21string.out
 
-test_sscanf: tests/sscanf/test_s21sscanf.c
+test_sscanf: s21_string.a tests/sscanf/test_s21sscanf.c
 	gcc -Wall -Wextra tests/sscanf/test_s21sscanf.c s21_string.a -o test_s21sscanf.out -lcheck -lm -lpthread -lsubunit
 	./test_s21sscanf.out
 
