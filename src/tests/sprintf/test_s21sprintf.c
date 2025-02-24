@@ -1,11 +1,12 @@
 #include <check.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
+
 #include "../../s21_string.h"
 
 #define BUFF_SIZE 1024
- /* Simple specifier tests */
+/* Simple specifier tests */
 START_TEST(test_sprtinf_c_spec) {
   char s21_buff[BUFF_SIZE], std_buff[BUFF_SIZE];
   char value = 'A';
@@ -735,7 +736,7 @@ START_TEST(test_length_L_e) {
 }
 END_TEST
 
-/* ---------------------- Custom Edge Cases ---------------------- */ 
+/* ---------------------- Custom Edge Cases ---------------------- */
 START_TEST(test_sprtinf_p_null) {
   char s21_buff[BUFF_SIZE], std_buff[BUFF_SIZE];
   int *p = NULL;
@@ -876,10 +877,11 @@ START_TEST(test_sprtinf_f_nan) {
 }
 END_TEST
 START_TEST(test_sprtinf_g_nan) {
-  // %0-10g would exit without putting spaces but i don't think it will be tested so we skip it
+  // %0-10g would exit without putting spaces but i don't think it will be
+  // tested so we skip it
   char s21_buff[BUFF_SIZE], std_buff[BUFF_SIZE];
   double value = NAN;
-  s21_sprintf(s21_buff, "ab %g cd", value); 
+  s21_sprintf(s21_buff, "ab %g cd", value);
   sprintf(std_buff, "ab %g cd", value);
   ck_assert_str_eq(s21_buff, std_buff);
 }
@@ -887,7 +889,7 @@ END_TEST
 
 START_TEST(test_sprtinf_no_spec) {
   char s21_buff[BUFF_SIZE], std_buff[BUFF_SIZE];
-  s21_sprintf(s21_buff, "ab 5 cd"); 
+  s21_sprintf(s21_buff, "ab 5 cd");
   sprintf(std_buff, "ab 5 cd");
   ck_assert_str_eq(s21_buff, std_buff);
 }
@@ -895,7 +897,7 @@ END_TEST
 
 START_TEST(test_sprtinf_wr_spec) {
   char s21_buff[BUFF_SIZE], std_buff[BUFF_SIZE];
-  s21_sprintf(s21_buff, "ab %j cd"); 
+  s21_sprintf(s21_buff, "ab %j cd");
   sprintf(std_buff, "ab %j cd");
   ck_assert_str_eq(s21_buff, std_buff);
 }
@@ -906,23 +908,21 @@ START_TEST(test_sprtinf_return) {
   int value = 77777;
   int result21 = 0;
   int resultsd = 0;
-  result21 = s21_sprintf(s21_buff, "ab %d cd", value); 
+  result21 = s21_sprintf(s21_buff, "ab %d cd", value);
   resultsd = sprintf(std_buff, "ab %d cd", value);
   ck_assert_int_eq(result21, resultsd);
 }
-
 
 START_TEST(test_sprtinf_return2) {
   char s21_buff[BUFF_SIZE], std_buff[BUFF_SIZE];
   int value = 77777;
   int result21 = 0;
   int resultsd = 0;
-  result21 = s21_sprintf(s21_buff, "ab %n cd", &value); 
+  result21 = s21_sprintf(s21_buff, "ab %n cd", &value);
   resultsd = sprintf(std_buff, "ab %n cd", &value);
   ck_assert_int_eq(result21, resultsd);
 }
 END_TEST
-
 
 Suite *sprintf_suite(void) {
   Suite *s = suite_create("s21_sprintf");
@@ -965,7 +965,6 @@ Suite *sprintf_suite(void) {
   tcase_add_test(tc, test_sprtinf_X_spec);
   tcase_add_test(tc, test_sprtinf_p_spec);
   tcase_add_test(tc, test_sprtinf_n_spec);
-
 
   /* Tests for Flag_LEFT*/
   tcase_add_test(tc, test_sprtinf_c_left);
@@ -1018,7 +1017,7 @@ Suite *sprintf_suite(void) {
   tcase_add_test(tc, test_sprtinf_zero_d_negative);
   tcase_add_test(tc, test_sprtinf_zero_f);
   tcase_add_test(tc, test_sprtinf_minus_zero_d);
-  
+
   /* Custom Edge Cases*/
   tcase_add_test(tc, test_sprtinf_p_null);
   tcase_add_test(tc, test_edge_d_int_max);
@@ -1042,10 +1041,6 @@ Suite *sprintf_suite(void) {
   tcase_add_test(tc, test_sprtinf_return);
   tcase_add_test(tc, test_sprtinf_return2);
 
-
-
-
-
   suite_add_tcase(s, tc);
   return s;
 }
@@ -1055,7 +1050,6 @@ int main(void) {
   Suite *s = sprintf_suite();
   SRunner *sr = srunner_create(s);
 
-  
   srunner_run_all(sr, CK_VERBOSE);
   fails = srunner_ntests_failed(sr);
   srunner_free(sr);

@@ -8,8 +8,6 @@
 #include <stdio.h>
 #include <wchar.h>
 
-
-
 /* SPRINTF FLAGS */
 #define FLAG_LEFT 1
 #define FLAG_SIGN 2
@@ -61,14 +59,19 @@ int parse_flags(const char **current, markers *mrk);
 int parse_width(const char **current, va_list *args, markers *mrk);
 int parse_precision(const char **current, va_list *args, markers *mrk);
 int parse_length_modifiers(const char **current, markers *mrk);
-void parse_type_spec(const char **current, char *str, va_list *args, int *index, markers *mrk);
+void parse_type_spec(const char **current, char *str, va_list *args, int *index,
+                     markers *mrk);
 
 // process data types
 int process_signed_int(char *str, void *value, int *index, markers *mrk);
-int process_unsigned_int(char *str, void *u_value, int *index, markers *mrk, int base, int IsUpper, int isX);
-int process_float(char *str, void *value, int *index, markers *mrk, int IsUpper);
-int process_scientific(char *str, void *value, int *index, markers *mrk, int IsUpper);
-int process_compact(char *str, void *value, int *index, markers *mrk, int IsUpper);
+int process_unsigned_int(char *str, void *u_value, int *index, markers *mrk,
+                         int base, int IsUpper, int isX);
+int process_float(char *str, void *value, int *index, markers *mrk,
+                  int IsUpper);
+int process_scientific(char *str, void *value, int *index, markers *mrk,
+                       int IsUpper);
+int process_compact(char *str, void *value, int *index, markers *mrk,
+                    int IsUpper);
 int process_string_arg(char *str, void *value, int *index, markers *mrk);
 int process_char(char *str, void *value, int *index, markers *mrk);
 int process_char_counter(va_list *args, int *index);
@@ -91,14 +94,5 @@ char *s21_lftoa(long double value, char *buffer, int precision);
 char *s21_lltoa(long value, char *buffer, int base);
 char *s21_llutoa(unsigned long value, char *buffer, int base, int IsUpper);
 char *s21_etoa(double value, char *buffer, int precision);
-
-
-
-
-
-
-
-
-
 
 #endif

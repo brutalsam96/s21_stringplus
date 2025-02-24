@@ -1,20 +1,17 @@
 #ifndef S21_STRING
 #define S21_STRING
 
-#include "s21_string.h"
-#include "s21_sprintf.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "s21_sprintf.h"
+#include "s21_string.h"
 
 // String types
 typedef long unsigned int s21_size_t;
 
 // MACRO
-#define S21_NULL ((void*) 0)
-
-
-
-
+#define S21_NULL ((void *)0)
 
 void *s21_memchr(const void *str, int c, s21_size_t n);
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n);
@@ -40,8 +37,6 @@ void *s21_to_lower(const char *str);
 void *s21_insert(const char *src, const char *str, s21_size_t start_index);
 int is_trim_char(char c, const char *trim_chars);
 char *s21_trim(const char *src, const char *trim_chars);
-
-
 
 typedef struct {
   int error_code;  // Error code (e.g., ENOENT)

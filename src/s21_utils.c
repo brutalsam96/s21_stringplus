@@ -184,23 +184,21 @@ void parse_type_spec(const char **current, char *str, va_list *args, int *index,
     else
       value.db = va_arg(*args, double);
     process_compact(str, &value, index, mrk, spec == 'G');
-  } else if (spec == 's'){
+  } else if (spec == 's') {
     union signed_value value = {0};
     if (mrk->length_modifier == 'l')
-      value.wcstr = va_arg(*args, wchar_t*);
+      value.wcstr = va_arg(*args, wchar_t *);
     else
-      value.str = va_arg(*args, char*);
+      value.str = va_arg(*args, char *);
     process_string_arg(str, &value, index, mrk);
-  }
-  else if (spec == 'c'){
-      union signed_value value = {0};
+  } else if (spec == 'c') {
+    union signed_value value = {0};
     if (mrk->length_modifier == 'l')
       value.wc = va_arg(*args, wchar_t);
     else
       value.c = va_arg(*args, int);
     process_char(str, &value, index, mrk);
-  }
-  else if (spec == 'p')
+  } else if (spec == 'p')
     process_pointer(str, args, index, mrk);
   else if (spec == 'n')
     process_char_counter(args, index);
@@ -562,20 +560,18 @@ int process_compact(char *str, void *value, int *index, markers *mrk,
 pointer i don't think they are required by task*/
 
 int process_string_arg(char *str, void *value, int *index, markers *mrk) {
-
   char *val;
   char *temp;
 
   if (mrk->length_modifier == 'l') {
     wchar_t *wstr = ((union signed_value *)value)->wcstr;
     size_t wlen = wcslen(wstr);
-    temp = (char*)malloc((wlen * MB_CUR_MAX + 1) * sizeof(char));
+    temp = (char *)malloc((wlen * MB_CUR_MAX + 1) * sizeof(char));
     wcstombs(temp, wstr, wlen * MB_CUR_MAX + 1);
     val = temp;
   } else {
     val = (((union signed_value *)value)->str);
   }
-  
 
   int val_len = s21_strlen(val);
   if (mrk->flags & FLAG_ZERO) mrk->flags &= ~FLAG_ZERO;
@@ -1123,7 +1119,7 @@ char *s21_etoa(double value, char *buffer, int precision) {
 
 // int main()
 // {
-  // char a[] = "abc";
+// char a[] = "abc";
 //   wchar_t a[] = L"abc";
 //   char buf[256];
 //   s21_sprintf(buf, "a b %s", a);

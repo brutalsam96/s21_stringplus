@@ -3,16 +3,16 @@
 
 #define S21_NULL 0
 
+#include <ctype.h>
+#include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
-#include <stdarg.h>
-#include <math.h>
 #include <wchar.h>
 
-
 // TODO could confilct with string one
-typedef long long unsigned int s21_uintptr_t; // TODO could confilct with sprintf one
+typedef long long unsigned int
+    s21_uintptr_t;  // TODO could confilct with sprintf one
 
 void parse_number(const char **str, int base, int *num, int width);
 void parse_number_u(const char **str, int base, unsigned int *num, int width);
@@ -37,7 +37,4 @@ int p_specifier(va_list *args, const char **str);
 
 s21_uintptr_t hex2dec_ptr(const char **str);
 
-
-
 #endif
-
