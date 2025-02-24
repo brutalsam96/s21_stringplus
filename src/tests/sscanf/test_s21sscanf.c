@@ -2419,16 +2419,6 @@ START_TEST(test_sscanf_length_modifier_long_int_hex_upper) {
     ck_assert_int_eq(s21_value, std_value);
 }
 
-// START_TEST(test_sscanf_length_modifier_negative_long_int_hex) {
-//     char input[] = "-1f4";  // -500
-//     long int s21_value = 0, std_value = 0;
-
-//     s21_sscanf(input, "%lx", &s21_value);
-//     sscanf(input, "%lx", &std_value);
-
-//     ck_assert_int_eq(s21_value, std_value);
-// }
-
 START_TEST(test_sscanf_length_modifier_long_int_overflow) {
     char input[] = "9223372036854775807";
     long int s21_value = 0, std_value = 0;
@@ -2860,7 +2850,6 @@ Suite *sprintf_suite(void) {
     tcase_add_test(tc, test_sscanf_length_modifier_long_int_octal);
     tcase_add_test(tc, test_sscanf_length_modifier_long_int_hex_lower);
     tcase_add_test(tc, test_sscanf_length_modifier_long_int_hex_upper);
-    // tcase_add_test(tc, test_sscanf_length_modifier_negative_long_int_hex);
     tcase_add_test(tc, test_sscanf_length_modifier_long_int_overflow);
     tcase_add_test(tc, test_sscanf_length_modifier_long_int_leading_zeros);
     tcase_add_test(tc, test_sscanf_length_modifier_mixed_long_int_and_unsigned_long_int);
