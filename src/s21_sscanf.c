@@ -862,12 +862,3 @@ s21_uintptr_t hex2dec_ptr(const char **str) {
 //     }
 // }
 
-int main(int argc, char const *argv[])
-{
-    char input[] = "3.1";
-    float s21_value = 0, std_value = 0;
-
-    s21_sscanf(input, "%3f", &s21_value);
-    sscanf(input, "%3f", &std_value);
-    return 0;
-}
