@@ -10,7 +10,7 @@
 typedef long unsigned int s21_size_t;
 
 // MACRO
-#define S21_NULL 0
+#define S21_NULL ((void*) 0)
 
 
 

@@ -552,6 +552,18 @@ int f_specifier(va_list *args, const char **str, char len_mod, int width) {
     } else if (**str == '+') {
         (*str)++;
     }
+
+    // Handle "inf" and "infinity"
+    if (strncmp(*str, "inf", 3) == 0) {
+        *num = sign * INFINITY;
+        *str += 3;
+        return 0;
+    }
+    if (strncmp(*str, "infinity", 8) == 0) {
+        *num = sign * INFINITY;
+        *str += 8;
+        return 0;
+    }
    
     if (!(isdigit(**str))) {
         return 1;
@@ -596,15 +608,25 @@ int f_specifier(va_list *args, const char **str, char len_mod, int width) {
         return 1;
     }
     if (**str == 'e' || **str == 'E') {
+    (*str)++;
+    int exp_sign = 1;
+    int exponent = 0;
+
+    if (**str == '-') {  
+        exp_sign = -1;
         (*str)++;
-        int exponent =  0;
-        while (isdigit(**str))
-        {
-            exponent = exponent * 10 + (**str - '0');
-            (*str)++;
-        }
-        *num *= pow(10, exponent);
+    } else if (**str == '+') {
+        (*str)++;
     }
+
+    while (isdigit(**str)) {
+        exponent = exponent * 10 + (**str - '0');
+        (*str)++;
+    }
+
+    *num *= powl(10, exp_sign * exponent); // Use powl() for long double
+}
+
 
     *num *= sign;
 
@@ -654,7 +676,6 @@ int p_specifier(va_list *args, const char **str) {
 
 
 int x_specifier(va_list *args, const char **str, char len_mod, int width) {
-    int is_negative = 0;
     unsigned short int *short_ptr;
     unsigned long int *long_ptr;
     unsigned int *val = S21_NULL;
@@ -679,24 +700,22 @@ int x_specifier(va_list *args, const char **str, char len_mod, int width) {
 
     if (**str == '-') {
         sign = -1; (*str)++;
-    }  else if (**str == '-') {
+        if (len_mod == 'l') {
+            val = (int *)val;
+        }
+    }  else if (**str == '+') {
         sign = 1; (*str)++;
     }
 
     if (**str == '0' && (*(*str + 1) == 'x' || *(*str + 1) == 'X')) (*str) += 2;
     
-    if (**str == '-') {
-        (*str)++;
-        is_negative = 1;
-    } else if (**str == '+') {
-        (*str)++;
-    }
 
     if (!(isxdigit(**str))) {
         return 1;
     }
     *val = 0;
     parse_number_u(str, 16, val, width);
+    *val *= sign;
     return 0;
 }
 
@@ -905,12 +924,16 @@ s21_uintptr_t hex2dec_ptr(const char **str) {
 //     return 0;
 // }
 
-int main(int argc, char const *argv[])
-{
-    char input[] = "3.1";
-    float s21_value = 0, std_value = 0;
+// int main(int argc, char const *argv[])
+// {
+//      char input[] = "1.7e308";
+//     long double s21_value = 0.0, std_value = 0.0;
 
-    s21_sscanf(input, "%3f", &s21_value);
-    sscanf(input, "%3f", &std_value);
-    return 0;
-}
+//     s21_sscanf(input, "%Lf", &s21_value);
+//     sscanf(input, "%Lf", &std_value);
+
+//     printf("%Lf\n", s21_value);
+//     printf("%Lf\n", std_value);
+
+//     return 0;
+// }
