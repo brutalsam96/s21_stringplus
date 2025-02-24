@@ -1,14 +1,14 @@
 #ifndef S21_SSCANF
 #define S21_SSCANF
 
-#include "s21_string.h"
-
 #include <ctype.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 #include <wchar.h>
+
+#include "s21_string.h"
 
 // TODO could confilct with string one
 typedef long long unsigned int
