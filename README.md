@@ -115,8 +115,8 @@ This project also includes a few bonus functions inspired by C# string manipulat
 This project was a collaborative effort completed at [School 21](https://21-school.uz).
 
 **Authors:**
-- brutalsam
-- teraxiom
+- [brutalsam96](https://github.com/brutalsam96)
+- [yunusov02](https://github.com/yunusov02)
 
 ## Building and Testing
 
